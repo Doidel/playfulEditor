@@ -351,6 +351,7 @@ Play.prototype._playLoop = function ( delta ) {
 	this._previousTouches = touches.slice(0);
 	
 	
+	//console.log('touches', touches.length);
 	
 	// loop through all touched objects and assign touch events
 	var obj;

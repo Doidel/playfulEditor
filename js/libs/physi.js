@@ -511,6 +511,14 @@ window.Physijs = (function() {
 			object,
 			i, offset;
 
+			
+							//custom
+							var fetchpos = false;
+							if ( window.fetchPositions ) {
+							window.fetchPositions = false;
+							fetchpos = true;
+							}
+		
 		for ( i = 0; i < num_objects; i++ ) {
 			offset = 2 + i * REPORT_ITEMSIZE;
 			object = this._objects[ data[ offset ] ];
@@ -519,6 +527,12 @@ window.Physijs = (function() {
 				continue;
 			}
 
+							if (fetchpos) console.log(
+							object.name,
+							data[ offset + 1 ],
+							data[ offset + 2 ],
+							data[ offset + 3 ] );
+							
 			if ( object.__dirtyPosition === false ) {
 				object.position.set(
 					data[ offset + 1 ],
@@ -633,6 +647,8 @@ window.Physijs = (function() {
 		 * If you feel inclined to make this better, please do so.
 		 */
 
+		console.log('RECEIVED COLLISIONS LENGTH', data.length);
+		 
 		var i, j, offset, object, object2, id1, id2,
 			collisions = {}, normal_offsets = {};
 
@@ -1109,6 +1125,7 @@ window.Physijs = (function() {
 	};
 	
 	Physijs.Mesh.prototype.clone = function( object, recursive ) {
+		console.log('clone');
 		
 		if ( this.events ) {
 		

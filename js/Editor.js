@@ -47,7 +47,11 @@ var Editor = function () {
 	this.storage = new Storage();
 	this.loader = new Loader( this );
 
-	this.scene = new Physijs.Scene();
+	// The report size was increased in order to allow more than the default 50 touches/collisions.
+	// This also increases other report cache's buffers, so in case of performance issues try to
+	// lower the reportsize or try to use different buffer sizes for different caches ( see
+	// physijs_worker.js:252 )
+	this.scene = new Physijs.Scene( { reportsize: 500 } );
 	this.scene._gravity = new THREE.Vector3(0, -16, 0);
 	this.scene.setGravity( this.scene._gravity );
 	this.sceneHelpers = new THREE.Scene();
@@ -438,7 +442,7 @@ Editor.prototype = {
 	startPlay: function ( ) {
 		
 		this.sceneChildrenSaves = [];
-		this.sceneChildrenClones = [];
+		this.sceneChildrenClones = new THREE.Object3D();
 		
 		this.play._timeBasedActionsCollection = {};
 		
@@ -449,7 +453,7 @@ Editor.prototype = {
 			if ( other_object.name == 'PlayerCharacter' ) return;
 		
 			// `this` has collided with `other_object` with an impact speed of `relative_velocity` and a rotational force of `relative_rotation` and at normal `contact_normal`			
-			console.log('speed', relative_velocity.length(), new Date().getTime(), this.uuid, other_object.name, relative_velocity);
+			//console.log('speed', relative_velocity.length(), new Date().getTime(), this.uuid, other_object.name, relative_velocity);
 			
 			if ( this.events != undefined ) {
 			
@@ -497,6 +501,7 @@ Editor.prototype = {
 		
 		// leap touch callback
 		var point = function ( ) {
+			console.log('point event on object');
 		
 			if ( this.name != 'Ground' ) editor.play.effects.glow( this );
 			
@@ -556,11 +561,10 @@ Editor.prototype = {
 		}
 		
 		//clone array
-		var children = this.scene.children.slice(0);
+		//var children = this.scene.children.slice(0);
 		
-		for (var i = 0; i < children.length; i++) {
-			
-			var child = children[ i ];
+		this.scene._cloneEquivalent = this.sceneChildrenClones;
+		this.scene.traverse( function( child ) {
 			
 			//replace all physijs objects with clones
 			if ( child._physijs ) {
@@ -578,6 +582,8 @@ Editor.prototype = {
 				clone.isStatic = child.isStatic;
 				clone._originalMass = clone.mass;
 				if ( clone.isStatic == true ) clone.mass = 0;
+				if ( clone.name == 'p1' ) console.log( clone.name, clone.mass );
+				//clone.mass = clone.mass;
 				//if ( clone.material._physijs.massmodifier != undefined ) clone.mass *= clone.material._physijs.massmodifier;
 				
 				// add collision event callbacks
@@ -608,21 +614,38 @@ Editor.prototype = {
 				//TODO: Does this destroy anything?
 				clone.material = child.material.clone();
 				
-				this.sceneChildrenClones.push( clone );
+				child.parent._cloneEquivalent.add( clone );
+				
+				child._cloneEquivalent = clone;
 				
 				
-				this.sceneChildrenSaves.push( child );
-				this.scene.remove( child );
+				//this.sceneChildrenClones.push( clone );
+				if ( child.parent instanceof THREE.Scene ) {
+					//if ( this.sceneChildrenSaves.length == 0 ) console.log( clone.uuid, 'orig', child.uuid );
+					this.sceneChildrenSaves.push( child );
+				}
 			}
+		
+		}.bind(this) );
+		
+		//remove scene children
+		for ( var x = 0; x < this.sceneChildrenSaves.length; x++ ) {
 			
-		}
+			editor.scene.remove( this.sceneChildrenSaves[ x ] );
+			
+		}	
 		
 		//add the clones to the scene
-		for (var x = 0; x < this.sceneChildrenClones.length; x++) {
+		console.log('- before scene add -');
+		var children = this.sceneChildrenClones.children.slice(0); //clone children array, as it is altered when objects get moved from the Object3D into the scene
+		for (var x = 0; x < children.length; x++) {
 		
-			var child = this.sceneChildrenClones[ x ];
-		
+			var child = children[ x ];
+			
+			//this.sceneChildrenClones.remove( child );
+			
 			this.scene.add( child );
+			if ( child.mass > 0 ) console.log( 'unfrozen object1:', child.name );
 			child.material.needsUpdate = true;
 			
 			if ( child.sounds ) {
@@ -634,12 +657,26 @@ Editor.prototype = {
 			}
 		
 		}
+	console.log('scene now', this.scene.children);
+	
+	//unfrozen objects
+	editor.scene.traverse( function( object ) {
+		if ( object._physijs ) {
+			if ( object._physijs.mass > 0 ) console.log( 'unfrozen object2:', object.name );
+		}
+	} );
+
+	//console.log('mass', editor.scene.children[5].mass);
+	//console.log('massC', this.sceneChildrenClones.children[5].mass);
 		
 		editor.play.start();
+	//console.log('mass', editor.scene.children[5].mass);
 	},
 	
 	// Delete all physics objects and restore visibility of the others.
 	resetPlay: function ( ) {
+	
+		console.log('reset play');
 		
 		if ( this.sceneChildrenClones ) {
 		

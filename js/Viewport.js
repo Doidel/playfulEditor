@@ -54,7 +54,7 @@ var Viewport = function ( editor ) {
 
 	var transformControls = new THREE.TransformControls( camera, container.dom );
 	transformControls.addEventListener( 'change', function () {
-
+	
 		controls.enabled = true;
 
 		if ( transformControls.axis !== null ) {
@@ -268,6 +268,8 @@ var Viewport = function ( editor ) {
 	var onMouseDown = function ( event ) {
 
 		event.preventDefault();
+		
+		if ( viewport.play ) return false;
 
 		var rect = container.dom.getBoundingClientRect();
 		x = (event.clientX - rect.left) / rect.width;

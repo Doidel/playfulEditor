@@ -19,7 +19,6 @@ Play.Effects = function ( ) {
 
 Play.Effects.prototype.glow = function ( element ) {
 
-	console.log('glow');
 	if ( element._glow == undefined ) {
 		var mat = this._glowMaterial.clone();
 		mat.uniforms.viewVector.value = editor.play._camera.parent.parent.position;

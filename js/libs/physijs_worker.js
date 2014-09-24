@@ -1279,7 +1279,7 @@ reportCollisions = function() {
 		}	
 	}
 	
-	
+	console.log(collisionreport.length);
 	if ( SUPPORT_TRANSFERABLE ) {
 		transferableMessage( collisionreport.buffer, [collisionreport.buffer] );
 	} else {
