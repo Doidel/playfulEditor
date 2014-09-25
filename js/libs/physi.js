@@ -510,14 +510,6 @@ window.Physijs = (function() {
 		var num_objects = data[1],
 			object,
 			i, offset;
-
-			
-							//custom
-							var fetchpos = false;
-							if ( window.fetchPositions ) {
-							window.fetchPositions = false;
-							fetchpos = true;
-							}
 		
 		for ( i = 0; i < num_objects; i++ ) {
 			offset = 2 + i * REPORT_ITEMSIZE;
@@ -526,12 +518,6 @@ window.Physijs = (function() {
 			if ( object === undefined ) {
 				continue;
 			}
-
-							if (fetchpos) console.log(
-							object.name,
-							data[ offset + 1 ],
-							data[ offset + 2 ],
-							data[ offset + 3 ] );
 							
 			if ( object.__dirtyPosition === false ) {
 				object.position.set(

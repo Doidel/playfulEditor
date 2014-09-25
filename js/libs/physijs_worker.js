@@ -1241,10 +1241,10 @@ reportCollisions = function() {
 		_collided = false;
 	
 	if ( SUPPORT_TRANSFERABLE ) {
-		if ( collisionreport.length < 2 + num * COLLISIONREPORT_ITEMSIZE ) {
+		if ( collisionreport.length < 2 + num * 4 * COLLISIONREPORT_ITEMSIZE ) {
 			collisionreport = new Float32Array(
 				2 + // message id & # objects in report
-				( Math.ceil( _num_objects / REPORT_CHUNKSIZE ) * REPORT_CHUNKSIZE ) * COLLISIONREPORT_ITEMSIZE // # of values needed * item size
+				( Math.ceil( num * 4 / REPORT_CHUNKSIZE ) * REPORT_CHUNKSIZE ) * COLLISIONREPORT_ITEMSIZE // # of values needed * item size
 			);
 			collisionreport[0] = MESSAGE_TYPES.COLLISIONREPORT;
 		}
@@ -1279,7 +1279,6 @@ reportCollisions = function() {
 		}	
 	}
 	
-	console.log(collisionreport.length);
 	if ( SUPPORT_TRANSFERABLE ) {
 		transferableMessage( collisionreport.buffer, [collisionreport.buffer] );
 	} else {
