@@ -6,7 +6,7 @@ var Play = function ( editor ) {
 	
 	this.gestureDisplay = document.createElement( 'img' );
 	this.gestureDisplay.id = 'gestureDisplay';
-	this.gestureDisplay.src = 'images/gesture_open.png';
+	this.gestureDisplay.src = 'images/gesture_stroke.png';
 };
 
 // what are the timeouts for certain actions? Are those timeouts only for certain triggers?
@@ -169,7 +169,6 @@ Play.prototype.release = function ( ) {
 
 	if ( this.isGrabbing ) {
 		
-		this._character.material.color.setHex( this._character._color );
 		this._character.children[0].intensity /= 2.5;
 		this.isGrabbing = false;
 	
@@ -226,18 +225,15 @@ Play.prototype.startLeap = function ( ) {
 						} );
 						
 						if ( extendedFingers == 1 || extendedFingers == 2 ) {
-							editor.play.gestureDisplay.src = 'images/gesture_point.png';
 							gestureType = 'point';
 						}						
 						
 					} 
 					
 					if ( gestureType == 'stroke' && hand.grabStrength > 0.8 ) {
-						editor.play.gestureDisplay.src = 'images/gesture_fist.png';
 						gestureType = 'grab';
 					}
 				
-					if ( gestureType == 'stroke' ) editor.play.gestureDisplay.src = 'images/gesture_open.png';
 					
 					this._previousGesture = gestureType;
 				} else {
@@ -248,6 +244,7 @@ Play.prototype.startLeap = function ( ) {
 				}
 				
 				editor.play._currentGesture = gestureType;
+				editor.play.effects.displayGestureType( gestureType );
 
 			}
 		});

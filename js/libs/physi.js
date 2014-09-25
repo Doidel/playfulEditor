@@ -632,8 +632,6 @@ window.Physijs = (function() {
 		 *
 		 * If you feel inclined to make this better, please do so.
 		 */
-
-		console.log('RECEIVED COLLISIONS LENGTH', data.length);
 		 
 		var i, j, offset, object, object2, id1, id2,
 			collisions = {}, normal_offsets = {};

@@ -480,7 +480,7 @@ Editor.prototype = {
 		// leap touch callback
 		var grab = function ( ) {
 		
-			if ( this.name != 'Ground' ) editor.play.effects.glow( this );
+			//if ( this.name != 'Ground' ) editor.play.effects.glow( this );
 			
 			if ( this.events != undefined ) {
 			
@@ -503,7 +503,7 @@ Editor.prototype = {
 		var point = function ( ) {
 			console.log('point event on object');
 		
-			if ( this.name != 'Ground' ) editor.play.effects.glow( this );
+			//if ( this.name != 'Ground' ) editor.play.effects.glow( this );
 			
 			if ( this.events != undefined ) {
 			
@@ -525,7 +525,7 @@ Editor.prototype = {
 		// leap touch callback
 		var stroke = function ( ) {
 		
-			if ( this.name != 'Ground' ) editor.play.effects.glow( this );
+			//if ( this.name != 'Ground' ) editor.play.effects.glow( this );
 			
 			if ( this.events != undefined ) {
 			
@@ -546,7 +546,7 @@ Editor.prototype = {
 		
 		var release = function ( )  {
 			
-			editor.play.effects.removeGlow( this );
+			//editor.play.effects.removeGlow( this );
 			
 		}
 		
@@ -680,19 +680,22 @@ Editor.prototype = {
 		
 		if ( this.sceneChildrenClones ) {
 		
-			for ( var x = 0; x < this.sceneChildrenClones.length; x++ ) {
-			
-				var child = this.sceneChildrenClones[ x ];
-				if ( child.sounds ) {
+			editor.scene.traverse( function( child ) {
 				
-					if ( child.sounds.constant != undefined ) editor.soundCollection.stop( child.sounds.constant, true );
-					if ( child.sounds.collision != undefined ) editor.soundCollection.stop( child.sounds.collision, true );
+				if ( child._physijs ) {
 				
+					if ( child.sounds ) {
+					
+						if ( child.sounds.constant != undefined ) editor.soundCollection.stop( child.sounds.constant, true );
+						if ( child.sounds.collision != undefined ) editor.soundCollection.stop( child.sounds.collision, true );
+					
+					}
+					//editor.play.effects.removeGlow( child );
+					editor.scene.remove( child );
+					
 				}
-				editor.play.effects.removeGlow( child );
-				this.scene.remove( child );
 				
-			}
+			});
 			
 			this.sceneChildrenClones = undefined;
 			

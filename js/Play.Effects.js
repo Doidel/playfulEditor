@@ -17,6 +17,22 @@ Play.Effects = function ( ) {
 
 };
 
+Play.Effects.prototype.displayGestureType = function ( type ) {
+
+	editor.play._character.material.color.setHex( this.gestureColors[ type ] );
+	editor.play._character.children[0].color.setHex( this.gestureColors[ type ] );
+	editor.play.gestureDisplay.src = 'images/gesture_' + type + '.png';
+
+};
+
+Play.Effects.prototype.gestureColors = {
+	'stroke': 0xd7d23c,
+	'point': 0xdcb946,
+	'grab': 0xb4c846
+};
+
+
+//DEPRECATED
 Play.Effects.prototype.glow = function ( element ) {
 
 	if ( element._glow == undefined ) {
