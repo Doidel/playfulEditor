@@ -16,7 +16,7 @@ Play.prototype.actionTimeouts = {
 		'Touch Fist': 1000,
 		'Touch Point': 1000,
 		'Touch Stroke': 1000,
-		'Collision': 50
+		'Collision': 150
 	}
 }
 
@@ -42,6 +42,7 @@ Play.prototype.playAction = function ( object, eventIndex, args ) {
 			));
 			break;
 		case 'Play sound':
+			console.log('play');
 			var speed = args.relative_velocity != undefined ? args.relative_velocity.length() : 1;
 			if ( speed < 0.1 ) return;
 				editor.soundCollection.playAttachedSound( action.sound, object, false );
@@ -54,6 +55,9 @@ Play.prototype.playAction = function ( object, eventIndex, args ) {
 				object._originalMass = object.mass;
 				object.mass = 0;
 			}
+		break;
+		case 'Stop sounds':
+			editor.soundCollection.stopAll( object._panner );
 		break;
 	}
 	
@@ -292,6 +296,14 @@ Play.prototype.startLeap = function ( ) {
 		})
 		.on('streamingStopped', function () {
 			editor.play._leapStreaming = false;
+			
+			if ( editor.play._character != undefined ) {
+				
+				editor.play._character.visible = true;
+				editor.play._character.children[0].visible = true;
+				editor.play._character.mass = 0.01;
+				
+			}
 		});
 		
 	}
@@ -333,7 +345,7 @@ Play.prototype._playLoop = function ( delta ) {
 	if ( !this._leapStreaming ) {
 		
 		// calculate the ball position to be in front of the camera
-		this._character.position.set(0, 0, -5);
+		this._character.position.set(0, 0, -8);
 		this._character.position.applyMatrix4( editor.play._camera.matrixWorld );
 		
 	}
@@ -502,11 +514,14 @@ Play.prototype._mouseEvents = {
 			editor.play._currentGesture = 'grab';
 			
 		}
+		
+		editor.play.effects.displayGestureType( editor.play._currentGesture );
 	
 	},
 	up: function( event ) {
 					
 		editor.play._currentGesture = 'stroke';
+		editor.play.effects.displayGestureType( editor.play._currentGesture );
 	
 	}
 };

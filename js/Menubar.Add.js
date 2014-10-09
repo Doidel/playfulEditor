@@ -143,6 +143,13 @@ Menubar.Add = function ( editor ) {
 			0.5
 		);
 		var mesh = new Physijs.SphereMesh( geometry, material );
+		
+		// Enable CCD if the object moves more than 1 meter in one simulation frame
+		mesh.setCcdMotionThreshold(1);
+
+		// Set the radius of the embedded sphere such that it is smaller than the object
+		mesh.setCcdSweptSphereRadius(0.2);
+		
 		mesh.name = 'Sphere ' + ( ++ meshCount );
 		//mesh.dynamic = true;
 		

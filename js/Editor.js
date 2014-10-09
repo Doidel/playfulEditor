@@ -51,7 +51,7 @@ var Editor = function () {
 	// This also increases other report cache's buffers, so in case of performance issues try to
 	// lower the reportsize or try to use different buffer sizes for different caches ( see
 	// physijs_worker.js:252 )
-	this.scene = new Physijs.Scene( /*{ reportsize: 500 }*/ );
+	this.scene = new Physijs.Scene( {fixedTimeStep: 1/120} );
 	this.scene._gravity = new THREE.Vector3(0, -16, 0);
 	this.scene.setGravity( this.scene._gravity );
 	this.sceneHelpers = new THREE.Scene();
@@ -284,9 +284,14 @@ Editor.prototype = {
 			parent = this.scene;
 
 		}
+		
+		//reposition object
+		object.position.applyMatrix4( object.parent.matrixWorld );
+		object.position.applyMatrix4( new THREE.Matrix4().getInverse( parent.matrixWorld ) );
 
 		parent.add( object );
 
+		this.signals.objectChanged.dispatch( object );
 		this.signals.sceneGraphChanged.dispatch();
 
 	},
@@ -678,24 +683,34 @@ Editor.prototype = {
 	
 		console.log('reset play');
 		
+		editor.play.stop();
+		
 		if ( this.sceneChildrenClones ) {
 		
-			editor.scene.traverse( function( child ) {
+			/*editor.scene.traverse( function( child ) {
 				
 				if ( child._physijs ) {
 				
-					if ( child.sounds ) {
+					if ( child._panner ) {
 					
 						if ( child.sounds.constant != undefined ) editor.soundCollection.stop( child.sounds.constant, true );
 						if ( child.sounds.collision != undefined ) editor.soundCollection.stop( child.sounds.collision, true );
 					
 					}
 					//editor.play.effects.removeGlow( child );
-					editor.scene.remove( child );
 					
 				}
 				
-			});
+			});*/
+			
+			editor.soundCollection.stopAll();
+			
+			var children = editor.scene.children.slice(0);
+			for (var x = 0; x < children.length; x++) {
+				if ( children[ x ]._physijs ) {
+					editor.scene.remove( children[ x ] );
+				}
+			}
 			
 			this.sceneChildrenClones = undefined;
 			
@@ -711,8 +726,6 @@ Editor.prototype = {
 			
 			this.sceneChildrenSaves = undefined;
 		}
-		
-		editor.play.stop();	
 	},
 
 }

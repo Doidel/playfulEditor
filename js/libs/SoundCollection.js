@@ -63,7 +63,7 @@ SoundCollection.prototype = {
 			delete this._soundCollection.soundUrl[index];
 			delete this._soundCollection.panner[index];
 			delete this._soundCollection.buffer[index];
-			delete this._soundCollection.source[index];
+			//delete this._soundCollection.source[index];
 		}
 	},
 	
@@ -84,13 +84,6 @@ SoundCollection.prototype = {
 					source.loop	= true;
 					source.connect(this._lineOut.destination);
 					if (endedCallback) source.onended = endedCallback;
-					
-					//stop the playback after 5 loops
-					/*setTimeout(function() {
-						if (this.playbackState == 1 || this.playbackState == 2) {
-							this.stop();
-						}
-					}.bind(source), source.buffer.duration * 1000 * 5);*/
 					
 					source.start(0, offset|0);
 					source.playbackState = 1;
@@ -143,8 +136,9 @@ SoundCollection.prototype = {
 				source.buffer = buffer;
 				source.loop	= loop === false ? false : true;
 				source.connect(panner);
+				source._connectedPanner = panner;
 				
-				this._soundCollection.source[index] = source;
+				this._soundCollection.source.push( source );
 				source.start(0);
 				
 			}
@@ -206,6 +200,19 @@ SoundCollection.prototype = {
 		return false;
 	},
 	
+	stopAll: function(panner) {
+		for (var x = 0, l = this._soundCollection.source.length; x < l ; x++) {
+			var source = this._soundCollection.source[ x ];
+			if (source != undefined && ( !panner || source._connectedPanner === panner)) {
+				if (source.playbackState != 0) {
+					console.log('stop sound');
+					source.stop();
+				}
+				this._soundCollection.source[ x ] = undefined;
+			}
+		}
+	},
+	
 	_getSoundIndex: function(sound) {
 		var soundIndex = -1;
 		//figure out index
@@ -222,9 +229,6 @@ SoundCollection.prototype = {
 			} else if (sound instanceof AudioBufferSourceNode) {
 				soundIndex = this._soundCollection.source.indexOf(sound);
 			}
-		}
-		if (soundIndex == -1) {
-			//console.log('-1!', sound);
 		}
 		return soundIndex
 	},

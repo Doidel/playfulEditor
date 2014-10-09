@@ -598,8 +598,7 @@ Sidebar.Material = function ( editor ) {
 			'side': materialSideRow,
 			'opacity': materialOpacityRow,
 			'transparent': materialTransparentRow,
-			'wireframe': materialWireframeRow,
-			'runtimeMaterials': runtimeMaterialRow
+			'wireframe': materialWireframeRow
 		};
 
 		var material = editor.selected.material;

@@ -1109,6 +1109,7 @@ UI.EventList = function (  ) {
 		<option>...</option>\
 		<option>Toss</option>\
 		<option>Play sound</option>\
+		<option>Stop sounds</option>\
 		<option>Change Static</option>\
 	</select>\
 	<button style="display: none;">+</button>\
@@ -1253,7 +1254,9 @@ UI.EventList.prototype.actionProperties = {
 			staticSelect.value = dataObject.mode;
 
 		}
-	}
+	},
+	"Stop sounds": { }
+	
 };
 
 UI.EventList.prototype.setProperties = function ( trigger, action, propertiesElement, eventNode ) {
