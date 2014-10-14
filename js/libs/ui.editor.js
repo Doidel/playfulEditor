@@ -64,12 +64,12 @@ UI.ButtonHelper = {
 			var button = $('<a/>').addClass('button '+styleclass);
 			button.on( 'click', function(e)
 			{
+				callback(e);
 				if(toggle)
 				{
 					$(container.dom).find(".active").removeClass("active");
 					$(this).addClass("active");
 				}
-				callback(e);
 			});
 				
 			button.appendTo( container.dom );

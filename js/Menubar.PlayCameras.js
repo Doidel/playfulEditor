@@ -1,4 +1,4 @@
-Menubar.Play.Cameras = function ( editor ) {
+Menubar.PlayCameras = function ( editor ) {
 
 	var cameraModes = [
 		{

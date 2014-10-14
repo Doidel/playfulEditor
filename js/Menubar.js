@@ -7,8 +7,7 @@ var Menubar = function ( editor ) {
 	container.add( new Menubar.Add( editor ) );
 	//container.add( new Menubar.View( editor ) );
 	container.add( new Menubar.Help( editor ) );
-	container.add( new Menubar.Play( editor ) );
-	container.add( new Menubar.Play.Cameras( editor ) );
+	container.add( new Menubar.PlayCameras( editor ) );
 
 	return container;
 
