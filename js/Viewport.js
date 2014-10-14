@@ -356,7 +356,7 @@ var Viewport = function ( editor ) {
 
 	// signals
 
-	signals.themeChanged.add( function ( value ) {
+	/*signals.themeChanged.add( function ( value ) {
 
 		switch ( value ) {
 
@@ -378,7 +378,7 @@ var Viewport = function ( editor ) {
 
 		render();
 
-	} );
+	} );*/
 	
 	signals.skyboxChanged.add( function ( type, customTextures ) {
 	

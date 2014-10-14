@@ -66,6 +66,7 @@ var Editor = function () {
 	
 	this.soundCollection;
 	
+	this.theme = new Editor.Theme( this );
 	this.play = new Play( this );
 	
 	this.omittedObjects = [ "Skybox" ]; // objects which don't appear in the scenegraph
@@ -74,9 +75,10 @@ var Editor = function () {
 
 Editor.prototype = {
 
+	// set the editor's theme
 	setTheme: function ( value ) {
 
-		document.getElementById( 'theme' ).href = value;
+		//document.getElementById( 'theme' ).href = value;
 
 		this.signals.themeChanged.dispatch( value );
 
@@ -130,8 +132,12 @@ Editor.prototype = {
 			if ( child.material !== undefined ) scope.addMaterial( child.material );
 
 			scope.addHelper( child );
+			
+			if ( object._physijs ) editor.theme.currentTheme.decorate( object );
 
 		} );
+		
+		if ( object._physijs ) editor.theme.currentTheme.decorate( object );
 		
 		/*if ( object.geometry != undefined ) {
 			object.castShadow = true;
@@ -587,7 +593,6 @@ Editor.prototype = {
 				clone.isStatic = child.isStatic;
 				clone._originalMass = clone.mass;
 				if ( clone.isStatic == true ) clone.mass = 0;
-				if ( clone.name == 'p1' ) console.log( clone.name, clone.mass );
 				//clone.mass = clone.mass;
 				//if ( clone.material._physijs.massmodifier != undefined ) clone.mass *= clone.material._physijs.massmodifier;
 				
@@ -650,7 +655,6 @@ Editor.prototype = {
 			//this.sceneChildrenClones.remove( child );
 			
 			this.scene.add( child );
-			if ( child.mass > 0 ) console.log( 'unfrozen object1:', child.name );
 			child.material.needsUpdate = true;
 			
 			if ( child.sounds ) {
@@ -662,14 +666,6 @@ Editor.prototype = {
 			}
 		
 		}
-	console.log('scene now', this.scene.children);
-	
-	//unfrozen objects
-	editor.scene.traverse( function( object ) {
-		if ( object._physijs ) {
-			if ( object._physijs.mass > 0 ) console.log( 'unfrozen object2:', object.name );
-		}
-	} );
 
 	//console.log('mass', editor.scene.children[5].mass);
 	//console.log('massC', this.sceneChildrenClones.children[5].mass);
@@ -686,22 +682,6 @@ Editor.prototype = {
 		editor.play.stop();
 		
 		if ( this.sceneChildrenClones ) {
-		
-			/*editor.scene.traverse( function( child ) {
-				
-				if ( child._physijs ) {
-				
-					if ( child._panner ) {
-					
-						if ( child.sounds.constant != undefined ) editor.soundCollection.stop( child.sounds.constant, true );
-						if ( child.sounds.collision != undefined ) editor.soundCollection.stop( child.sounds.collision, true );
-					
-					}
-					//editor.play.effects.removeGlow( child );
-					
-				}
-				
-			});*/
 			
 			editor.soundCollection.stopAll();
 			
