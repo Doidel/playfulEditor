@@ -38,45 +38,45 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-icon-add:before {
+.icon-add:before {
   content: "a";
 }
-.icon-icon-zoom:before {
+.icon-zoom:before {
   content: "b";
 }
-.icon-icon-del-small:before {
+.icon-del-small:before {
   content: "c";
 }
-.icon-icon-closed-small:before {
+.icon-closed-small:before {
   content: "d";
 }
-.icon-icon-dupli-small:before {
+.icon-dupli-small:before {
   content: "e";
 }
-.icon-icon-edit-small:before {
+.icon-edit-small:before {
   content: "f";
 }
-.icon-icon-move:before {
+.icon-move:before {
   content: "g";
 }
-.icon-icon-open-small:before {
+.icon-open-small:before {
   content: "h";
 }
-.icon-icon-pan:before {
+.icon-pan:before {
   content: "i";
 }
-.icon-icon-play:before {
+.icon-play:before {
   content: "j";
 }
-.icon-icon-play-small:before {
+.icon-play-small:before {
   content: "k";
 }
-.icon-icon-rotate:before {
+.icon-rotate:before {
   content: "l";
 }
-.icon-icon-sound:before {
+.icon-sound:before {
   content: "m";
 }
-.icon-icon-scale:before {
+.icon-scale:before {
   content: "n";
 }

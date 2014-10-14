@@ -1,0 +1,52 @@
+
+#tools {
+	position: fixed;
+	top: 0; left: 0; right: 0; bottom: 0;
+	z-index: 99;
+	pointer-events: none;
+	padding: 3em 1em 1em 1em;
+}
+
+.buttongroup {
+	display: inline-block;
+	font-size: 4.5em;
+	line-height: 1em;
+	pointer-events: auto;
+	background-color: #e6e6e6;
+	border-radius: 0.2em;
+	border: 1px solid #ccc;
+}
+
+.buttongroup .button{
+	display: inline-block;
+	vertical-align: top;
+	line-height: 0.5em;
+	pointer-events: auto;
+	border-left: 1px solid #d0d0d0;
+	color: #e57245;
+	cursor: pointer;
+}
+.buttongroup .button:first-child {
+	border-left: none;
+	border-radius: 0.2em 0 0 0.2em;
+}
+.buttongroup .button:last-child {
+	border-radius: 0 0.2em 0.2em 0;
+}
+
+
+.buttongroup .button.icon-play{
+	color: #5365d3;
+}
+
+.buttongroup .button:hover{
+	background-color: #fff;
+}
+
+.buttongroup .button.active{
+	color: #fff;
+	background-color: #e57245;
+}
+.buttongroup .button.icon-play.active{
+	background-color: #5365d3;
+}

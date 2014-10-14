@@ -48,3 +48,26 @@ UI.MenubarHelper = {
 	}
 
 };
+
+UI.ButtonHelper = {
+
+	createButtonPanel: function ( name ) {
+
+		var container = new UI.Panel();
+		container.setClass( 'buttongroup' );
+		container.setId( name );
+		
+		container.addButton = function ( styleclass, callbackHandler ) {
+	
+			var button = document.createElement( 'a' );
+			button.className = 'button '+styleclass;
+			button.addEventListener( 'click', callbackHandler );
+				
+			container.dom.appendChild( button );
+		};
+
+		return container;
+
+	}
+
+};

@@ -8,6 +8,9 @@
 	<body>
 		<link href="css/types.css" rel="stylesheet" />
 		<link id="theme" href="css/light.css" rel="stylesheet" />
+		
+		<link href="icons/styles.css" rel="stylesheet" />
+		<link href="css/playful.css" rel="stylesheet" />
 
 		<script src="build/three.js"></script>
 		<script src="js/three/libs/system.min.js"></script>
@@ -98,6 +101,10 @@
 		<script src="js/Sidebar.Physics.js"></script>
 		<script src="js/Sidebar.Events.js"></script>
 		<script src="js/Toolbar.js"></script>
+		<script src="js/Tools.js"></script>
+		<script src="js/Tools.Menu.js"></script>
+		<script src="js/Tools.Modes.js"></script>
+		<script src="js/Tools.View.js"></script>
 		<script src="js/Viewport.js"></script>
 		<script src="js/Play.js"></script>
 		<script src="js/Play.Effects.js"></script>
@@ -617,6 +624,9 @@
 
 			var sidebar = new Sidebar( editor ).setId( 'sidebar' );
 			document.body.appendChild( sidebar.dom );
+			
+			var tools = new Tools( editor ).setId( 'tools' );
+			document.body.appendChild( tools.dom );
 
 			//
 
