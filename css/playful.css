@@ -127,11 +127,9 @@
 	top: 9.5em;
 	bottom: 1.5em;
 	width: 25em;
-	background-color: #e6e6e6;
-	border: 1px solid #ccc;
 	overflow: auto;
 	z-index: 80;
-	border-radius: 1em;
+	border-radius: 0.3em;
 }
 
 	#sidebar input,
@@ -140,16 +138,27 @@
 		/* background: #ccc; */
 	}
 
-	#sidebar .Panel {
-		margin-bottom: 10px;
+	#sidebar>.Panel {
+		margin-bottom: 0.5em;
+		overflow: hidden;
 	}
-
-	#sidebar > .Panel {
-		color: #888;
-		padding: 10px;
+	#sidebar>.Panel h2 {
+		font-size: 1em; letter-spacing: 0.1em;
+		text-align: right;
+		color: #e57245;
+		text-transform: uppercase;
+	}
+	#sidebar>.Panel>.Panel {
+		background-color: #e6e6e6;
+		border-radius: 1em;
+		overflow: hidden;
+	}
+	
+	#sidebar>.Panel>.Panel>.Panel {
+		padding: 1em;
 		border-top: 1px solid #ccc;
 	}
-	#sidebar > .Panel:first-child {
+	#sidebar>.Panel>.Panel>.Panel:first-child {
 		border-top: none;
 	}
 

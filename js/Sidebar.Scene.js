@@ -4,8 +4,7 @@ Sidebar.Scene = function ( editor ) {
 
 	var container = new UI.Panel();
 
-	container.add( new UI.Text( 'SCENE' ) );
-	container.add( new UI.Break(), new UI.Break() );
+	$("<h2/>").html("Scene").appendTo(container.dom);
 
 	var outliner = new UI.FancySelect().setId( 'outliner' );
 	outliner.onChange( function () {
@@ -14,8 +13,6 @@ Sidebar.Scene = function ( editor ) {
 
 	} );
 	container.add( outliner );
-	container.add( new UI.Break() );
-
 	// default color
 
 	var defaultColorRow = new UI.Panel();
