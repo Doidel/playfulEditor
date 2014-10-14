@@ -1,10 +1,20 @@
 
+#viewport {
+	position: absolute;
+	top: 32px;
+	left: 0px;
+	right: 330px;
+	bottom: 0;
+	z-index: 1;
+}
+
+
+/* Tools */
 #tools {
 	position: fixed;
 	top: 0; left: 0; right: 0; bottom: 0;
-	z-index: 99;
+	z-index: 90;
 	pointer-events: none;
-	padding: 3em 1em 1em 1em;
 }
 
 .buttongroup {
@@ -15,6 +25,16 @@
 	background-color: #e6e6e6;
 	border-radius: 0.2em;
 	border: 1px solid #ccc;
+	position: absolute; top: 0.8em; left: 0.3em;
+}
+
+#view.buttongroup {
+	left: auto;
+	right: 0.3em;
+}
+#menu.buttongroup {
+	top: auto;
+	bottom: 0.3em;
 }
 
 .buttongroup .button{
@@ -50,3 +70,51 @@
 .buttongroup .button.icon-play.active{
 	background-color: #5365d3;
 }
+
+/* Menubar */
+#menubar {
+	position: absolute;
+	width: 100%;
+	height: 32px;
+	background: #eee;
+	padding: 0px;
+	margin: 0px;
+	z-index: 100;
+}
+
+	#menubar .menu {
+		float: left;
+		width: 50px;
+		cursor: pointer;
+	}
+
+	#menubar .Panel {
+		color: #888;
+	}
+
+		#menubar .menu .options {
+			display: none;
+			padding: 5px 0px;
+			background: #eee;
+			width: 140px;
+		}
+
+		#menubar .menu:hover .options {
+			display: block;
+		}
+
+			#menubar .menu .options hr {
+				border-color: #ddd;
+			}
+
+			#menubar .menu .options .option {
+				color: #666;
+				background-color: transparent;
+				padding: 5px 10px;
+				margin: 0px !important;
+			}
+
+				#menubar .menu .options .option:hover {
+					color: #fff;
+					background-color: #08f;
+				}

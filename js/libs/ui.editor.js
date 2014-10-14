@@ -51,19 +51,28 @@ UI.MenubarHelper = {
 
 UI.ButtonHelper = {
 
-	createButtonPanel: function ( name ) {
+	createButtonPanel: function ( name, toggle ) {
 
+		var toggle = toggle===true ? true : false;
+		
 		var container = new UI.Panel();
 		container.setClass( 'buttongroup' );
 		container.setId( name );
 		
-		container.addButton = function ( styleclass, callbackHandler ) {
+		container.addButton = function ( styleclass, callback ) {
 	
-			var button = document.createElement( 'a' );
-			button.className = 'button '+styleclass;
-			button.addEventListener( 'click', callbackHandler );
+			var button = $('<a/>').addClass('button '+styleclass);
+			button.on( 'click', function(e)
+			{
+				if(toggle)
+				{
+					$(container.dom).find(".active").removeClass("active");
+					$(this).addClass("active");
+				}
+				callback(e);
+			});
 				
-			container.dom.appendChild( button );
+			button.appendTo( container.dom );
 		};
 
 		return container;

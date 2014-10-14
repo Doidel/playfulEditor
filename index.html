@@ -100,7 +100,6 @@
 		<script src="js/Sidebar.Material.js"></script>
 		<script src="js/Sidebar.Physics.js"></script>
 		<script src="js/Sidebar.Events.js"></script>
-		<script src="js/Toolbar.js"></script>
 		<script src="js/Tools.js"></script>
 		<script src="js/Tools.Menu.js"></script>
 		<script src="js/Tools.Modes.js"></script>
@@ -615,9 +614,6 @@
 
 			var viewport = new Viewport( editor ).setId( 'viewport' );
 			document.body.appendChild( viewport.dom );
-
-			var toolbar = new Toolbar( editor ).setId( 'toolbar' )
-			document.body.appendChild( toolbar.dom );
 
 			var menubar = new Menubar( editor ).setId( 'menubar' );
 			document.body.appendChild( menubar.dom );
