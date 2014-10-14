@@ -3,7 +3,7 @@
 	position: absolute;
 	top: 32px;
 	left: 0px;
-	right: 330px;
+	right: 0;
 	bottom: 0;
 	z-index: 1;
 }
@@ -118,3 +118,45 @@
 					color: #fff;
 					background-color: #08f;
 				}
+				
+/* Sidebar */
+
+#sidebar {
+	position: absolute;
+	right: 1.5em;
+	top: 9.5em;
+	bottom: 1.5em;
+	width: 25em;
+	background-color: #e6e6e6;
+	border: 1px solid #ccc;
+	overflow: auto;
+	z-index: 80;
+	border-radius: 1em;
+}
+
+	#sidebar input,
+	#sidebar textarea,
+	#sidebar select {
+		/* background: #ccc; */
+	}
+
+	#sidebar .Panel {
+		margin-bottom: 10px;
+	}
+
+	#sidebar > .Panel {
+		color: #888;
+		padding: 10px;
+		border-top: 1px solid #ccc;
+	}
+	#sidebar > .Panel:first-child {
+		border-top: none;
+	}
+
+	#sidebar #outliner {
+		width: 100%;
+		height: 140px;
+		color: #444;
+		font-size: 12px;
+	}
+

@@ -709,20 +709,16 @@ var Viewport = function ( editor ) {
 	
 	container.maximize = function() {
 	
-		sidebar.setStyle( 'display', ['none'] );
-		toolbar.setStyle( 'display', ['none'] );
-		viewport.setStyle( 'right', ['0'] );
-		viewport.setStyle( 'bottom', ['0'] );
+		$(sidebar.dom).fadeOut(500);
+		$(tools.menu.dom).fadeOut(500);
 		editor.signals.windowResize.dispatch();
 		
 	};
 	
 	container.windowed = function() {
 	
-		sidebar.setStyle( 'display', [''] );
-		toolbar.setStyle( 'display', [''] );
-		viewport.setStyle( 'right', [''] );
-		viewport.setStyle( 'bottom', [''] );
+		$(sidebar.dom).fadeIn(500);
+		$(tools.menu.dom).fadeIn(500);
 		editor.signals.windowResize.dispatch();
 		
 	};
