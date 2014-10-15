@@ -3,7 +3,7 @@ var Config = function () {
 	var name = 'playful-editor';
 
 	var storage = {
-		theme: 'css/light.css',
+		theme: 'edges',
 		camera: {
 			position: [ 5, 2.5, 5 ],
 			target: [ 0, 0, 0 ] 

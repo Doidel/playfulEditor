@@ -98,7 +98,7 @@ Sidebar.Material = function ( editor ) {
 	edgesRow.add( new UI.Text( 'Edges' ).setWidth( '90px' ) );
 	edgesRow.add( edgesCheckbox );
 
-	//TODO:container.add( edgesRow );
+	container.add( edgesRow );
 
 	// ambient
 
@@ -356,11 +356,21 @@ Sidebar.Material = function ( editor ) {
 
 			}
 			
-			//if ( material.edges !== undefined ) {
+			if ( edgesCheckbox.getValue() == true && object._egh == undefined ) {
 			
-				material.edges = edgesCheckbox.getValue();
+				var egh = new THREE.EdgesHelper( object, 0x00ffff );
+				egh.name = 'Helper';
+				egh.material.linewidth = 50;
+				object.add( egh );
+				
+				object._egh = egh;
 			
-			//}
+			} else if ( edgesCheckbox.getValue() == false && object._egh != undefined ) {
+			
+				object.remove( object._egh );
+				delete object._egh;
+			
+			}
 
 			if ( material.ambient !== undefined ) {
 
@@ -649,11 +659,7 @@ Sidebar.Material = function ( editor ) {
 
 			}
 			
-			if ( material.edges !== undefined ) {
-			
-				edgesCheckbox.setValue( material.edges );
-			
-			}
+			edgesCheckbox.setValue( object._egh !== undefined );
 
 			if ( material.ambient !== undefined ) {
 

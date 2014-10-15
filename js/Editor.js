@@ -69,7 +69,7 @@ var Editor = function () {
 	this.theme = new Editor.Theme( this );
 	this.play = new Play( this );
 	
-	this.omittedObjects = [ "Skybox" ]; // objects which don't appear in the scenegraph
+	this.omittedObjects = [ "Skybox", "Helper" ]; // objects which don't appear in the scenegraph
 
 };
 

@@ -1,6 +1,10 @@
 var Play = function ( editor ) {
 
-	//this.isGrabbing = false;
+	// hook for character customization
+	this.characterCustomization = undefined;
+	this.callbacks = {
+		characterCreated: undefined
+	};
 	
 	this.effects = new Play.Effects();
 	
@@ -67,6 +71,8 @@ Play.prototype.playAction = function ( object, eventIndex, args ) {
 Play.prototype.start = function ( ) {
 
 	this.createPlayerCharacter( 0xcccc44 );
+	
+	if ( this.callbacks.characterCreated) this.callbacks.characterCreated( this._character );
 	
 	//https://github.com/mrdoob/three.js/issues/1239
 	var aspect = viewport.dom.offsetWidth / viewport.dom.offsetHeight;
@@ -464,6 +470,22 @@ Play.prototype.runtimeMaterials = {
 					object._colorDelta.b -= object._origColor.b;
 				}
 				object.material.color.setRGB( object._origColor.r + object._colorDelta.r * scale, object._origColor.g + object._colorDelta.g * scale, object._origColor.b + object._colorDelta.b * scale );
+				break;
+			case 'Edges':
+				var edge = object.getObjectByName("Helper");
+				if ( edge ) {
+					/*object._egh.material.linewidth = Math.round( scale * 5 );
+					object._egh.material.needsUpdate = true;*/
+					var posArr = edge.geometry.attributes.position.array;
+					var prevScale = edge._previousScale ? edge._previousScale : 1;
+					var vScale = 1 + scale / 10;
+					var total = 1 / prevScale * vScale;
+					for (var x = 0, l = posArr.length; x < l; x++) {
+						posArr[ x ] *= total;
+					}
+					edge._previousScale = vScale;
+					edge.geometry.attributes.position.needsUpdate = true;
+				}
 				break;
 		}
 	

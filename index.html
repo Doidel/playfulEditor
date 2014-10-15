@@ -626,8 +626,6 @@
 
 			//
 
-			editor.setTheme( editor.config.getKey( 'theme' ) );
-
 			editor.storage.init( function () {
 				
 				editor.storage.get( function ( state ) {
@@ -710,6 +708,9 @@
 
 					}
 
+					// after load select theme, as it may alter the (default/loaded) scene and objects
+					editor.setTheme( editor.config.getKey( 'theme' ) );
+
 				} );
 
 				//
@@ -753,7 +754,7 @@
 				signals.sceneGraphChanged.add( saveState );
 
 			} );
-
+			
 			//
 
 			document.addEventListener( 'dragover', function ( event ) {

@@ -1460,6 +1460,7 @@ UI.RuntimeMaterial = function (  ) {
 		<option>...</option>\
 		<option>Brightness</option>\
 		<option>Color</option>\
+		<option>Edges</option>\
 	</select>\
 	<button style="display: none;">+</button>\
 	<button class="eventDeleteButton"><img src="images/Delete.png" /></button>\
@@ -1506,7 +1507,6 @@ UI.RuntimeMaterial.prototype.triggerProperties = {
 		getData: function ( container, resultObject, eventNode ) {
 			
 			var easingSelect = container.dom.querySelector('.timeEasing');
-			console.log('easingSelect', easingSelect.value);
 			resultObject.easing = easingSelect.options[easingSelect.selectedIndex].text;
 
 		},
@@ -1551,6 +1551,9 @@ UI.RuntimeMaterial.prototype.actionProperties = {
 			colorSelect.value = dataObject.color;
 
 		}
+	},
+	Edges: {
+	
 	}
 };
 
@@ -1664,6 +1667,7 @@ UI.RuntimeMaterial.prototype.add = function() {
 	this.dom.insertBefore(clone,this.dom.firstChild);
 	
 	var triggerDropdown = clone.querySelector('select');
+	var actionDropdown = clone.getElementsByClassName('eventActionSelector')[0];
 	
 	//first select
 	triggerDropdown.addEventListener('change', function(event) {
@@ -1676,13 +1680,15 @@ UI.RuntimeMaterial.prototype.add = function() {
 			actionSelect.style.display = 'none';
 		} else {
 			actionSelect.style.display = '';
+			
+			this.setProperties( triggerDropdown.value, actionDropdown.value, propertiesElement, clone );
 		}
 		
 	}.bind(this), false);
 	
 	
 	//second select
-	clone.getElementsByClassName('eventActionSelector')[0].addEventListener('change', function(event) {
+	actionDropdown.addEventListener('change', function(event) {
 		var actionSelect = event.target;
 		
 		if (actionSelect.selectedIndex == 0) {
