@@ -6,6 +6,8 @@ var Play = function ( editor ) {
 		characterCreated: undefined
 	};
 	
+	this.characterLineDrawDistanceTreshold = 3;
+	
 	this.effects = new Play.Effects();
 	
 	this.gestureDisplay = document.createElement( 'img' );
@@ -94,6 +96,10 @@ Play.prototype.start = function ( ) {
 	
 	this._playTimeStart = (new Date()).getTime();
 	
+	this._character.add( this._lines[0] );
+	this._character.add( this._lines[1] );
+	this._character.add( this._lines[2] );
+	
 };
 
 Play.prototype.stop = function ( ) {
@@ -127,6 +133,8 @@ Play.prototype.createPlayerCharacter = function ( color ) {
 	
 	var light = new THREE.PointLight( color, 2, 4 );
 	mesh.add( light );
+	
+	mesh.castShadow = true;
 	
 	mesh.position.set(0, -0.5, -10);
 	mesh._physijs.collision_flags = 4;
@@ -197,10 +205,10 @@ Play.prototype.startLeap = function ( ) {
 				// Approximate ranges: x = -210 to 210 to , y = 0 to 400, z = -230 to 230
 				
 				
-				var zModifier = -400;
+				/*var zModifier = -400;
 				
 				var z = hand.palmPosition[2] + zModifier;
-				z *= 1 + (Math.abs(hand.palmPosition[2] - 230) / 100); // increase z's range somewhat exponentially to allow more movement
+				/*z *= 1 + (Math.abs(hand.palmPosition[2] - 230) / 100); // increase z's range somewhat exponentially to allow more movement
 				
 				// scale y according to the character's z position. 320 and 4 are random tweaks.
 				var y = editor.play._heightMultiplier * z * ((hand.palmPosition[1] - 220) / 400) * 4;
@@ -218,7 +226,21 @@ Play.prototype.startLeap = function ( ) {
 				newpos.applyMatrix4( editor.play._camera.matrixWorld );
 				character.position.multiplyScalar( 0.6 ).add( newpos.multiplyScalar( 0.4 ) ); //linear interpolation
 				//character.position = newpos;
-				character.position.y = Math.max( character.position.y, 0.07 );
+				character.position.y = Math.max( character.position.y, 0.07 );*/
+				
+				
+				var character = editor.play._character;
+				if ( !character ) return;
+				
+				var modifier = 0.05;
+				
+				var zModifier = -400;
+				
+				var z = hand.palmPosition[2];
+				var y = Math.max( hand.palmPosition[1] - 60, 0.07 ) / 3.4;
+				var x = hand.palmPosition[0];
+				var newpos = new THREE.Vector3( x * modifier, y * modifier, z * modifier );
+				character.position.multiplyScalar( 0.6 ).add( newpos.multiplyScalar( 0.4 ) ); //linear interpolation
 				
 				
 				// which gesture is it?
@@ -288,6 +310,15 @@ Play.prototype.startLeap = function ( ) {
 				
 			}
 			
+			editor._pointerLockControls.enabled = false;
+			//adjust position/rotation to fixed camera pos
+			var yawObject = editor._pointerLockControls.getObject();
+			yawObject.position.set( 0, 4.3, 8.5 );
+			var rot = new THREE.Euler( -0.25, 0, 0 );
+			rot.reorder( "YXZ" );
+			yawObject.rotation.y = rot.y;
+			yawObject.children[0].rotation.x = rot.x;
+			
 		})
 		.on('handLost', function(hand) {
 
@@ -310,6 +341,10 @@ Play.prototype.startLeap = function ( ) {
 				editor.play._character.mass = 0.01;
 				
 			}
+			
+			// reenable mouse and keyboard movement if the blocker isn't there
+			if (editor._pointerLockControls.blocker.dom.style.display == 'none') editor._pointerLockControls.enabled = true;
+			
 		});
 		
 	}
@@ -344,6 +379,33 @@ Play.prototype.preloadSounds = function ( object ) {
 
 };
 
+var lineMat = new THREE.LineDashedMaterial({
+	color: 0x00aaff,
+	dashSize: 0.6,
+	gapSize: 0.3
+});
+var lineGeom = new THREE.Geometry();
+lineGeom.vertices.push(new THREE.Vector3(0, 0, 0));
+lineGeom.vertices.push(new THREE.Vector3(0, 10, 0));
+
+Play.prototype._lines = (function() {
+	var lines = [
+		new THREE.Line(lineGeom, lineMat, THREE.LineStrip),
+		new THREE.Line(lineGeom.clone(), lineMat, THREE.LineStrip),
+		new THREE.Line(lineGeom.clone(), lineMat, THREE.LineStrip),
+		new THREE.Line(lineGeom.clone(), lineMat, THREE.LineStrip),
+		new THREE.Line(lineGeom.clone(), lineMat, THREE.LineStrip),
+		new THREE.Line(lineGeom.clone(), lineMat, THREE.LineStrip)
+	];
+	lines[0].visible = false;
+	lines[1].visible = false;
+	lines[2].visible = false;
+	lines[3].visible = false;
+	lines[4].visible = false;
+	lines[5].visible = false;
+	return lines;
+})();
+
 Play.prototype._playLoop = function ( delta ) {
 
 	this._delta = delta;
@@ -366,21 +428,31 @@ Play.prototype._playLoop = function ( delta ) {
 	this._previousTouches = touches.slice(0);
 	
 	
-	//console.log('touches', touches.length);
+	//let the character glow
+	var scale = touches.length > 0 ? 1.5 : 1;
+	this._character.scale.set( scale, scale, scale );
 	
-	// loop through all touched objects and assign touch events
-	var obj;
-	for (var x = 0; x < touches.length; x++) {
-		
-		obj = editor.scene._objects[ touches[ x ] ];
-		if ( obj[ this._currentGesture ] !== undefined ) {
-			obj[ this._currentGesture ]();
+	// which objects did we already send events to?
+	var eventedObjects = [];
+	
+	function eventToObject( obj, gesture ) {
+		if ( obj[ gesture ] !== undefined ) {
+			obj[ gesture ]();
+			eventedObjects.push( obj );
 			
 			var previousGrabIndex = touchesGrabCheck.indexOf( touches[ x ] );
 			if ( previousGrabIndex >= 0 ) {
 				touchesGrabCheck[ previousGrabIndex ] = -1;
 			}
 		}
+	}
+	
+	// loop through all touched objects and assign touch events
+	var obj;
+	for (var x = 0; x < touches.length; x++) {
+		
+		obj = editor.scene._objects[ touches[ x ] ];
+		eventToObject( obj, this._currentGesture );
 	
 	}
 	
@@ -412,6 +484,48 @@ Play.prototype._playLoop = function ( delta ) {
 	}
 	
 	
+	var lineCount = 0;
+	var dist;
+	
+	// draw the connection line to surrounding objects
+	editor.scene.traverse( function( el ) {
+	
+		if ( el._physijs && el.events && el.events.length > 0 ) {
+			
+			if ( ! el.geometry.boundingSphere ) el.geometry.computeBoundingSphere();
+			editor.play._character.localToWorld( editor.play._character.position.clone() )
+			
+			dist = el.localToWorld( el.position.clone() ).sub( editor.play._character.localToWorld( editor.play._character.position.clone() ) );
+			
+			console.log('dist', dist.length());
+			
+			//are we within the boundingsphere's radius + distance treshold?
+			if ( dist.length() - el.geometry.boundingSphere.radius <= editor.play.characterLineDrawDistanceTreshold ) {
+				
+				// TODO: are we really near the object, or just near the bounding sphere? (think huge plate)
+				
+				// draw line
+				editor.play._lines[ lineCount ].geometry.vertices[1] = dist.multiplyScalar(0.5);
+				editor.play._lines[ lineCount ].geometry.verticesNeedUpdate = true;
+				editor.play._lines[ lineCount ].visible = true;
+				lineCount++;
+				
+				// fire current event if it hasn't been fired already
+				if ( editor.play._currentGesture != 'stroke' && eventedObjects.indexOf( el ) == -1 ) {
+					eventToObject( el, editor.play._currentGesture );
+				}
+			}
+			
+		}
+	
+	} );
+	
+	// hide the other lines
+	if ( lineCount < this._lines.length - 1 ) {
+		for ( var x = lineCount; x < this._lines.length; x++ ) {
+			this._lines[ x ].visible = false;
+		}
+	}
 
 };
 

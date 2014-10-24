@@ -6,6 +6,14 @@ Menubar.Add = function ( editor ) {
 	function defaultMaterial () {
 		return new THREE.MeshPhongMaterial( { ambient: 0x555555, color: 0x555555, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading }  );
 	}
+	
+	function defaultOptions ( mesh ) {
+	
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		mesh.isStatic = true;
+	
+	}
 
 	// event handlers
 
@@ -57,7 +65,7 @@ Menubar.Add = function ( editor ) {
 		var mesh = new Physijs.BoxMesh( geometry, material );
 		mesh.name = 'Plane ' + ( ++ meshCount );
 		
-		mesh.isStatic = true;
+		defaultOptions( mesh );
 
 		editor.addObject( mesh );
 		editor.select( mesh );
@@ -83,14 +91,14 @@ Menubar.Add = function ( editor ) {
 		var mesh = new Physijs.BoxMesh( geometry, material );
 		mesh.name = 'Box ' + ( ++ meshCount );
 		
-		mesh.isStatic = true;
+		defaultOptions( mesh );
 
 		editor.addObject( mesh );
 		editor.select( mesh );
 
 	}
 	
-	function onCircleOptionClick () {
+	/*function onCircleOptionClick () {
 
 		var radius = 0.5;
 		var segments = 8;
@@ -102,7 +110,7 @@ Menubar.Add = function ( editor ) {
 		editor.addObject( mesh );
 		editor.select( mesh );
 
-	}
+	}*/
 
 	function onCylinderOptionClick () {
 
@@ -122,7 +130,7 @@ Menubar.Add = function ( editor ) {
 		var mesh = new Physijs.CylinderMesh( geometry, material );
 		mesh.name = 'Cylinder ' + ( ++ meshCount );
 		
-		mesh.isStatic = true;
+		defaultOptions( mesh );
 
 		editor.addObject( mesh );
 		editor.select( mesh );
@@ -153,14 +161,14 @@ Menubar.Add = function ( editor ) {
 		mesh.name = 'Sphere ' + ( ++ meshCount );
 		//mesh.dynamic = true;
 		
-		mesh.isStatic = true;
+		defaultOptions( mesh );
 
 		editor.addObject( mesh );
 		editor.select( mesh );
 
 	}
 
-	function onIcosahedronOptionClick () {
+	/*function onIcosahedronOptionClick () {
 
 		var radius = 0.5;
 		var detail = 2;
@@ -218,7 +226,7 @@ Menubar.Add = function ( editor ) {
 		editor.addObject( sprite );
 		editor.select( sprite );
 
-	}
+	}*/
 
 	function onPointLightOptionClick () {
 

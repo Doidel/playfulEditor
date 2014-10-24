@@ -83,16 +83,19 @@ var Viewport = function ( editor ) {
 	
 	
 	
+	
 	// "play" pointerlock controls
 	
 	var playCamera = new THREE.PerspectiveCamera( 50, 1, 0.01, 500 );
 	playCamera.name = 'playCamera';
+	
 	editor.play.setLeapCamera( playCamera );
 	
 	var pointerLockControls = new THREE.PointerLockControls( playCamera );
 	var yawObject = pointerLockControls.getObject();
 	
 	editor._pointerLockControls = pointerLockControls;
+	editor._pointerLockControls.blocker = blocker;
 	
 	var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 	
@@ -104,7 +107,7 @@ var Viewport = function ( editor ) {
 
 			if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
 
-				pointerLockControls.enabled = true;
+				if ( !editor.play._leapStreaming ) pointerLockControls.enabled = true;
 
 				blocker.dom.style.display = 'none';
 
@@ -179,6 +182,69 @@ var Viewport = function ( editor ) {
 
 	}
 	
+	//leapbox with
+	function addLeapBox() {
+		var leapBox = new THREE.Object3D();
+		leapBox.name = "LeapBox";
+		/*new THREE.Mesh( new THREE.BoxGeometry( 10, 10, 10, 1, 1, 1 ),
+			new THREE.MeshPhongMaterial( {
+				ambient: 0x555555,
+				color: 0x555555,
+				specular: 0xffffff,
+				shininess: 50,
+				shading: THREE.SmoothShading,
+				opacity: 0.2,
+				transparent: true,
+				side: THREE.BackSide
+			} )
+		);*/
+		var planeMat = Physijs.createMaterial(
+			new THREE.MeshPhongMaterial( {
+				ambient: 0x555555,
+				color: 0x555555,
+				specular: 0xffffff,
+				shininess: 50,
+				shading: THREE.SmoothShading,
+				opacity: 0.2,
+				transparent: true,
+				side: THREE.BackSide
+			}  ),
+			0.5,
+			0.5
+		);
+		//var planeGeom = new THREE.BoxGeometry( 1, 10, 10, 1, 1, 1 );
+		var planeGeom = new THREE.BoxGeometry( 10, 10, 0.1, 1, 1 );
+		leapBoxWalls = [
+			new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
+			new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
+			new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
+			new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
+			new Physijs.BoxMesh( planeGeom, planeMat, 0 )
+		];
+		leapBoxWalls[0].position.x = 5;
+		leapBoxWalls[0].position.y = 5;
+		leapBoxWalls[0].rotation.y = Math.PI / 2;
+		leapBoxWalls[1].position.z = 5;
+		leapBoxWalls[1].position.y = 5;
+		leapBoxWalls[1].rotation.y = 0;
+		leapBoxWalls[2].position.x = -5;
+		leapBoxWalls[2].position.y = 5;
+		leapBoxWalls[2].rotation.y = -Math.PI / 2;
+		leapBoxWalls[3].position.z = -5;
+		leapBoxWalls[3].position.y = 5;
+		leapBoxWalls[3].rotation.y = Math.PI;
+		leapBoxWalls[4].position.y = 10;
+		leapBoxWalls[4].rotation.x = Math.PI / 2;
+		leapBoxWalls[4].rotation.y = Math.PI;
+		editor.scene.add(leapBoxWalls[0]);
+		editor.scene.add(leapBoxWalls[1]);
+		editor.scene.add(leapBoxWalls[2]);
+		editor.scene.add(leapBoxWalls[3]);
+		editor.scene.add(leapBoxWalls[4]);
+	}
+	
+	
+	
 	/*var directionalLights;
 	function assignCameraPositionToLights() {
 		directionalLights = [];
@@ -202,13 +268,22 @@ var Viewport = function ( editor ) {
 		editor.deselect();
 		transformControls.detach();
 		activeCamera = playCamera;
-		yawObject.position.set( camera.position.x, camera.position.y, camera.position.z );
+		/*yawObject.position.set( camera.position.x, camera.position.y, camera.position.z );
 		var rot = camera.rotation.clone();
 		rot.reorder( "YXZ" );
 		yawObject.rotation.y = rot.y;
+		yawObject.children[0].rotation.x = rot.x;*/
+		
+		//fixed camera pos
+		yawObject.position.set( 0, 4.3, 8.5 );
+		var rot = new THREE.Euler( -0.25, 0, 0 );
+		rot.reorder( "YXZ" );
+		yawObject.rotation.y = rot.y;
 		yawObject.children[0].rotation.x = rot.x;
+		
 		scene.add( yawObject );
 		//if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( activeCamera );
+		addLeapBox();//scene.add( leapBox );
 		render();
 		
 	} );
@@ -220,6 +295,7 @@ var Viewport = function ( editor ) {
 		activeCamera = camera;
 		scene.remove( yawObject );
 		//if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( activeCamera );
+		//scene.remove( leapBox );
 		render();
 		
 	} );
@@ -439,7 +515,9 @@ var Viewport = function ( editor ) {
 
 		container.dom.removeChild( renderer.domElement );
 
-		renderer = new THREE[ type ]( { antialias: true } );
+		renderer = new THREE[ type ]( { antialias: false } );
+		renderer.gammaInput = true;
+		renderer.gammaOutput = true;
 		renderer.autoClear = false;
 		renderer.autoUpdateScene = false;
 		renderer.setClearColor( clearColor );

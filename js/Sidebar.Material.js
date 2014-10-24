@@ -358,12 +358,7 @@ Sidebar.Material = function ( editor ) {
 			
 			if ( edgesCheckbox.getValue() == true && object._egh == undefined ) {
 			
-				var egh = new THREE.EdgesHelper( object, 0x00ffff );
-				egh.name = 'Helper';
-				egh.material.linewidth = 50;
-				object.add( egh );
-				
-				object._egh = egh;
+				editor.setEdge( object, !object.events ? 1 : object.events.length );
 			
 			} else if ( edgesCheckbox.getValue() == false && object._egh != undefined ) {
 			

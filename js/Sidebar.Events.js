@@ -25,6 +25,8 @@ Sidebar.Events = function ( editor ) {
 	function update( ) {
 		
 		objectSelected.events = eventList.getValue();
+		
+		if ( objectSelected._egh ) editor.setEdge( objectSelected, !objectSelected.events ? 3 : objectSelected.events.length );
 
 	};
 

@@ -29,12 +29,7 @@ _lS = {
 				object.material.needsUpdate = true;
 			}
 			
-			var egh = new THREE.EdgesHelper( object, 0x00ffff );
-			egh.name = 'Helper';
-			egh.material.linewidth = 50;
-			object.add( egh );
-			
-			object._egh = egh;
+			editor.setEdge( object, !object.events ? 1 : object.events.length );
 		
 		}
 		
@@ -55,6 +50,41 @@ _lS = {
 			}
 			
 		});
+	
+	},
+	
+	prefabsList: 
+	
+	getPrefab: function( name ) {
+	
+		var mesh;
+	
+		switch( name ) {
+			case 'Resurrection Sphere':
+				mesh = new Physijs.SphereMesh(
+					new THREE.SphereGeometry( 0.5, 32, 16 ),
+					Physijs.createMaterial(
+						new THREE.MeshPhongMaterial( { ambient: 0x555555, color: 0x555555, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading }  ),
+						0.5,
+						0.5
+					)
+				);
+				
+				// Enable CCD if the object moves more than 1 meter in one simulation frame
+				mesh.setCcdMotionThreshold(1);
+
+				// Set the radius of the embedded sphere such that it is smaller than the object
+				mesh.setCcdSweptSphereRadius(0.2);
+				
+				mesh.isStatic = true;
+				break;
+		}
+		
+		mesh.name = name;
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		
+		return mesh;
 	
 	}
 }

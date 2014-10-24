@@ -213,6 +213,76 @@ Editor.prototype = {
 
 	},
 
+	setEdge: function ( object, colorsAmount ) {
+		
+		colorsAmount = colorsAmount >= 1 ? colorsAmount : 1;
+	
+		var colorsArr;
+		//var colors = [57, 181, 74, 229, 114, 69, 83, 101, 211];
+		var colors = [57 / 256, 181 / 256, 74 / 256, 229 / 256, 114 / 256, 69 / 256, 83 / 256, 101 / 256, 211 / 256];
+		//var colors = [0,0,1,0,1,0,0.99,0.1,0.1];
+		
+		if ( !object._egh ) {
+		
+			var egh = new THREE.EdgesHelper( object, 0xffffff );
+			egh.name = 'Helper';
+			egh.geometry.computeBoundingSphere();
+			
+			//remove doubles
+
+			/*var verticesMap = {}; // Hashmap for looking up vertice by position coordinates (and making sure they are unique)
+			var unique = [];
+
+			var key;
+			var precisionPoints = 4; // number of decimal points, eg. 4 for epsilon of 0.0001
+			var precision = Math.pow( 10, precisionPoints );
+			var i,il;
+			var vertices = egh.geometry.attributes.position.array;
+
+			for ( i = 0, il = vertices.length; i < il; i += 3 ) {
+
+				key = Math.round( vertices[ i ] * precision ) + '_' + Math.round( vertices[ i + 1 ] * precision ) + '_' + Math.round( vertices[ i + 2 ] * precision );
+
+				if ( verticesMap[ key ] === undefined ) {
+
+					verticesMap[ key ] = i;
+					unique.push( vertices[ i ], vertices[ i + 1 ], vertices[ i + 2 ] );
+
+				}
+
+			};
+
+			// Use unique set of vertices
+
+			egh.geometry.attributes.position.array = new Float32Array( unique );
+			egh.geometry.attributes.position.needsUpdate = true;*/
+			
+			object.add( egh );
+			object._egh = egh;
+		}
+		
+		if ( !object._egh.geometry.attributes.color ) {
+			
+			object._egh.geometry.addAttribute( 'color', new THREE.BufferAttribute( new Float32Array( object._egh.geometry.attributes.position.array.length ), 3 ) );
+			
+		}
+		
+		colorsArr = object._egh.geometry.attributes.color.array;
+		
+		// assign colors
+		for (var x = 0, l = colorsArr.length; x < l; x += 3) {
+			var col = Math.floor( (x / 6) % colorsAmount ) * 3;
+			colorsArr[ x ] = colors[ col ];
+			colorsArr[ x + 1 ] = colors[ col + 1 ];
+			colorsArr[ x + 2 ] = colors[ col + 2 ];
+			//console.log(colors[ col ], colors[ col + 1 ], colors[ col + 2 ]);
+		}
+		
+		object._egh.geometry.attributes.color.needsUpdate = true;
+		object._egh.material.vertexColors = THREE.VertexColors;
+		object._egh.material.needsUpdate = true;
+	
+	},
 	//
 
 	addHelper: function () {
@@ -578,7 +648,7 @@ Editor.prototype = {
 		this.scene.traverse( function( child ) {
 			
 			//replace all physijs objects with clones
-			if ( child._physijs ) {
+			if ( child._physijs && child.parent.name != "LeapBox" ) {
 				
 				var clone = child.clone();
 				

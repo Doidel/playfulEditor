@@ -342,6 +342,13 @@
 					case 'DirectionalLight':
 
 						object = new THREE.DirectionalLight( data.color, data.intensity );
+						object.shadowCameraNear = 0.5;
+						object.shadowCameraFar = 30;
+						object.shadowCameraLeft = -5;
+						object.shadowCameraRight = 5;
+						object.shadowCameraTop = 5;
+						object.shadowCameraBottom = -3;
+						object.castShadow = true;
 
 						break;
 
@@ -354,6 +361,7 @@
 					case 'SpotLight':
 
 						object = new THREE.SpotLight( data.color, data.intensity, data.distance, data.angle, data.exponent );
+						object.castShadow = true;
 
 						break;
 
@@ -401,6 +409,10 @@
 							object.events = data.events;
 							traverseForSound( object.events );
 						}
+						
+						// every object will have shadows so it's not exported/imported
+						object.castShadow = true;
+						object.receiveShadow = true;
 						
 						/*if ( object.material.map ) {
 							console.log('has map');
@@ -650,15 +662,18 @@
 						var light = new THREE.DirectionalLight( color, intensity );
 						light.name = 'DirectionalLight default';
 						light.target.name = 'DirectionalLight default Target';
-						/*light.add( target );*/
-						var shadowSize = 10;
-						light.shadowCameraLeft = -shadowSize;
-						light.shadowCameraRight = shadowSize;
-						light.shadowCameraBottom = -shadowSize;
-						light.shadowCameraTop = shadowSize;
+						light.shadowCameraNear = 0.5;
+						light.shadowCameraFar = 30;
+						light.shadowCameraLeft = -5;
+						light.shadowCameraRight = 5;
+						light.shadowCameraTop = 5;
+						light.shadowCameraBottom = -3;
+						light.castShadow = true;
+						//dl.shadowCameraVisible = true;
+						
+						//editor.scene.traverse( function(el) { if (el._physijs) { el.castShadow = true; el.receiveShadow = true; } });
 
-						light.position.set( 20, 18, 25 );
-						//light.target.position.set( -2000, -1800, -2500 );
+						light.position.set( 2, 9, 2.5 );
 
 						editor.addObject( light );
 						
@@ -691,9 +706,7 @@
 						var mesh = new Physijs.BoxMesh( geometry, material );
 						mesh.name = 'Ground';
 						mesh.position.set(0, -0.1, 0);
-						
-						//mesh.receiveShadow = true;
-						
+						mesh.receiveShadow = true;						
 						mesh.isStatic = true;
 
 						editor.addObject( mesh );
