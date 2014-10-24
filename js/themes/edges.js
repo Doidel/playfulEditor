@@ -53,32 +53,35 @@ _lS = {
 	
 	},
 	
-	prefabsList: 
+	prefabsList: {
+		// name: function to create it
+		'Resurrection Sphere': function ( ) {
+			
+			var mesh = new Physijs.SphereMesh(
+				new THREE.SphereGeometry( 0.5, 32, 16 ),
+				Physijs.createMaterial(
+					new THREE.MeshPhongMaterial( { ambient: 0x555555, color: 0x555555, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading }  ),
+					0.5,
+					0.5
+				)
+			);
+			
+			// Enable CCD if the object moves more than 1 meter in one simulation frame
+			mesh.setCcdMotionThreshold(1);
+
+			// Set the radius of the embedded sphere such that it is smaller than the object
+			mesh.setCcdSweptSphereRadius(0.2);
+			
+			mesh.isStatic = true;
+			
+			return mesh;
+			
+		}
+	},
 	
 	getPrefab: function( name ) {
 	
-		var mesh;
-	
-		switch( name ) {
-			case 'Resurrection Sphere':
-				mesh = new Physijs.SphereMesh(
-					new THREE.SphereGeometry( 0.5, 32, 16 ),
-					Physijs.createMaterial(
-						new THREE.MeshPhongMaterial( { ambient: 0x555555, color: 0x555555, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading }  ),
-						0.5,
-						0.5
-					)
-				);
-				
-				// Enable CCD if the object moves more than 1 meter in one simulation frame
-				mesh.setCcdMotionThreshold(1);
-
-				// Set the radius of the embedded sphere such that it is smaller than the object
-				mesh.setCcdSweptSphereRadius(0.2);
-				
-				mesh.isStatic = true;
-				break;
-		}
+		var mesh = this.prefabsList[ name ]();
 		
 		mesh.name = name;
 		mesh.castShadow = true;
