@@ -169,3 +169,73 @@
 		font-size: 12px;
 	}
 
+	#gallery{
+	    position: relative;
+	    top: 50px;
+	    left: 300px;
+	    margin-right: 700px;
+	    bottom: 32px;
+	    z-index: 2;	   
+	    /* border: 1px solid black; */
+	    height: 170px;
+	    
+	    
+	/* overflow: auto; */
+	}
+
+	#cameraPanel{
+	    width:35%;
+	    float: left;
+	    
+	}
+
+	#cameraArrayList{
+	    /* border: 1px solid blue; */
+	    overflow-x:scroll;
+	    overflow-y:hidden;
+	    white-space:nowrap;
+	    height: 140px;
+	    margin-Left:7px;
+	    margin-top:5px;
+	    background: #eee;
+	    border-radius: 10px;
+	}
+
+	#cameraArrayList>.Panel{
+	    margin-top:-5px;
+	    margin-left:5px;
+	    text-align:center;
+	}
+
+	#cameraArrayList>.Panel>.Panel{
+	    float:left;	    
+	}
+
+	#imageList{
+	    /* border: 1px solid blue; */
+	    overflow-x:scroll;
+	    overflow-y:hidden;
+	    white-space:nowrap;
+	    height: 140px;
+	    margin-Left:7px;
+	    margin-top:5px;
+	    background: #eee;
+	    border-radius: 10px;
+	}
+
+	#imageList>.Panel{
+	    margin-top:-15px;
+	}
+
+	#imageList>.Panel>img{
+	    float:left;	
+	    width: 310px; 
+	    height: 140px;
+	}
+
+
+
+	#imagePanel{
+	    width:65%;
+	    float:left;
+	}

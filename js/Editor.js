@@ -10,6 +10,11 @@ var Editor = function () {
 		play: new SIGNALS.Signal(), //plays physics + sounds
 		stop: new SIGNALS.Signal(),
 
+
+	    	    //scene gallery
+	    renderingRequested: new SIGNALS.Signal(),		
+	    newImageAvailable: new SIGNALS.Signal(),
+
 		// notifications
 
 		themeChanged: new SIGNALS.Signal(),
@@ -40,6 +45,8 @@ var Editor = function () {
 		fogParametersChanged: new SIGNALS.Signal(),
 		skyboxChanged: new SIGNALS.Signal(),
 		windowResize: new SIGNALS.Signal()
+
+
 
 	};
 	
