@@ -13,6 +13,7 @@ Sidebar.Properties = function ( editor ) {
 	properties.add( new Sidebar.Physics( editor ) );
 	properties.add( new Sidebar.Material( editor ) );
 	properties.add( new Sidebar.Animation( editor ) );
+	properties.add( new Sidebar.SceneProperties( editor ) );
 
 	container.add(properties);
 	return container;

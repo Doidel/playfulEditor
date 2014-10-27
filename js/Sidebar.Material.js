@@ -583,6 +583,28 @@ Sidebar.Material = function ( editor ) {
 
 	};
 
+	// 1 = visible in easy mode, 2 = visible in advanced mode, not part of this list = visible in both modes
+	var propertyVisibilities = {
+		'ambient': 2,
+		'emissive': 2,
+		'specular': 2,
+		'shininess': 2,
+		'vertexColors': 2,
+		'map': 2,
+		'lightMap': 2,
+		'bumpMap': 2,
+		'normalMap': 2,
+		'specularMap': 2,
+		'envMap': 2,
+		'blending': 2,
+		'side': 2,
+		'opacity': 2,
+		'transparent': 2,
+		'wireframe': 2,
+		'runtimeMaterials': 2,
+		'edges': 2
+	};
+	
 	function updateRows() {
 
 		var properties = {
@@ -603,14 +625,19 @@ Sidebar.Material = function ( editor ) {
 			'side': materialSideRow,
 			'opacity': materialOpacityRow,
 			'transparent': materialTransparentRow,
-			'wireframe': materialWireframeRow
+			'wireframe': materialWireframeRow,
+			'runtimeMaterials': runtimeMaterialRow,
+			'edges': edgesRow
 		};
 
 		var material = editor.selected.material;
 
 		for ( var property in properties ) {
-
-			properties[ property ].setDisplay( material[ property ] !== undefined ? '' : 'none' );
+		
+			var visible = material[ property ] !== undefined ?
+				( workMode == 'advanced' && propertyVisibilities[ property ] == 2) || ( workMode == 'easy' && propertyVisibilities[ property ] == 1 ) || propertyVisibilities[ property ] == undefined
+				: false;
+			properties[ property ].setDisplay( visible ? '' : 'none' );
 
 		}
 
