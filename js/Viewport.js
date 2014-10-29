@@ -4,6 +4,7 @@ var Viewport = function ( editor ) {
 
 	var container = new UI.Panel();
 	container.setPosition( 'absolute' );
+	container.dom.setAttribute("tabindex", 0); // makes the container focusable and receive keyboard events
 
 	var info = new UI.Text();
 	info.setPosition( 'absolute' );
@@ -42,7 +43,7 @@ var Viewport = function ( editor ) {
 	camera.lookAt( new THREE.Vector3().fromArray( editor.config.getKey( 'camera' ).target ) );
 	editor._cam = camera;
 
-	var activeCamera = camera;
+	editor._activeCamera = camera;
 
 	//
 
@@ -79,14 +80,22 @@ var Viewport = function ( editor ) {
 
 	} );
 	sceneHelpers.add( transformControls );
-	editor._transformControls = transformControls;
+	editor._activeControls = transformControls;
 	
 	
+	
+	var playCamera = new THREE.PerspectiveCamera( 50, 1, 0.01, 500 );
+	playCamera.name = 'playCamera';
+	editor.scene.add( playCamera );
+	
+	editor.play.setLeapCamera( playCamera );
+	console.log(container);
+	var orbitControls = new THREE.OrbitControls( playCamera, container.dom );
 	
 	
 	// "play" pointerlock controls
 	
-	var playCamera = new THREE.PerspectiveCamera( 50, 1, 0.01, 500 );
+	/*var playCamera = new THREE.PerspectiveCamera( 50, 1, 0.01, 500 );
 	playCamera.name = 'playCamera';
 	
 	editor.play.setLeapCamera( playCamera );
@@ -180,7 +189,7 @@ var Viewport = function ( editor ) {
 
 		alert('Your browser doesn\'t seem to support Pointer Lock API. The "Play" mode requires a modern browser.');
 
-	}
+	}*/
 	
 	//leapbox with
 	function addLeapBox() {
@@ -250,7 +259,7 @@ var Viewport = function ( editor ) {
 		directionalLights = [];
 		editor.scene.traverse( function( obj ) {
 			if (obj instanceof THREE.DirectionalLight) {
-				obj.position = (activeCamera instanceof THREE.PerspectiveCamera ? activeCamera : yawObject).position;
+				obj.position = (editor._activeCamera instanceof THREE.PerspectiveCamera ? editor._activeCamera : yawObject).position;
 				directionalLights.push( obj );
 			}
 		});
@@ -264,10 +273,10 @@ var Viewport = function ( editor ) {
 	
 	signals.play.add( function() {
 		
-		blocker.setDisplay( 'block' );
+		blocker.setDisplay( 'none' );
 		editor.deselect();
 		transformControls.detach();
-		activeCamera = playCamera;
+		editor._activeCamera = playCamera;
 		/*yawObject.position.set( camera.position.x, camera.position.y, camera.position.z );
 		var rot = camera.rotation.clone();
 		rot.reorder( "YXZ" );
@@ -275,14 +284,23 @@ var Viewport = function ( editor ) {
 		yawObject.children[0].rotation.x = rot.x;*/
 		
 		//fixed camera pos
-		yawObject.position.set( 0, 4.3, 8.5 );
+		/*yawObject.position.set( 0, 4.3, 8.5 );
 		var rot = new THREE.Euler( -0.25, 0, 0 );
 		rot.reorder( "YXZ" );
 		yawObject.rotation.y = rot.y;
 		yawObject.children[0].rotation.x = rot.x;
 		
-		scene.add( yawObject );
-		//if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( activeCamera );
+		scene.add( yawObject );*/
+		
+		
+		
+		//scene.add( playCamera );
+		
+		editor._activeControls = orbitControls;
+		
+		editor._activeControls.setTranslate( new THREE.Vector3( 0, 4.3, 8.5 ) );
+	
+		//if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( editor._activeCamera );
 		addLeapBox();//scene.add( leapBox );
 		render();
 		
@@ -292,9 +310,11 @@ var Viewport = function ( editor ) {
 		
 		blocker.setDisplay( 'none' );
 		pointerLockControls.enabled = false;
-		activeCamera = camera;
-		scene.remove( yawObject );
-		//if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( activeCamera );
+		editor._activeCamera = camera;
+		//scene.remove( yawObject );
+		editor._activeControls = transformControls;
+		//scene.remove( playCamera );
+		
 		//scene.remove( leapBox );
 		render();
 		
@@ -475,7 +495,7 @@ var Viewport = function ( editor ) {
 				//create the skybox
 				editor.scene.skybox = new Skybox();
 				editor.scene.add( editor.scene.skybox.mesh );
-				editor.scene.skybox.alignWithCamera( activeCamera );
+				editor.scene.skybox.alignWithCamera( editor._activeCamera );
 				
 			}
 			
@@ -984,7 +1004,7 @@ var Viewport = function ( editor ) {
 			
 			if ( document.getElementById('blocker').style.display == 'none') scene.simulate( delta / 1000 ); // run physics
 			
-			pointerLockControls.update( delta );
+			//editor._activeControls.update( delta );
 			
 			editor.play._playLoop( delta );
 			
@@ -1004,16 +1024,16 @@ var Viewport = function ( editor ) {
 		sceneHelpers.updateMatrixWorld();
 		scene.updateMatrixWorld();
 		
-		if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( activeCamera );
+		if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( editor._activeCamera );
 		
 		// update
 		
 		renderer.clear();
-		renderer.render( scene, activeCamera );
+		renderer.render( scene, editor._activeCamera );
 
 		if ( !container.play && renderer instanceof THREE.RaytracingRenderer === false ) {
 
-			renderer.render( sceneHelpers, activeCamera );
+			renderer.render( sceneHelpers, editor._activeCamera );
 
 		}
 
