@@ -807,7 +807,7 @@ var Viewport = function ( editor ) {
 	
 	container.maximize = function() {
 	
-		$(sidebar.dom).fadeOut(500);
+		$(sidebars.dom).fadeOut(500);
 		$(tools.menu.dom).fadeOut(500);
 		editor.signals.windowResize.dispatch();
 		
@@ -815,7 +815,7 @@ var Viewport = function ( editor ) {
 	
 	container.windowed = function() {
 	
-		$(sidebar.dom).fadeIn(500);
+		$(sidebars.dom).fadeIn(500);
 		$(tools.menu.dom).fadeIn(500);
 		editor.signals.windowResize.dispatch();
 		

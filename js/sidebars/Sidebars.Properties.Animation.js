@@ -1,4 +1,4 @@
-Sidebar.Animation = function ( editor ) {
+Sidebars.Properties.Animation = function ( editor ) {
 
 	var signals = editor.signals;
 

@@ -1,4 +1,4 @@
-Sidebar.Events = function ( editor ) {
+Sidebars.Properties.Events = function ( editor ) {
 
 	var signals = editor.signals;
 	

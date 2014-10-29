@@ -1,4 +1,4 @@
-Sidebar.Scene = function ( editor ) {
+Sidebars.Scene = function ( editor ) {
 
 	var signals = editor.signals;
 

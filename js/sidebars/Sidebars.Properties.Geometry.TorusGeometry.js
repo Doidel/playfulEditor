@@ -1,4 +1,4 @@
-Sidebar.Geometry.TorusGeometry = function ( signals, object ) {
+Sidebars.Properties.Geometry.TorusGeometry = function ( signals, object ) {
 
 	var container = new UI.Panel();
 

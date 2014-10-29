@@ -1,4 +1,4 @@
-Sidebar.Object3D = function ( editor ) {
+Sidebars.Properties.Object3D = function ( editor ) {
 
 	var signals = editor.signals;
 

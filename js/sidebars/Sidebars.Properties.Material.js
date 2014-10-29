@@ -1,4 +1,4 @@
-Sidebar.Material = function ( editor ) {
+Sidebars.Properties.Material = function ( editor ) {
 
 	var signals = editor.signals;
 

@@ -1,4 +1,4 @@
-Sidebar.Physics = function ( editor ) {
+Sidebars.Properties.Physics = function ( editor ) {
 
 	var signals = editor.signals;
 	

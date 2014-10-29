@@ -1,4 +1,4 @@
-Sidebar.Geometry.BoxGeometry = function ( signals, object ) {
+Sidebars.Properties.Geometry.BoxGeometry = function ( signals, object ) {
 
 	var container = new UI.Panel();
 

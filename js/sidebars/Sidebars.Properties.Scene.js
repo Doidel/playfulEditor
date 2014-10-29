@@ -1,4 +1,4 @@
-Sidebar.SceneProperties = function ( editor ) {
+Sidebars.Properties.Scene = function ( editor ) {
 
 	var signals = editor.signals;
 
