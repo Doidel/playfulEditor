@@ -80,3 +80,6 @@
 .icon-scale:before {
   content: "n";
 }
+.icon-file:before {
+  content: "o";
+}
