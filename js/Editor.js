@@ -39,7 +39,9 @@ var Editor = function () {
 		fogColorChanged: new SIGNALS.Signal(),
 		fogParametersChanged: new SIGNALS.Signal(),
 		skyboxChanged: new SIGNALS.Signal(),
-		windowResize: new SIGNALS.Signal()
+		windowResize: new SIGNALS.Signal(),
+		
+		menuButtonClicked: new SIGNALS.Signal()
 
 	};
 	
