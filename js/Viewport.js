@@ -85,7 +85,6 @@ var Viewport = function ( editor ) {
 	
 	var playCamera = new THREE.PerspectiveCamera( 50, 1, 0.01, 500 );
 	playCamera.name = 'playCamera';
-	editor.scene.add( playCamera );
 	
 	editor.play.setLeapCamera( playCamera );
 	console.log(container);
@@ -580,11 +579,13 @@ var Viewport = function ( editor ) {
 		}
 
 		saveTimeout = setTimeout( function () {
-
-			editor.config.setKey( 'camera', {
-				position: camera.position.toArray(),
-				target: controls.center.toArray()
-			} );
+		
+			if ( !viewport.play ) {
+				editor.config.setKey( 'camera', {
+					position: camera.position.toArray(),
+					target: controls.center.toArray()
+				} );
+			}
 
 		}, 1000 );
 

@@ -89,6 +89,7 @@ Play.prototype.start = function ( ) {
 	//viewport.dom.addEventListener('mouseup', this._inputEvents.up);
 	document.body.addEventListener('keydown', this._inputEvents.down);
 	document.body.addEventListener('keyup', this._inputEvents.up);
+	editor._activeControls.domElement.addEventListener('mousemove', this._inputEvents.move, false);
 	
 	this.startLeap();
 	document.getElementById('menubar').appendChild( this.gestureDisplay );
@@ -102,6 +103,15 @@ Play.prototype.start = function ( ) {
 	this._character.add( this._lines[1] );
 	this._character.add( this._lines[2] );
 	
+	
+	//calc the ratio between camera fov scaled to charcter zpos and clientX/Y
+	this._characterPlaneHalfHeight = Math.tan(editor._activeControls.object.fov * Math.PI / 180 /2) * 8;
+	this._characterPlaneHalfWidth = editor._activeControls.object.aspect * this._characterPlaneHalfHeight;
+	this._cameraToCharacterAspectWidth = this._characterPlaneHalfWidth * 2 / editor._activeControls.domElement.clientWidth;
+	this._cameraToCharacterAspectHeight = this._characterPlaneHalfHeight * 2 / editor._activeControls.domElement.clientHeight;
+	this._characterX = 0;
+	this._characterY = 0;
+	
 };
 
 Play.prototype.stop = function ( ) {
@@ -110,6 +120,7 @@ Play.prototype.stop = function ( ) {
 	//viewport.dom.removeEventListener('mouseup', this._inputEvents.up);
 	document.body.removeEventListener('keydown', this._inputEvents.down);
 	document.body.removeEventListener('keyup', this._inputEvents.up);
+	editor._activeControls.domElement.removeEventListener('mousemove', this._inputEvents.move);
 	
 	this.removePlayerCharacter();	
 	this.stopLeap();
@@ -417,7 +428,7 @@ Play.prototype._playLoop = function ( delta ) {
 	if ( !this._leapStreaming ) {
 		
 		// calculate the ball position to be in front of the camera
-		this._character.position.set(0, 0, -8);
+		this._character.position.set(this._characterX, this._characterY, -8);
 		this._character.position.applyMatrix4( editor.play._camera.matrixWorld );
 		//console.log( this._character.position );
 		
@@ -678,6 +689,11 @@ Play.prototype._inputEvents = {
 		editor.play._currentGesture = 'stroke';
 		editor.play.effects.displayGestureType( editor.play._currentGesture );
 	
+	},
+	move: function( event ) {
+		editor.play._characterX = editor.play._cameraToCharacterAspectWidth * event.clientX - editor.play._characterPlaneHalfWidth;
+		editor.play._characterY = -editor.play._cameraToCharacterAspectHeight * event.clientY + editor.play._characterPlaneHalfHeight + 0.1;
+		console.log( editor.play._characterX, editor.play._characterY );
 	}
 };
 
