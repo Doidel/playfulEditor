@@ -4,7 +4,6 @@ var Viewport = function ( editor ) {
 
 	var container = new UI.Panel();
 	container.setPosition( 'absolute' );
-	container.dom.setAttribute("tabindex", 0); // makes the container focusable and receive keyboard events
 
 	var info = new UI.Text();
 	info.setPosition( 'absolute' );
@@ -191,11 +190,12 @@ var Viewport = function ( editor ) {
 
 	}*/
 	
+	var leapBoxWalls;
 	//leapbox with
 	function addLeapBox() {
-		var leapBox = new THREE.Object3D();
+		/*var leapBox = new THREE.Object3D();
 		leapBox.name = "LeapBox";
-		/*new THREE.Mesh( new THREE.BoxGeometry( 10, 10, 10, 1, 1, 1 ),
+		new THREE.Mesh( new THREE.BoxGeometry( 10, 10, 10, 1, 1, 1 ),
 			new THREE.MeshPhongMaterial( {
 				ambient: 0x555555,
 				color: 0x555555,
@@ -230,6 +230,7 @@ var Viewport = function ( editor ) {
 			new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
 			new Physijs.BoxMesh( planeGeom, planeMat, 0 )
 		];
+		for (var x = 0; x < leapBoxWalls.length; x++) leapBoxWalls[x].name = 'LeapBoxWall' + x;
 		leapBoxWalls[0].position.x = 5;
 		leapBoxWalls[0].position.y = 5;
 		leapBoxWalls[0].rotation.y = Math.PI / 2;
@@ -292,31 +293,42 @@ var Viewport = function ( editor ) {
 		
 		scene.add( yawObject );*/
 		
-		
-		
-		//scene.add( playCamera );
-		
 		editor._activeControls = orbitControls;
 		
 		editor._activeControls.setTranslate( new THREE.Vector3( 0, 4.3, 8.5 ) );
 	
 		//if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( editor._activeCamera );
-		addLeapBox();//scene.add( leapBox );
 		render();
+	
+		//reset simulation deltas in order to have a fresh start!
+		viewport._lastSoundUpdate = Date.now();
+		//scene.resetSimulation();
+		editor.startPlay();
+		scene.add( playCamera );
+		addLeapBox();
+		container.play = true;
 		
 	} );
 	
 	signals.stop.add( function() {
 		
 		blocker.setDisplay( 'none' );
-		pointerLockControls.enabled = false;
+		//pointerLockControls.enabled = false;
 		editor._activeCamera = camera;
 		//scene.remove( yawObject );
 		editor._activeControls = transformControls;
-		//scene.remove( playCamera );
+		scene.remove( playCamera );
 		
-		//scene.remove( leapBox );
+		for (var x = 0; x < leapBoxWalls.length; x++) editor.scene.remove( leapBoxWalls[ x ] );
 		render();
+		
+		container.play = false;
+		
+		//give the simulation time to run out
+		setTimeout( function() {
+			editor.resetPlay();
+			render();
+		}, 100);
 		
 	} );
 			
@@ -838,30 +850,6 @@ var Viewport = function ( editor ) {
 
 		animate();
 
-	} );
-
-	signals.play.add( function() {
-	
-		//reset simulation deltas in order to have a fresh start!
-		viewport._lastSoundUpdate = Date.now();
-		//scene.resetSimulation();
-		editor.startPlay();
-		container.play = true;
-	
-	} );
-
-	// reset pos, rotation and velocity when stopping physics animation
-	
-	signals.stop.add( function() {
-	
-		container.play = false;
-		
-		//give the simulation time to run out
-		setTimeout( function() {
-			editor.resetPlay();
-			render();
-		}, 100);
-	
 	} );
 	
 	//

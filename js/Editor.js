@@ -650,7 +650,7 @@ Editor.prototype = {
 		this.scene.traverse( function( child ) {
 			
 			//replace all physijs objects with clones
-			if ( child._physijs && child.parent.name != "LeapBox" ) {
+			if ( child._physijs ) {
 				
 				var clone = child.clone();
 				
