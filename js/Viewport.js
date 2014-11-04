@@ -45,7 +45,7 @@ var Viewport = function ( editor ) {
 	camera.lookAt( new THREE.Vector3().fromArray( editor.config.getKey( 'camera' ).target ) );
 	editor._cam = camera;
 
-	var activeCamera = camera;
+	editor._activeCamera = camera;
 
 	//
 
@@ -82,14 +82,21 @@ var Viewport = function ( editor ) {
 
 	} );
 	sceneHelpers.add( transformControls );
-	editor._transformControls = transformControls;
+	editor._activeControls = transformControls;
 	
 	
+	
+	var playCamera = new THREE.PerspectiveCamera( 50, 1, 0.01, 500 );
+	playCamera.name = 'playCamera';
+	
+	editor.play.setLeapCamera( playCamera );
+	console.log(container);
+	var orbitControls = new THREE.OrbitControls( playCamera, container.dom );
 	
 	
 	// "play" pointerlock controls
 	
-	var playCamera = new THREE.PerspectiveCamera( 50, 1, 0.01, 500 );
+	/*var playCamera = new THREE.PerspectiveCamera( 50, 1, 0.01, 500 );
 	playCamera.name = 'playCamera';
 	
 	editor.play.setLeapCamera( playCamera );
@@ -183,13 +190,14 @@ var Viewport = function ( editor ) {
 
 		alert('Your browser doesn\'t seem to support Pointer Lock API. The "Play" mode requires a modern browser.');
 
-	}
+	}*/
 	
+	var leapBoxWalls;
 	//leapbox with
 	function addLeapBox() {
-		var leapBox = new THREE.Object3D();
+		/*var leapBox = new THREE.Object3D();
 		leapBox.name = "LeapBox";
-		/*new THREE.Mesh( new THREE.BoxGeometry( 10, 10, 10, 1, 1, 1 ),
+		new THREE.Mesh( new THREE.BoxGeometry( 10, 10, 10, 1, 1, 1 ),
 			new THREE.MeshPhongMaterial( {
 				ambient: 0x555555,
 				color: 0x555555,
@@ -224,6 +232,7 @@ var Viewport = function ( editor ) {
 			new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
 			new Physijs.BoxMesh( planeGeom, planeMat, 0 )
 		];
+		for (var x = 0; x < leapBoxWalls.length; x++) leapBoxWalls[x].name = 'LeapBoxWall' + x;
 		leapBoxWalls[0].position.x = 5;
 		leapBoxWalls[0].position.y = 5;
 		leapBoxWalls[0].rotation.y = Math.PI / 2;
@@ -253,7 +262,7 @@ var Viewport = function ( editor ) {
 		directionalLights = [];
 		editor.scene.traverse( function( obj ) {
 			if (obj instanceof THREE.DirectionalLight) {
-				obj.position = (activeCamera instanceof THREE.PerspectiveCamera ? activeCamera : yawObject).position;
+				obj.position = (editor._activeCamera instanceof THREE.PerspectiveCamera ? editor._activeCamera : yawObject).position;
 				directionalLights.push( obj );
 			}
 		});
@@ -267,10 +276,10 @@ var Viewport = function ( editor ) {
 	
 	signals.play.add( function() {
 		
-		blocker.setDisplay( 'block' );
+		blocker.setDisplay( 'none' );
 		editor.deselect();
 		transformControls.detach();
-		activeCamera = playCamera;
+		editor._activeCamera = playCamera;
 		/*yawObject.position.set( camera.position.x, camera.position.y, camera.position.z );
 		var rot = camera.rotation.clone();
 		rot.reorder( "YXZ" );
@@ -278,28 +287,50 @@ var Viewport = function ( editor ) {
 		yawObject.children[0].rotation.x = rot.x;*/
 		
 		//fixed camera pos
-		yawObject.position.set( 0, 4.3, 8.5 );
+		/*yawObject.position.set( 0, 4.3, 8.5 );
 		var rot = new THREE.Euler( -0.25, 0, 0 );
 		rot.reorder( "YXZ" );
 		yawObject.rotation.y = rot.y;
 		yawObject.children[0].rotation.x = rot.x;
 		
-		scene.add( yawObject );
-		//if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( activeCamera );
-		addLeapBox();//scene.add( leapBox );
+		scene.add( yawObject );*/
+		
+		editor._activeControls = orbitControls;
+		
+		editor._activeControls.setTranslate( new THREE.Vector3( 0, 4.3, 8.5 ) );
+	
+		//if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( editor._activeCamera );
 		render();
+	
+		//reset simulation deltas in order to have a fresh start!
+		viewport._lastSoundUpdate = Date.now();
+		//scene.resetSimulation();
+		editor.startPlay();
+		scene.add( playCamera );
+		addLeapBox();
+		container.play = true;
 		
 	} );
 	
 	signals.stop.add( function() {
 		
 		blocker.setDisplay( 'none' );
-		pointerLockControls.enabled = false;
-		activeCamera = camera;
-		scene.remove( yawObject );
-		//if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( activeCamera );
-		//scene.remove( leapBox );
+		//pointerLockControls.enabled = false;
+		editor._activeCamera = camera;
+		//scene.remove( yawObject );
+		editor._activeControls = transformControls;
+		scene.remove( playCamera );
+		
+		for (var x = 0; x < leapBoxWalls.length; x++) editor.scene.remove( leapBoxWalls[ x ] );
 		render();
+		
+		container.play = false;
+		
+		//give the simulation time to run out
+		setTimeout( function() {
+			editor.resetPlay();
+			render();
+		}, 100);
 		
 	} );
 			
@@ -478,7 +509,7 @@ var Viewport = function ( editor ) {
 				//create the skybox
 				editor.scene.skybox = new Skybox();
 				editor.scene.add( editor.scene.skybox.mesh );
-				editor.scene.skybox.alignWithCamera( activeCamera );
+				editor.scene.skybox.alignWithCamera( editor._activeCamera );
 				
 			}
 			
@@ -551,11 +582,13 @@ var Viewport = function ( editor ) {
 		}
 
 		saveTimeout = setTimeout( function () {
-
-			editor.config.setKey( 'camera', {
-				position: camera.position.toArray(),
-				target: controls.center.toArray()
-			} );
+		
+			if ( !viewport.play ) {
+				editor.config.setKey( 'camera', {
+					position: camera.position.toArray(),
+					target: controls.center.toArray()
+				} );
+			}
 
 		}, 1000 );
 
@@ -790,7 +823,7 @@ var Viewport = function ( editor ) {
 	
 	container.maximize = function() {
 	
-		$(sidebar.dom).fadeOut(500);
+		$(sidebars.dom).fadeOut(500);
 		$(tools.menu.dom).fadeOut(500);
 		editor.signals.windowResize.dispatch();
 		
@@ -798,7 +831,7 @@ var Viewport = function ( editor ) {
 	
 	container.windowed = function() {
 	
-		$(sidebar.dom).fadeIn(500);
+		$(sidebars.dom).fadeIn(500);
 		$(tools.menu.dom).fadeIn(500);
 		editor.signals.windowResize.dispatch();
 		
@@ -821,30 +854,6 @@ var Viewport = function ( editor ) {
 
 		animate();
 
-	} );
-
-	signals.play.add( function() {
-	
-		//reset simulation deltas in order to have a fresh start!
-		viewport._lastSoundUpdate = Date.now();
-		//scene.resetSimulation();
-		editor.startPlay();
-		container.play = true;
-	
-	} );
-
-	// reset pos, rotation and velocity when stopping physics animation
-	
-	signals.stop.add( function() {
-	
-		container.play = false;
-		
-		//give the simulation time to run out
-		setTimeout( function() {
-			editor.resetPlay();
-			render();
-		}, 100);
-	
 	} );
 	
 	//
@@ -987,7 +996,7 @@ var Viewport = function ( editor ) {
 			
 			if ( document.getElementById('blocker').style.display == 'none') scene.simulate( delta / 1000 ); // run physics
 			
-			pointerLockControls.update( delta );
+			//editor._activeControls.update( delta );
 			
 			editor.play._playLoop( delta );
 			
@@ -1027,7 +1036,8 @@ var Viewport = function ( editor ) {
 		    editor._cam.lookAt( new THREE.Vector3().fromArray( lookAt ) );
 		    
 		    editor.signals.cameraChanged.dispatch( editor._cam );
-		    editor._transformControls.update();
+		    // editor._transformControls.update();
+		    editor._activeControls.update();
 		    
 		    takeScreenShot = true;
 		    render();
@@ -1047,16 +1057,17 @@ var Viewport = function ( editor ) {
 		sceneHelpers.updateMatrixWorld();
 		scene.updateMatrixWorld();
 		
-		if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( activeCamera );
+		if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( editor._activeCamera );
 		
 		// update
 		
 		renderer.clear();
-		renderer.render( scene, activeCamera );
+		renderer.render( scene, editor._activeCamera );
 
 	    
 
 		if ( !container.play && renderer instanceof THREE.RaytracingRenderer === false ) {
+
 
 		    if( takeScreenShot === true ){
 			// var imageType = editor.config.getKey( 'imageType' ) || 'png';
@@ -1068,7 +1079,8 @@ var Viewport = function ( editor ) {
 		    }
 
 
-		    renderer.render( sceneHelpers, activeCamera );
+			renderer.render( sceneHelpers, editor._activeCamera );
+
 
 		}
 

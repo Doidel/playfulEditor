@@ -85,8 +85,11 @@ Play.prototype.start = function ( ) {
 	this._leapStreaming = false;
 	this._currentGesture = 'stroke';
 	
-	viewport.dom.addEventListener('mousedown', this._mouseEvents.down);
-	viewport.dom.addEventListener('mouseup', this._mouseEvents.up);
+	//viewport.dom.addEventListener('mousedown', this._inputEvents.down);
+	//viewport.dom.addEventListener('mouseup', this._inputEvents.up);
+	document.body.addEventListener('keydown', this._inputEvents.down);
+	document.body.addEventListener('keyup', this._inputEvents.up);
+	editor._activeControls.domElement.addEventListener('mousemove', this._inputEvents.move, false);
 	
 	this.startLeap();
 	document.getElementById('menubar').appendChild( this.gestureDisplay );
@@ -100,12 +103,24 @@ Play.prototype.start = function ( ) {
 	this._character.add( this._lines[1] );
 	this._character.add( this._lines[2] );
 	
+	
+	//calc the ratio between camera fov scaled to charcter zpos and clientX/Y
+	this._characterPlaneHalfHeight = Math.tan(editor._activeControls.object.fov * Math.PI / 180 /2) * 8;
+	this._characterPlaneHalfWidth = editor._activeControls.object.aspect * this._characterPlaneHalfHeight;
+	this._cameraToCharacterAspectWidth = this._characterPlaneHalfWidth * 2 / editor._activeControls.domElement.clientWidth;
+	this._cameraToCharacterAspectHeight = this._characterPlaneHalfHeight * 2 / editor._activeControls.domElement.clientHeight;
+	this._characterX = 0;
+	this._characterY = 0;
+	
 };
 
 Play.prototype.stop = function ( ) {
 		
-	viewport.dom.removeEventListener('mousedown', this._mouseEvents.down);
-	viewport.dom.removeEventListener('mouseup', this._mouseEvents.up);
+	//viewport.dom.removeEventListener('mousedown', this._inputEvents.down);
+	//viewport.dom.removeEventListener('mouseup', this._inputEvents.up);
+	document.body.removeEventListener('keydown', this._inputEvents.down);
+	document.body.removeEventListener('keyup', this._inputEvents.up);
+	editor._activeControls.domElement.removeEventListener('mousemove', this._inputEvents.move);
 	
 	this.removePlayerCharacter();	
 	this.stopLeap();
@@ -310,14 +325,14 @@ Play.prototype.startLeap = function ( ) {
 				
 			}
 			
-			editor._pointerLockControls.enabled = false;
+			/*editor._pointerLockControls.enabled = false;
 			//adjust position/rotation to fixed camera pos
 			var yawObject = editor._pointerLockControls.getObject();
 			yawObject.position.set( 0, 4.3, 8.5 );
 			var rot = new THREE.Euler( -0.25, 0, 0 );
 			rot.reorder( "YXZ" );
 			yawObject.rotation.y = rot.y;
-			yawObject.children[0].rotation.x = rot.x;
+			yawObject.children[0].rotation.x = rot.x;*/
 			
 		})
 		.on('handLost', function(hand) {
@@ -343,7 +358,7 @@ Play.prototype.startLeap = function ( ) {
 			}
 			
 			// reenable mouse and keyboard movement if the blocker isn't there
-			if (editor._pointerLockControls.blocker.dom.style.display == 'none') editor._pointerLockControls.enabled = true;
+			//if (editor._pointerLockControls.blocker.dom.style.display == 'none') editor._pointerLockControls.enabled = true;
 			
 		});
 		
@@ -413,8 +428,9 @@ Play.prototype._playLoop = function ( delta ) {
 	if ( !this._leapStreaming ) {
 		
 		// calculate the ball position to be in front of the camera
-		this._character.position.set(0, 0, -8);
+		this._character.position.set(this._characterX, this._characterY, -8);
 		this._character.position.applyMatrix4( editor.play._camera.matrixWorld );
+		//console.log( this._character.position );
 		
 	}
 
@@ -496,8 +512,6 @@ Play.prototype._playLoop = function ( delta ) {
 			editor.play._character.localToWorld( editor.play._character.position.clone() )
 			
 			dist = el.localToWorld( el.position.clone() ).sub( editor.play._character.localToWorld( editor.play._character.position.clone() ) );
-			
-			console.log('dist', dist.length());
 			
 			//are we within the boundingsphere's radius + distance treshold?
 			if ( dist.length() - el.geometry.boundingSphere.radius <= editor.play.characterLineDrawDistanceTreshold ) {
@@ -638,16 +652,32 @@ Play.prototype.Audio = {
 	}
 };
 
-Play.prototype._mouseEvents = {
+Play.prototype._inputEvents = {
 	down: function( event ) {
+	
+		if ( !event.keyCode ) {
 		
-		if ( event.which == 1 ) {
-		
-			editor.play._currentGesture = 'point';
-		
-		} else if ( event.which == 3 ) {
+			if ( event.which == 1 ) {
 			
-			editor.play._currentGesture = 'grab';
+				editor.play._currentGesture = 'point';
+			
+			} else if ( event.which == 3 ) {
+				
+				editor.play._currentGesture = 'grab';
+				
+			}
+		
+		} else if ( event.keyCode ) {
+			
+			if ( event.keyCode == 81 ) {
+			
+				editor.play._currentGesture = 'point';
+			
+			} else if ( event.keyCode == 87 ) {
+				
+				editor.play._currentGesture = 'grab';
+				
+			}
 			
 		}
 		
@@ -659,6 +689,11 @@ Play.prototype._mouseEvents = {
 		editor.play._currentGesture = 'stroke';
 		editor.play.effects.displayGestureType( editor.play._currentGesture );
 	
+	},
+	move: function( event ) {
+		editor.play._characterX = editor.play._cameraToCharacterAspectWidth * event.clientX - editor.play._characterPlaneHalfWidth;
+		editor.play._characterY = -editor.play._cameraToCharacterAspectHeight * event.clientY + editor.play._characterPlaneHalfHeight + 0.1;
+		console.log( editor.play._characterX, editor.play._characterY );
 	}
 };
 

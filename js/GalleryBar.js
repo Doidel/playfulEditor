@@ -6,6 +6,12 @@ var GalleryBar = function( editor ){
 
 // --------------------------------------------------
 
+    function updateCamera(){
+	editor.signals.cameraChanged.dispatch( editor._cam );
+	//editor._transformControls.update();
+	editor._activeControls.update();
+    }
+
     var cameraPanel = new  UI.Panel().setId('cameraPanel'); 
    
     var addCamera  = new UI.Button( 'Add Camera' ).setMarginTop('5px').setMarginLeft( '10px' );
@@ -13,7 +19,7 @@ var GalleryBar = function( editor ){
     addCamera.onClick( function () {
 	
 
-	var updateCamera = function () {
+	var setCamera = function () {
 	    var x = cameraPositionX.getValue();
 	    var y = cameraPositionY.getValue();
 	    var z = cameraPositionZ.getValue();
@@ -24,13 +30,12 @@ var GalleryBar = function( editor ){
 	    var lookAtZ = cameraRotationZ.getValue();
 	    editor._cam.lookAt( new THREE.Vector3().fromArray([ lookAtX, lookAtY, lookAtZ]) );
 	    
-	    editor.signals.cameraChanged.dispatch( editor._cam );
-	    editor._transformControls.update();	    
+	    updateCamera();
 	    
 	};
 	
-	editor.signals.cameraChanged.dispatch( editor._cam );
-	editor._transformControls.update();	    
+
+	updateCamera();
 
 	var cam = editor.config.getKey('camera');
 	var position = cam.position;
@@ -40,7 +45,7 @@ var GalleryBar = function( editor ){
 
 	cameraListItem.add(new UI.Break());
 
-	var showCam = new UI.Button('Show').setMarginLeft( '10px' ).onClick( updateCamera );
+	var showCam = new UI.Button('Show').setMarginLeft( '10px' ).onClick( setCamera );
 	var remCam  = new UI.Button('Remove').setMarginLeft( '10px' ).onClick( function(){ 
 	    cameraScrollContainer.remove( cameraListItem ); 
 	    var scrollContainer = document.getElementById('cameraArrayList').firstChild;
@@ -51,9 +56,9 @@ var GalleryBar = function( editor ){
 
 	cameraListItem.add(showCam, remCam, new UI.Break());
 
-	var cameraPositionX = new UI.Number().setValue( position[0] ).setWidth( '50px' ).setColor( 'red' ).onChange( updateCamera );
-	var cameraPositionY = new UI.Number().setValue( position[1] ).setWidth( '50px' ).setColor( 'green' ).onChange( updateCamera );
-	var cameraPositionZ = new UI.Number().setValue( position[2] ).setWidth( '50px' ).setColor( 'blue' ).onChange( updateCamera );
+	var cameraPositionX = new UI.Number().setValue( position[0] ).setWidth( '50px' ).setColor( 'red' ).onChange( setCamera );
+	var cameraPositionY = new UI.Number().setValue( position[1] ).setWidth( '50px' ).setColor( 'green' ).onChange( setCamera );
+	var cameraPositionZ = new UI.Number().setValue( position[2] ).setWidth( '50px' ).setColor( 'blue' ).onChange( setCamera );
 	var cameraPositionXLabel = new UI.Text( 'X' ).setWidth( '10px' ).setColor( 'red' );
 	var cameraPositionYLabel = new UI.Text( 'Y' ).setWidth( '10px' ).setColor( 'green' );
 	var cameraPositionZLabel = new UI.Text( 'Z' ).setWidth( '10px' ).setColor( 'blue' );
@@ -64,9 +69,9 @@ var GalleryBar = function( editor ){
 		       cameraPositionZLabel, cameraPositionZ, new UI.Break() );	
 
 
-	var cameraRotationX = new UI.Number().setValue( lookAt[0] ).setWidth( '50px' ).setColor( 'red' ).onChange( updateCamera );
-	var cameraRotationY = new UI.Number().setValue( lookAt[1] ).setWidth( '50px' ).setColor( 'green' ).onChange( updateCamera );
-	var cameraRotationZ = new UI.Number().setValue( lookAt[2] ).setWidth( '50px' ).setColor( 'blue' ).onChange( updateCamera );
+	var cameraRotationX = new UI.Number().setValue( lookAt[0] ).setWidth( '50px' ).setColor( 'red' ).onChange( setCamera );
+	var cameraRotationY = new UI.Number().setValue( lookAt[1] ).setWidth( '50px' ).setColor( 'green' ).onChange( setCamera );
+	var cameraRotationZ = new UI.Number().setValue( lookAt[2] ).setWidth( '50px' ).setColor( 'blue' ).onChange( setCamera );
 	var cameraRotationXLabel = new UI.Text( 'X' ).setWidth( '10px' ).setColor( 'red' );
 	var cameraRotationYLabel = new UI.Text( 'Y' ).setWidth( '10px' ).setColor( 'green' );
 	var cameraRotationZLabel = new UI.Text( 'Z' ).setWidth( '10px' ).setColor( 'blue' );
@@ -112,19 +117,9 @@ var GalleryBar = function( editor ){
     var imagePanel = new  UI.Panel().setId('imagePanel'); 
 
     var takeScreenshot = new UI.Button( 'Take Photo' ).setMarginTop('5px').setMarginLeft( '7px' ).onClick( function () {
-	// editor.signals.cameraChanged.dispatch( editor._cam );
-	// editor._transformControls.update();
-	// var cam = editor.config.getKey('camera');
-	// var position = cam.position;
-	// var lookAt   = cam.target;
+
 	 cameraArray = [];
-	// cameraArray[0] = [];
-	// cameraArray[0][0] = position[0];
-	// cameraArray[0][1] = position[1];
-	// cameraArray[0][2] = position[2];
-	// cameraArray[0][3] = lookAt[0];
-	// cameraArray[0][4] = lookAt[1];
-	// cameraArray[0][5] = lookAt[2];
+
 
 	signals.renderingRequested.dispatch( cameraArray );
     });    
@@ -205,3 +200,4 @@ var GalleryBar = function( editor ){
     return container;
 
 }
+

@@ -3,21 +3,25 @@ Tools.Modes = function ( editor ) {
 	var buttonpanel = new UI.ButtonHelper.createButtonPanel( "modes", true );
 	var signals = editor.signals;
 	
+	var lastSelected = undefined;
+	
 	var playing = false;
 	var stopPlaying = function()
 	{
-		if(playing)
+		if( playing )
 		{
 			viewport.windowed();
 			editor.signals.stop.dispatch();
 			playing = false;
+			editor.select( lastSelected );
 		}
 	}
 	var startPlaying = function()
 	{
-		if(!playing)
+		if( !playing )
 		{
 			viewport.maximize();
+			lastSelected = editor.selected;
 			editor.signals.play.dispatch();
 			playing = true;
 		}
@@ -28,7 +32,7 @@ Tools.Modes = function ( editor ) {
 	buttonpanel.addButton( "icon-rotate", function() { stopPlaying(); signals.transformModeChanged.dispatch( 'rotate' ); } );
 	buttonpanel.addButton( "icon-play", function() { 
 		
-		if( $(this).is(".active") ) stopPlaying();
+		if( playing ) stopPlaying();
 		else startPlaying();
 		
 	});

@@ -1,4 +1,4 @@
-Sidebar.Physics = function ( editor ) {
+Sidebars.Properties.Physics = function ( editor ) {
 
 	var signals = editor.signals;
 	
@@ -60,6 +60,31 @@ Sidebar.Physics = function ( editor ) {
 
 	};
 
+	// 1 = visible in easy mode, 2 = visible in advanced mode, not part of this list = visible in both modes
+	var propertyVisibilities = {
+		'friction': 2,
+		'restitution': 2
+	};
+	
+	function updateRows() {
+
+		var properties = {
+			'friction': physicsFrictionRow,
+			'restitution': physicsRestitutionRow,
+			'mode': physicsModeRow
+		};
+		
+		var object = editor.selected;
+
+		for ( var property in properties ) {
+		
+			var visible = (workMode == 'advanced' && propertyVisibilities[ property ] == 2) || ( workMode == 'easy' && propertyVisibilities[ property ] == 1 ) || propertyVisibilities[ property ] == undefined;
+			properties[ property ].setDisplay( visible ? '' : 'none' );
+
+		}
+
+	};
+	
 	// events
 
 	signals.objectSelected.add( function ( object ) {
@@ -81,6 +106,8 @@ Sidebar.Physics = function ( editor ) {
 			
 			if ( object.isStatic == undefined ) object.isStatic = false;
 			physicsMode.setValue( object.isStatic );
+			
+			updateRows();
 
 		} else {
 

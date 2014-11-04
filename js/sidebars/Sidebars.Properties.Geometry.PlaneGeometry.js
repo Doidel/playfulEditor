@@ -1,4 +1,4 @@
-Sidebar.Geometry.PlaneGeometry = function ( signals, object ) {
+Sidebars.Properties.Geometry.PlaneGeometry = function ( signals, object ) {
 
 	var container = new UI.Panel();
 

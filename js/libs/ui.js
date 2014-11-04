@@ -337,7 +337,7 @@ UI.FancySelect = function () {
 	var scope = this;
 
 	var dom = document.createElement( 'div' );
-	dom.className = 'FancySelect';
+	dom.className = 'Panel FancySelect';
 	dom.tabIndex = 0;	// keyup event is ignored without setting tabIndex
 
 	// Broadcast for object selection after arrow navigation

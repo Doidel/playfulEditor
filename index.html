@@ -68,6 +68,7 @@
 		<script src="js/libs/leap-plugins-0.1.6.js"></script>
 		<script src="js/libs/leap.rigged-hand-0.1.4.min.js"></script>
 		<script src="js/libs/jquery-2.1.1.min.js"></script>
+		<script src="js/libs/PlayOrbitControls.js"></script>
 
 		<script src="js/Storage.js"></script>
 
@@ -82,26 +83,32 @@
 		<script src="js/Menubar.View.js"></script>
 		<script src="js/Menubar.Help.js"></script>
 		<script src="js/Menubar.PlayCameras.js"></script>
+
 		<script src="js/Menubar.SceneGallery.js"></script>
-		<script src="js/Sidebar.js"></script>
-		<script src="js/Sidebar.Renderer.js"></script>
-		<script src="js/Sidebar.Scene.js"></script>
-		<script src="js/Sidebar.Properties.js"></script>
-		<script src="js/Sidebar.Object3D.js"></script>
-		<script src="js/Sidebar.Geometry.js"></script>
-		<script src="js/Sidebar.Animation.js"></script>
-		<script src="js/Sidebar.Geometry.BoxGeometry.js"></script>
-		<script src="js/Sidebar.Geometry.CircleGeometry.js"></script>
-		<script src="js/Sidebar.Geometry.CylinderGeometry.js"></script>
-		<script src="js/Sidebar.Geometry.IcosahedronGeometry.js"></script>
-		<script src="js/Sidebar.Geometry.PlaneGeometry.js"></script>
-		<script src="js/Sidebar.Geometry.SphereGeometry.js"></script>
-		<script src="js/Sidebar.Geometry.TorusGeometry.js"></script>
-		<script src="js/Sidebar.Geometry.TorusKnotGeometry.js"></script>
-		<script src="js/Sidebar.Material.js"></script>
-		<script src="js/Sidebar.Physics.js"></script>
-		<script src="js/Sidebar.Events.js"></script>
 		<script src="js/GalleryBar.js"></script>
+		<script src="js/sidebars/Sidebars.js"></script>
+		<script src="js/sidebars/Sidebars.Add.js"></script>
+		<script src="js/sidebars/Sidebars.File.js"></script>
+		<script src="js/sidebars/Sidebars.Help.js"></script>
+		<script src="js/sidebars/Sidebars.Scene.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.js"></script>
+		<script src="js/sidebars/Sidebars.Renderer.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Object3D.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Geometry.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Animation.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Scene.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Geometry.BoxGeometry.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Geometry.CircleGeometry.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Geometry.CylinderGeometry.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Geometry.IcosahedronGeometry.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Geometry.PlaneGeometry.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Geometry.SphereGeometry.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Geometry.TorusGeometry.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Geometry.TorusKnotGeometry.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Material.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Physics.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Events.js"></script>
+
 		<script src="js/Tools.js"></script>
 		<script src="js/Tools.Menu.js"></script>
 		<script src="js/Tools.Modes.js"></script>
@@ -624,6 +631,8 @@
 			window.URL = window.URL || window.webkitURL;
 			window.BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
 
+			var workMode = 'easy';
+			
 			var editor = new Editor();
 
 			var viewport = new Viewport( editor ).setId( 'viewport' );
@@ -632,8 +641,8 @@
 			var menubar = new Menubar( editor ).setId( 'menubar' );
 			document.body.appendChild( menubar.dom );
 
-			var sidebar = new Sidebar( editor ).setId( 'sidebar' );
-			document.body.appendChild( sidebar.dom );
+			var sidebars = new Sidebars( editor ).setId( 'sidebars' );
+			document.body.appendChild( sidebars.dom );
 			
 			var tools = new Tools( editor ).setId( 'tools' );
 			document.body.appendChild( tools.dom );

@@ -1,4 +1,4 @@
-Sidebar.Geometry.IcosahedronGeometry = function ( signals, object ) {
+Sidebars.Properties.Geometry.CircleGeometry = function ( signals, object ) {
 
 	var container = new UI.Panel();
 
@@ -14,16 +14,15 @@ Sidebar.Geometry.IcosahedronGeometry = function ( signals, object ) {
 
 	container.add( radiusRow );
 
-	// detail
+	// segments
 
-	var detailRow = new UI.Panel();
-	var detail = new UI.Integer( geometry.parameters.detail ).setRange( 0, Infinity ).onChange( update );
+	var segmentsRow = new UI.Panel();
+	var segments = new UI.Integer( geometry.parameters.segments ).onChange( update );
 
-	detailRow.add( new UI.Text( 'Detail' ).setWidth( '90px' ) );
-	detailRow.add( detail );
+	segmentsRow.add( new UI.Text( 'Segments' ).setWidth( '90px' ) );
+	segmentsRow.add( segments );
 
-	container.add( detailRow );
-
+	container.add( segmentsRow );
 
 	//
 
@@ -33,9 +32,9 @@ Sidebar.Geometry.IcosahedronGeometry = function ( signals, object ) {
 
 		object.geometry.dispose();
 
-		object.geometry = new THREE.IcosahedronGeometry(
+		object.geometry = new THREE.CircleGeometry(
 			radius.getValue(),
-			detail.getValue()
+			segments.getValue()
 		);
 
 		object.geometry.buffersNeedUpdate = true;

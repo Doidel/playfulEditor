@@ -1,4 +1,4 @@
-Sidebar.Geometry.CylinderGeometry = function ( signals, object ) {
+Sidebars.Properties.Geometry.CylinderGeometry = function ( signals, object ) {
 
 	var container = new UI.Panel();
 

@@ -1,4 +1,4 @@
-Sidebar.Object3D = function ( editor ) {
+Sidebars.Properties.Object3D = function ( editor ) {
 
 	var signals = editor.signals;
 
@@ -50,8 +50,6 @@ Sidebar.Object3D = function ( editor ) {
 
 	objectParentRow.add( new UI.Text( 'Parent' ).setWidth( '90px' ) );
 	objectParentRow.add( objectParent );
-
-	objectParentRow.setDisplay('none');
 	
 	container.add( objectParentRow );
 
@@ -390,6 +388,19 @@ Sidebar.Object3D = function ( editor ) {
 
 	}
 
+	// 1 = visible in easy mode, 2 = visible in advanced mode, not part of this list = visible in both modes
+	var propertyVisibilities = {
+		'visible': 2,
+		'parent': 2,
+		'fov': 2,
+		'near': 2,
+		'far': 2,
+		'groundColor': 2,
+		'distance' : 2,
+		'angle' : 2,
+		'exponent' : 2
+	};
+	
 	function updateRows() {
 
 		var object = editor.selected;
@@ -404,12 +415,16 @@ Sidebar.Object3D = function ( editor ) {
 			'groundColor': objectGroundColorRow,
 			'distance' : objectDistanceRow,
 			'angle' : objectAngleRow,
-			'exponent' : objectExponentRow
+			'exponent' : objectExponentRow,
+			'visible' : objectVisibleRow
 		};
 
 		for ( var property in properties ) {
-
-			properties[ property ].setDisplay( object[ property ] !== undefined ? '' : 'none' );
+		
+			var visible = object[ property ] !== undefined ?
+				( workMode == 'advanced' && propertyVisibilities[ property ] == 2) || ( workMode == 'easy' && propertyVisibilities[ property ] == 1 ) || propertyVisibilities[ property ] == undefined
+				: false;
+			properties[ property ].setDisplay( visible ? '' : 'none' );
 
 		}
 
@@ -478,7 +493,7 @@ Sidebar.Object3D = function ( editor ) {
 		updateUI();
 
 	} );
-
+	
 	function updateUI() {
 
 		container.setDisplay( 'none' );

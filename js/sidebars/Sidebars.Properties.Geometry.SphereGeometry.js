@@ -1,4 +1,4 @@
-Sidebar.Geometry.SphereGeometry = function ( signals, object ) {
+Sidebars.Properties.Geometry.SphereGeometry = function ( signals, object ) {
 
 	var container = new UI.Panel();
 

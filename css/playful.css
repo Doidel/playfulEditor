@@ -29,22 +29,23 @@
 }
 
 #view.buttongroup {
-	left: auto;
-	right: 0.3em;
-}
-#menu.buttongroup {
 	top: auto;
 	bottom: 0.3em;
+}
+#modes.buttongroup {
+	left: auto;
+	right: 0.3em;
 }
 
 .buttongroup .button{
 	display: inline-block;
 	vertical-align: top;
-	line-height: 0.5em;
+	line-height: 0.8em;
 	pointer-events: auto;
 	border-left: 1px solid #d0d0d0;
 	color: #e57245;
 	cursor: pointer;
+	padding: 0.08em 0.03em 0 0.03em;
 }
 .buttongroup .button:first-child {
 	border-left: none;
@@ -119,55 +120,60 @@
 					background-color: #08f;
 				}
 				
-/* Sidebar */
+/* Sidebars */
 
-#sidebar {
+#sidebars .sidebar {
 	position: absolute;
-	right: 1.5em;
 	top: 9.5em;
 	bottom: 1.5em;
 	width: 25em;
 	overflow: auto;
 	z-index: 80;
 	border-radius: 0.3em;
+	pointer-events: none;
+}
+#sidebars .sidebar.left {
+	right: auto;
+	left: 1.5em;
+	bottom: 3.5em;
+}
+#sidebars .sidebar.right {
+	left: auto;
+	right: 1.5em;
 }
 
-	#sidebar input,
-	#sidebar textarea,
-	#sidebar select {
-		/* background: #ccc; */
-	}
+#sidebars input,
+#sidebars textarea,
+#sidebars select {
+	/* background: #ccc; */
+}
 
-	#sidebar>.Panel {
-		margin-bottom: 0.5em;
-		overflow: hidden;
-	}
-	#sidebar>.Panel h2 {
-		font-size: 1em; letter-spacing: 0.1em;
-		text-align: right;
-		color: #e57245;
-		text-transform: uppercase;
-	}
-	#sidebar>.Panel>.Panel {
-		background-color: #e6e6e6;
-		border-radius: 1em;
-		overflow: hidden;
-	}
-	
-	#sidebar>.Panel>.Panel>.Panel {
-		padding: 1em;
-		border-top: 1px solid #ccc;
-	}
-	#sidebar>.Panel>.Panel>.Panel:first-child {
-		border-top: none;
-	}
+.sidebar>.Panel {
+	margin-bottom: 0.5em;
+	overflow: hidden;
+}
+.sidebar>.Panel h2 {
+	font-size: 1em; letter-spacing: 0.1em;
+	color: #e57245;
+	text-transform: uppercase;
+}
+.sidebar.right h2{
+	text-align: right;
+}
+.sidebar>.Panel>.Panel {
+	background-color: #e6e6e6;
+	border-radius: 1em;
+	overflow: hidden;
+	pointer-events: auto;
+}
 
-	#sidebar #outliner {
-		width: 100%;
-		height: 140px;
-		color: #444;
-		font-size: 12px;
-	}
+.sidebar>.Panel>.Panel>.Panel {
+	padding: 1em;
+	border-top: 1px solid #ccc;
+}
+.sidebar>.Panel>.Panel>.Panel:first-child {
+	border-top: none;
+}
 
 	#gallery{
 	    position: relative;
@@ -261,3 +267,19 @@
 	    width:65%;
 	    float:left;
 	}
+
+.sidebar .Panel.FancySelect {
+	cursor: default;
+	overflow: auto;
+	outline: none;
+	height: 12em;
+	color: #444;
+}
+.sidebar .Panel.FancySelect .option {
+	padding: 0.4em 0.8em;
+	white-space: nowrap;
+}
+.sidebar .Panel.FancySelect .option.active {
+	background-color: #fff;
+}
+

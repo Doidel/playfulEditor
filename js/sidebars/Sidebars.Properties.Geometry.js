@@ -1,4 +1,4 @@
-Sidebar.Geometry = function ( editor ) {
+Sidebars.Properties.Geometry = function ( editor ) {
 
 	var signals = editor.signals;
 
@@ -111,42 +111,42 @@ Sidebar.Geometry = function ( editor ) {
 
 			if ( geometry instanceof THREE.BoxGeometry ) {
 
-				parameters = new Sidebar.Geometry.BoxGeometry( signals, object );
+				parameters = new Sidebars.Properties.Geometry.BoxGeometry( signals, object );
 				container.add( parameters );
 
 			} else if ( geometry instanceof THREE.CircleGeometry ) {
 
-				parameters = new Sidebar.Geometry.CircleGeometry( signals, object );
+				parameters = new Sidebars.Properties.Geometry.CircleGeometry( signals, object );
 				container.add( parameters );
 
 			} else if ( geometry instanceof THREE.CylinderGeometry ) {
 
-				parameters = new Sidebar.Geometry.CylinderGeometry( signals, object );
+				parameters = new Sidebars.Properties.Geometry.CylinderGeometry( signals, object );
 				container.add( parameters );
 
 			} else if ( geometry instanceof THREE.SphereGeometry ) {
 
-				parameters = new Sidebar.Geometry.SphereGeometry( signals, object );
+				parameters = new Sidebars.Properties.Geometry.SphereGeometry( signals, object );
 				container.add( parameters );
 
 			} else if ( geometry instanceof THREE.IcosahedronGeometry ) {
 
-				parameters = new Sidebar.Geometry.IcosahedronGeometry( signals, object );
+				parameters = new Sidebars.Properties.Geometry.IcosahedronGeometry( signals, object );
 				container.add( parameters );
 
 			} else if ( geometry instanceof THREE.PlaneGeometry ) {
 
-				parameters = new Sidebar.Geometry.PlaneGeometry( signals, object );
+				parameters = new Sidebars.Properties.Geometry.PlaneGeometry( signals, object );
 				container.add( parameters );
 
 			} else if ( geometry instanceof THREE.TorusGeometry ) {
 
-				parameters = new Sidebar.Geometry.TorusGeometry( signals, object );
+				parameters = new Sidebars.Properties.Geometry.TorusGeometry( signals, object );
 				container.add( parameters );
 
 			} else if ( geometry instanceof THREE.TorusKnotGeometry ) {
 
-				parameters = new Sidebar.Geometry.TorusKnotGeometry( signals, object );
+				parameters = new Sidebars.Properties.Geometry.TorusKnotGeometry( signals, object );
 				container.add( parameters );
 
 			}

@@ -1,18 +1,14 @@
-Sidebar.Scene = function ( editor ) {
+Sidebars.Properties.Scene = function ( editor ) {
 
 	var signals = editor.signals;
 
 	var container = new UI.Panel();
+	container.setDisplay( 'none' );
 
-	$("<h2/>").html("Scene").appendTo(container.dom);
+	container.add( new UI.Text().setValue( 'SCENE PROPERTIES' ) );
+	container.add( new UI.Break(), new UI.Break() );
 
-	var outliner = new UI.FancySelect().setId( 'outliner' );
-	outliner.onChange( function () {
-
-		editor.selectById( parseInt( outliner.getValue() ) );
-
-	} );
-	container.add( outliner );
+	
 	// default color
 
 	var defaultColorRow = new UI.Panel();
@@ -211,74 +207,57 @@ Sidebar.Scene = function ( editor ) {
 
 	};
 	
+	// 1 = visible in easy mode, 2 = visible in advanced mode, not part of this list = visible in both modes
+	var propertyVisibilities = {
+		'fogNear': 2,
+		'fogFar': 2,
+		'fogDensity': 2
+	};
+	
+	function updateRows() {
+
+		var object = editor.selected;
+
+		var properties = {
+			'fogNear': fogNearRow,
+			'fogFar': fogFarRow,
+			'fogDensity': fogDensityRow
+		};
+
+		for ( var property in properties ) {
+		
+			var visible = ( workMode == 'advanced' && propertyVisibilities[ property ] == 2) || ( workMode == 'easy' && propertyVisibilities[ property ] == 1 ) || propertyVisibilities[ property ] == undefined
+			properties[ property ].setDisplay( visible ? '' : 'none' );
+
+		}
+
+	}
+	
 	function updateSceneOptionsDisplay( object ) {
 	
 		var display = object instanceof THREE.Scene ? '' : 'none';
 		
-		defaultColorRow.setDisplay( display );
-		fogTypeRow.setDisplay( display );
-		skyboxRow.setDisplay( display );
+		container.setDisplay( display );
+		
+		//defaultColorRow.setDisplay( display );
+		//fogTypeRow.setDisplay( display );
+		//skyboxRow.setDisplay( display );
 		if ( display == '' ) {
 			refreshFogUI();
 			if ( skyboxImage.getValue() == 'custom' ) skyboxCustomTexturesContainer.setDisplay( '' );
+			
+			updateRows();
+			
 		}
 	
 	}
-
-	// events
-
+	
+	
+	
 	signals.sceneGraphChanged.add( function () {
-
+	
 		var scene = editor.scene;
-		var sceneType = editor.getObjectType( scene );
-
-		var options = [];
-
-		options.push( { value: scene.id, html: '<span class="type ' + sceneType + '"></span> ' + scene.name } );
-
-		( function addObjects( objects, pad ) {
-
-			for ( var i = 0, l = objects.length; i < l; i ++ ) {
-
-				var object = objects[ i ];
-				
-				if ( editor.omittedObjects.indexOf( object.name ) === -1 ) {
-				
-					var objectType = editor.getObjectType( object );
-
-					var html = pad + '<span class="type ' + objectType + '"></span> ' + object.name;
-
-					if ( object instanceof THREE.Mesh ) {
-
-						var geometry = object.geometry;
-						var material = object.material;
-
-						var geometryType = editor.getGeometryType( geometry );
-						var materialType = editor.getMaterialType( material );
-
-						html += ' <span class="type ' + geometryType + '"></span> ' + geometry.name;
-						html += ' <span class="type ' + materialType + '"></span> ' + material.name;
-
-					}
-
-					options.push( { value: object.id, html: html } );
-
-					addObjects( object.children, pad + '&nbsp;&nbsp;&nbsp;' );
-				
-				}
-
-			}
-
-		} )( scene.children, '&nbsp;&nbsp;&nbsp;' );
-
-		outliner.setOptions( options );
-
-		if ( editor.selected !== null ) {
-
-			outliner.setValue( editor.selected.id );
-
-		}
-
+		
 		if ( scene.fog ) {
 
 			fogColor.setHexValue( scene.fog.color.getHex() );
@@ -327,16 +306,16 @@ Sidebar.Scene = function ( editor ) {
 			skyboxImage.setValue( "none" );
 
 		}
-
-	} );
-
+		
+		updateSceneOptionsDisplay( editor.selected );
+	});
+	
 	signals.objectSelected.add( function ( object ) {
-
-		outliner.setValue( object !== null ? object.id : null );
 		
 		updateSceneOptionsDisplay( object );
 
 	} );
+	
 
 	return container;
 
