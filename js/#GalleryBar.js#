@@ -112,19 +112,9 @@ var GalleryBar = function( editor ){
     var imagePanel = new  UI.Panel().setId('imagePanel'); 
 
     var takeScreenshot = new UI.Button( 'Take Photo' ).setMarginTop('5px').setMarginLeft( '7px' ).onClick( function () {
-	// editor.signals.cameraChanged.dispatch( editor._cam );
-	// editor._transformControls.update();
-	// var cam = editor.config.getKey('camera');
-	// var position = cam.position;
-	// var lookAt   = cam.target;
+
 	 cameraArray = [];
-	// cameraArray[0] = [];
-	// cameraArray[0][0] = position[0];
-	// cameraArray[0][1] = position[1];
-	// cameraArray[0][2] = position[2];
-	// cameraArray[0][3] = lookAt[0];
-	// cameraArray[0][4] = lookAt[1];
-	// cameraArray[0][5] = lookAt[2];
+
 
 	signals.renderingRequested.dispatch( cameraArray );
     });    

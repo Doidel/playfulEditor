@@ -1008,25 +1008,33 @@ var Viewport = function ( editor ) {
 
         signals.renderingRequested.add( function ( cameraArray ) {
 
-	    for(var i = 0; i < cameraArray.length; i++){
 
-		//console.log( cameraArray[i] );
-		var position = cameraArray[i].slice(0,3);
-		var lookAt   = cameraArray[i].slice(3);
-
-		//console.log( lookAt );
-
-		editor._cam.position.fromArray( position );
-		
-		editor._cam.lookAt( new THREE.Vector3().fromArray( lookAt ) );
-		
-		editor.signals.cameraChanged.dispatch( editor._cam );
-		editor._transformControls.update();
-
+	    if( cameraArray.length == 0 ){
 		takeScreenShot = true;
 		render();
 		takeScreenShot = false;
+	    }else{
+		for(var i = 0; i < cameraArray.length; i++){
+		    
+		    //console.log( cameraArray[i] );
+		    var position = cameraArray[i].slice(0,3);
+		    var lookAt   = cameraArray[i].slice(3);
+		    
+		    //console.log( lookAt );
+		    
+		    editor._cam.position.fromArray( position );
+		    
+		    editor._cam.lookAt( new THREE.Vector3().fromArray( lookAt ) );
+		    
+		    editor.signals.cameraChanged.dispatch( editor._cam );
+		    editor._transformControls.update();
+		    
+		    takeScreenShot = true;
+		    render();
+		    takeScreenShot = false;
+		}
 	    }
+	    
 	      
 
 	    

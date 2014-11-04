@@ -227,13 +227,35 @@
 	    margin-top:-15px;
 	}
 
-	#imageList>.Panel>img{
+	.imageContainer{
 	    float:left;	
-	    width: 310px; 
-	    height: 140px;
 	}
 
+	.imageContainer:hover a .galleryDeleteIcon{display:block; cursor:pointer;}
 
+	
+
+	.imageContainer a img{
+	    width: 310px; 
+	    height: 140px;
+	    border: solid 1px #ccc; 
+	    padding: 1px;
+	}
+
+	.galleryDeleteIcon{
+	    /* position : absolute; */
+	    display:none;
+	    background: url('../images/Delete.png') right top no-repeat;
+	    margin: -125px 10px 0px 285px; 
+	    height: 16px; 
+	    width: 16px;
+	    position: relative; 
+	    z-index: 100; 
+	    opacity: 0.8; 
+	    filter: alpha(opacity=80);
+
+	    /* z-index:100 */
+	}
 
 	#imagePanel{
 	    width:65%;
