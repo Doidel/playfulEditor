@@ -2,6 +2,9 @@ var Viewport = function ( editor ) {
 
 	var signals = editor.signals;
 
+
+       
+
 	var container = new UI.Panel();
 	container.setPosition( 'absolute' );
 
@@ -1024,6 +1027,47 @@ var Viewport = function ( editor ) {
 
 	};
 
+
+        //scene gallery
+        var takeScreenShot = false;
+
+        signals.renderingRequested.add( function ( cameraArray ) {
+
+
+	    if( cameraArray.length == 0 ){
+		takeScreenShot = true;
+		render();
+		takeScreenShot = false;
+	    }else{
+		for(var i = 0; i < cameraArray.length; i++){
+		    
+		    //console.log( cameraArray[i] );
+		    var position = cameraArray[i].slice(0,3);
+		    var lookAt   = cameraArray[i].slice(3);
+		    
+		    //console.log( lookAt );
+		    
+		    editor._cam.position.fromArray( position );
+		    
+		    editor._cam.lookAt( new THREE.Vector3().fromArray( lookAt ) );
+		    
+		    editor.signals.cameraChanged.dispatch( editor._cam );
+		    // editor._transformControls.update();
+		    editor._activeControls.update();
+		    
+		    takeScreenShot = true;
+		    render();
+		    takeScreenShot = false;
+		}
+	    }
+	    
+	      
+
+	    
+	    
+	});
+
+
 	function render() {
 
 		sceneHelpers.updateMatrixWorld();
@@ -1036,7 +1080,19 @@ var Viewport = function ( editor ) {
 		renderer.clear();
 		(effect ? effect : renderer).render( scene, editor._activeCamera );
 
+	    
+
 		if ( !container.play && renderer instanceof THREE.RaytracingRenderer === false ) {
+
+		    if( takeScreenShot === true ){
+			// var imageType = editor.config.getKey( 'imageType' ) || 'png';
+			// imageType = "image/"+imageType.toLowerCase();
+			//console.log("imagetype:"+imageType);
+			var imageType = "image/png"
+			//editor.takeScreenShot = false;
+			signals.newImageAvailable.dispatch( renderer.domElement.toDataURL( imageType ) );
+		    }
+
 
 			(effect ? effect : renderer).render( sceneHelpers, editor._activeCamera );
 

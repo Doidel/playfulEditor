@@ -175,6 +175,99 @@
 	border-top: none;
 }
 
+	#gallery{
+	    position: relative;
+	    top: 50px;
+	    left: 300px;
+	    margin-right: 700px;
+	    bottom: 32px;
+	    z-index: 2;	   
+	    /* border: 1px solid black; */
+	    height: 170px;
+	    
+	    
+	/* overflow: auto; */
+	}
+
+	#cameraPanel{
+	    width:35%;
+	    float: left;
+	    
+	}
+
+	#cameraArrayList{
+	    /* border: 1px solid blue; */
+	    overflow-x:scroll;
+	    overflow-y:hidden;
+	    white-space:nowrap;
+	    height: 140px;
+	    margin-Left:7px;
+	    margin-top:5px;
+	    background: #eee;
+	    border-radius: 10px;
+	}
+
+	#cameraArrayList>.Panel{
+	    margin-top:-5px;
+	    margin-left:5px;
+	    text-align:center;
+	}
+
+	#cameraArrayList>.Panel>.Panel{
+	    float:left;	    
+	}
+
+	#imageList{
+	    /* border: 1px solid blue; */
+	    overflow-x:scroll;
+	    overflow-y:hidden;
+	    white-space:nowrap;
+	    height: 140px;
+	    margin-Left:7px;
+	    margin-top:5px;
+	    background: #eee;
+	    border-radius: 10px;
+	}
+
+	#imageList>.Panel{
+	    margin-top:-15px;
+	}
+
+	.imageContainer{
+	    float:left;	
+	}
+
+	.imageContainer:hover a .galleryDeleteIcon{display:block; cursor:pointer;}
+
+	
+
+	.imageContainer a img{
+	    width: 310px; 
+	    height: 140px;
+	    border: solid 1px #ccc; 
+	    padding: 1px;
+	}
+
+	.galleryDeleteIcon{
+	    /* position : absolute; */
+	    display:none;
+	    background: url('../images/Delete.png') right top no-repeat;
+	    margin: -125px 10px 0px 285px; 
+	    height: 16px; 
+	    width: 16px;
+	    position: relative; 
+	    z-index: 100; 
+	    opacity: 0.8; 
+	    filter: alpha(opacity=80);
+
+	    /* z-index:100 */
+	}
+
+	#imagePanel{
+	    width:65%;
+	    float:left;
+	}
+
 .sidebar .Panel.FancySelect {
 	cursor: default;
 	overflow: auto;
@@ -189,3 +282,4 @@
 .sidebar .Panel.FancySelect .option.active {
 	background-color: #fff;
 }
+
