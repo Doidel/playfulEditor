@@ -213,51 +213,11 @@ Play.prototype.startLeap = function ( ) {
 
 	if ( !this._leapController ) {
 	
+		var currentHandPos;
+	
 		this._leapController = Leap.loop( { background: true }, {
 			hand: function (hand) {
-			
-				// The Leap movements should take place according to screen dimensions, in order to fill the position range of the screen. The screen's left to right have to be "filled" by leap.
-				// Approximate ranges: x = -210 to 210 to , y = 0 to 400, z = -230 to 230
-				
-				
-				/*var zModifier = -400;
-				
-				var z = hand.palmPosition[2] + zModifier;
-				/*z *= 1 + (Math.abs(hand.palmPosition[2] - 230) / 100); // increase z's range somewhat exponentially to allow more movement
-				
-				// scale y according to the character's z position. 320 and 4 are random tweaks.
-				var y = editor.play._heightMultiplier * z * ((hand.palmPosition[1] - 220) / 400) * 4;
-				
-				var cameraCapturedWidth  = editor.play._widthMultiplier * -z;
-				
-				var xRatio = hand.palmPosition[0] / 180;
-				//scale x too
-				var x = hand.palmPosition[0] + xRatio * (cameraCapturedWidth - editor.play._widthMultiplier );
-			
-				var character = editor.play._character;
-				if ( !character ) return;
-				var newpos = new THREE.Vector3(x, y, z);
-				newpos.multiplyScalar( 0.01 );
-				newpos.applyMatrix4( editor.play._camera.matrixWorld );
-				character.position.multiplyScalar( 0.6 ).add( newpos.multiplyScalar( 0.4 ) ); //linear interpolation
-				//character.position = newpos;
-				character.position.y = Math.max( character.position.y, 0.07 );*/
-				
-				
-				var character = editor.play._character;
-				if ( !character ) return;
-				
-				var modifier = 0.05;
-				
-				var zModifier = -400;
-				
-				var z = hand.palmPosition[2];
-				var y = Math.max( hand.palmPosition[1] - 60, 0.07 ) / 3.4;
-				var x = hand.palmPosition[0];
-				var newpos = new THREE.Vector3( x * modifier, y * modifier, z * modifier );
-				character.position.multiplyScalar( 0.6 ).add( newpos.multiplyScalar( 0.4 ) ); //linear interpolation
-				
-				
+					
 				// which gesture is it?
 				
 				var gestureType = 'stroke';	
@@ -292,6 +252,90 @@ Play.prototype.startLeap = function ( ) {
 				
 				editor.play._currentGesture = gestureType;
 				editor.play.effects.displayGestureType( gestureType );
+				
+			
+				if ( hand.type == "right" ) {
+			
+					// The Leap movements should take place according to screen dimensions, in order to fill the position range of the screen. The screen's left to right have to be "filled" by leap.
+					// Approximate ranges: x = -210 to 210 to , y = 0 to 400, z = -230 to 230
+					
+					
+					/*var zModifier = -400;
+					
+					var z = hand.palmPosition[2] + zModifier;
+					/*z *= 1 + (Math.abs(hand.palmPosition[2] - 230) / 100); // increase z's range somewhat exponentially to allow more movement
+					
+					// scale y according to the character's z position. 320 and 4 are random tweaks.
+					var y = editor.play._heightMultiplier * z * ((hand.palmPosition[1] - 220) / 400) * 4;
+					
+					var cameraCapturedWidth  = editor.play._widthMultiplier * -z;
+					
+					var xRatio = hand.palmPosition[0] / 180;
+					//scale x too
+					var x = hand.palmPosition[0] + xRatio * (cameraCapturedWidth - editor.play._widthMultiplier );
+				
+					var character = editor.play._character;
+					if ( !character ) return;
+					var newpos = new THREE.Vector3(x, y, z);
+					newpos.multiplyScalar( 0.01 );
+					newpos.applyMatrix4( editor.play._camera.matrixWorld );
+					character.position.multiplyScalar( 0.6 ).add( newpos.multiplyScalar( 0.4 ) ); //linear interpolation
+					//character.position = newpos;
+					character.position.y = Math.max( character.position.y, 0.07 );*/
+					
+					
+					var character = editor.play._character;
+					if ( !character ) return;
+					
+					var modifier = 0.05;
+					
+					var zModifier = -400;
+					
+					var z = hand.palmPosition[2];
+					var y = Math.max( (hand.palmPosition[1] - 60) / 3.4, 0.07 );
+					var x = hand.palmPosition[0];
+					var newpos = new THREE.Vector3( x * modifier, y * modifier, z * modifier ).applyQuaternion( new THREE.Quaternion( 0, editor.play._camera.quaternion.y, 0, editor.play._camera.quaternion.w ) );
+					character.position.multiplyScalar( 0.6 ).add( newpos.multiplyScalar( 0.4 ) ); //linear interpolation
+				
+				} else {
+				
+					var modifier = 0.002;
+					
+					var z = hand.palmPosition[2];
+					var y = hand.palmPosition[1] - 200;
+					var x = hand.palmPosition[0];
+					
+					if ( !currentHandPos ) {
+						
+						currentHandPos = new THREE.Vector3( x * modifier, y * modifier, z * modifier );
+						
+					} else {
+					
+						if ( gestureType == 'stroke' ) {
+						
+							//translate
+							var delta = new THREE.Vector3( x * modifier, y * modifier, z * modifier );
+							//delta.sub( currentHandPos );
+							
+							//editor.play._camera.position.add( delta );
+							var deltaZ = (new THREE.Vector3( 0, 0, z * modifier )).applyQuaternion( new THREE.Quaternion( 0, editor.play._camera.quaternion.y, 0, editor.play._camera.quaternion.w ) );
+							editor._activeControls.target.add( deltaZ );
+							editor._activeControls.object.position.add( deltaZ );
+							editor._activeControls.panLeft( - x * modifier );
+							editor._activeControls.panUp( y * modifier );
+							editor._activeControls.update();
+							
+						} else if ( gestureType == 'grab' ) {
+						
+							editor._activeControls.rotateLeft( - x * modifier * 0.1 );
+							editor._activeControls.rotateUp( - y * modifier * 0.1 );
+							editor._activeControls.update();
+						}
+					
+					}
+					
+				
+				}
 
 			}
 		});
@@ -475,9 +519,13 @@ Play.prototype._playLoop = function ( delta ) {
 	// loop through the touches and try to find objects which were left i.e. aren't touched anymore
 	for (var x = 0; x < touchesGrabCheck.length; x++) {
 	
-		if ( touchesGrabCheck[ x ] == -1 || !editor.scene._objects[ touchesGrabCheck[ x ] ] ) continue;
+		if ( touchesGrabCheck[ x ] == -1 ) continue;
 		
-		editor.scene._objects[ touchesGrabCheck[ x ] ].release();
+		obj = editor.scene._objects[ touchesGrabCheck[ x ] ];
+		
+		if ( !obj || !obj.release ) continue;
+		
+		obj.release();
 	
 	}
 	
@@ -693,7 +741,6 @@ Play.prototype._inputEvents = {
 	move: function( event ) {
 		editor.play._characterX = editor.play._cameraToCharacterAspectWidth * event.clientX - editor.play._characterPlaneHalfWidth;
 		editor.play._characterY = -editor.play._cameraToCharacterAspectHeight * event.clientY + editor.play._characterPlaneHalfHeight + 0.1;
-		console.log( editor.play._characterX, editor.play._characterY );
 	}
 };
 

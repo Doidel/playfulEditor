@@ -37,7 +37,7 @@ var Viewport = function ( editor ) {
 
 	//
 	
-	var camera = new THREE.PerspectiveCamera( 50, 1, 0.01, 500 );
+	var camera = new THREE.PerspectiveCamera( 60, 1, 0.01, 500 );
 	camera.position.fromArray( editor.config.getKey( 'camera' ).position );
 	camera.lookAt( new THREE.Vector3().fromArray( editor.config.getKey( 'camera' ).target ) );
 	editor._cam = camera;
@@ -553,6 +553,7 @@ var Viewport = function ( editor ) {
 		renderer.autoUpdateScene = false;
 		renderer.setClearColor( clearColor );
 		renderer.setSize( container.dom.offsetWidth, container.dom.offsetHeight );
+		if ( effect ) effect.setSize( container.dom.offsetWidth, container.dom.offsetHeight );
 
 		container.dom.appendChild( renderer.domElement );
 
@@ -813,6 +814,7 @@ var Viewport = function ( editor ) {
 		playCamera.updateProjectionMatrix();
 
 		renderer.setSize( container.dom.offsetWidth, container.dom.offsetHeight );
+		if ( effect ) effect.setSize( container.dom.offsetWidth, container.dom.offsetHeight );
 
 		render();
 
@@ -855,7 +857,7 @@ var Viewport = function ( editor ) {
 	
 	//
 
-	var clearColor, renderer;
+	var clearColor, renderer, effect;
 
 	if ( editor.config.getKey( 'renderer' ) !== undefined ) {
 
@@ -873,6 +875,20 @@ var Viewport = function ( editor ) {
 
 		}
 
+	}
+	
+	if ( editor.config.getKey( 'effect' ) !== undefined ) {
+
+		effect = new THREE[ editor.config.getKey( 'effect' ) ]( renderer );
+
+	} else {
+		
+		//effect = new THREE.AnaglyphEffect( renderer );
+		//effect.setFocalLength( 12.5 );
+		effect = new THREE.StereoEffect( renderer );
+		effect.separation = 0.1;
+		e = effect;
+		
 	}
 	
 	//renderer = new THREE.WebGLDeferredRenderer( { antialias: true } );
@@ -1018,11 +1034,11 @@ var Viewport = function ( editor ) {
 		// update
 		
 		renderer.clear();
-		renderer.render( scene, editor._activeCamera );
+		(effect ? effect : renderer).render( scene, editor._activeCamera );
 
 		if ( !container.play && renderer instanceof THREE.RaytracingRenderer === false ) {
 
-			renderer.render( sceneHelpers, editor._activeCamera );
+			(effect ? effect : renderer).render( sceneHelpers, editor._activeCamera );
 
 		}
 
