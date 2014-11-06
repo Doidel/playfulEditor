@@ -1,4 +1,4 @@
-var GalleryBar = function( editor ){
+var GalleryPanel = function( editor ){
     var signals = editor.signals;
     var cameraArray;
 

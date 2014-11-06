@@ -2,33 +2,31 @@ Menubar.SceneGallery = function ( editor ) {
 
 	// event handlers
 
-	function onShowHide () {
-	    var galleryPanel = document.getElementById('gallery');
-	    if(galleryPanel.style.display == 'none'){
-		console.log('on');
-		galleryPanel.style.display = '';
-	    }else{
-		console.log('off');
-		galleryPanel.style.display = 'none';
+	function showHide ( id ) {
+	    //console.log(id);
+	    var panel = document.getElementById( id );
+	    if(panel.style.display == 'none'){	
+		panel.style.display = '';
+	    }else{	
+		panel.style.display = 'none';
 	    }
-		// window.open( 'https://github.com/mrdoob/three.js/tree/master/editor', '_blank' )
-
 	}
 
-	function onUpload () {
+    function onShowHideGallery(){
+	showHide('gallery');
+    }
 
-		// window.open( 'http://threejs.org', '_blank' );
-
-	}
-
+    function onShowHideUpload(){
+	showHide('galleryUpload');
+    }
 	// configure menu contents
 
 	var createOption = UI.MenubarHelper.createOption;
 	var createDivider = UI.MenubarHelper.createDivider;
 
 	var menuConfig = [
-		createOption( 'Show / Hide Gallery Panel', onShowHide ),
-		createOption( 'Upload Gallery', onUpload )
+		createOption( 'Show / Hide Camera Panel', onShowHideGallery ),
+		createOption( 'Show / Hide Upload Panel', onShowHideUpload )
 	];
 
 	var optionsPanel = UI.MenubarHelper.createOptionsPanel( menuConfig );
