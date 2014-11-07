@@ -56,7 +56,6 @@ _lS = {
 	prefabsList: {
 		// name: function to create it
 		'Resurrection Sphere': function ( ) {
-			
 			var mesh = new Physijs.SphereMesh(
 				new THREE.SphereGeometry( 0.5, 32, 16 ),
 				Physijs.createMaterial(
@@ -65,7 +64,12 @@ _lS = {
 					0.5
 				)
 			);
-			
+				
+			var loader = new THREE.JSONLoader();
+			loader.load( "meshes/example.js", function( geometry, materials ) {
+				mesh.geometry = geometry;
+			});
+				
 			// Enable CCD if the object moves more than 1 meter in one simulation frame
 			mesh.setCcdMotionThreshold(1);
 

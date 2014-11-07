@@ -884,14 +884,6 @@ var Viewport = function ( editor ) {
 
 		effect = new THREE[ editor.config.getKey( 'effect' ) ]( renderer );
 
-	} else {
-		
-		//effect = new THREE.AnaglyphEffect( renderer );
-		//effect.setFocalLength( 12.5 );
-		effect = new THREE.StereoEffect( renderer );
-		effect.separation = 0.1;
-		e = effect;
-		
 	}
 	
 	//renderer = new THREE.WebGLDeferredRenderer( { antialias: true } );
@@ -916,6 +908,28 @@ var Viewport = function ( editor ) {
 	
 	
 	editor._renderer = renderer;
+	
+	//TODO: signals.effectChanged.dispatch( 'StereoEffect' );
+	signals.effectChanged.add( function( type ) {
+	
+		switch ( type ) {
+			case 'StereoEffect':
+				effect = new THREE.StereoEffect( renderer );
+				effect.separation = -.63; //wrong way round?
+				break;
+			case undefined:
+				effect = undefined;
+				break;
+		}
+		
+		editor.config.setKey( 'effect', type )
+		
+		signals.windowResize.dispatch();
+		render();
+		//e = effect;
+		
+	} );
+	
 
 	//
 
@@ -1061,10 +1075,6 @@ var Viewport = function ( editor ) {
 		}
 	    }
 	    
-	      
-
-	    
-	    
 	});
 
 
@@ -1078,23 +1088,23 @@ var Viewport = function ( editor ) {
 		// update
 		
 		renderer.clear();
-		(effect ? effect : renderer).render( scene, editor._activeCamera );
+		(effect && container.play ? effect : renderer).render( scene, editor._activeCamera );
 
 	    
 
 		if ( !container.play && renderer instanceof THREE.RaytracingRenderer === false ) {
 
 		    if( takeScreenShot === true ){
-			// var imageType = editor.config.getKey( 'imageType' ) || 'png';
-			// imageType = "image/"+imageType.toLowerCase();
-			//console.log("imagetype:"+imageType);
-			var imageType = "image/png"
-			//editor.takeScreenShot = false;
-			signals.newImageAvailable.dispatch( renderer.domElement.toDataURL( imageType ) );
+				// var imageType = editor.config.getKey( 'imageType' ) || 'png';
+				// imageType = "image/"+imageType.toLowerCase();
+				//console.log("imagetype:"+imageType);
+				var imageType = "image/png"
+				//editor.takeScreenShot = false;
+				signals.newImageAvailable.dispatch( renderer.domElement.toDataURL( imageType ) );
 		    }
 
 
-			(effect ? effect : renderer).render( sceneHelpers, editor._activeCamera );
+			renderer.render( sceneHelpers, editor._activeCamera );
 
 		}
 
