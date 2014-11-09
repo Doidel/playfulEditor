@@ -142,12 +142,6 @@
 	right: 1.5em;
 }
 
-#sidebars input,
-#sidebars textarea,
-#sidebars select {
-	/* background: #ccc; */
-}
-
 .sidebar>.Panel {
 	margin-bottom: 0.5em;
 	overflow: hidden;
@@ -173,6 +167,15 @@
 }
 .sidebar>.Panel>.Panel>.Panel:first-child {
 	border-top: none;
+}
+
+.sidebar .Panel.advancedSwitch {
+	background-color: #fff;
+}
+.sidebar>.Panel .switchButton {
+	font-size: 1em; letter-spacing: 0.1em;
+	color: #e57245;
+	text-decoration: none;
 }
 
 	#gallery{
