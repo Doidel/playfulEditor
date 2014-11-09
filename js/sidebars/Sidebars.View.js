@@ -7,6 +7,7 @@ Sidebars.View = function ( editor ) {
 
 	$("<h2/>").html("View").appendTo(container.dom);
 	var menu = new UI.Panel();
+	menu.setClass("Panel menu");
 	
 	// Create a button for each menu item
 	var d2Button = $("<a/>").html("2D Display").on("click",function(e)

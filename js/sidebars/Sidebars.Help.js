@@ -7,6 +7,7 @@ Sidebars.Help = function ( editor ) {
 
 	$("<h2/>").html("Help").appendTo(container.dom);
 	var menu = new UI.Panel();
+	menu.setClass("Panel menu");
 	
 	// Create a button for each menu item
 	var sourceButton = $("<a/>").html("Source Code").on("click",function(e)

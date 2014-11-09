@@ -135,7 +135,7 @@
 #sidebars .sidebar.left {
 	right: auto;
 	left: 1.5em;
-	bottom: 3.5em;
+	bottom: 7.5em;
 }
 #sidebars .sidebar.right {
 	left: auto;
@@ -169,165 +169,188 @@
 	border-top: none;
 }
 
-.sidebar .Panel.advancedSwitch {
-	background-color: #fff;
-}
-.sidebar>.Panel .switchButton {
-	font-size: 1em; letter-spacing: 0.1em;
-	color: #e57245;
-	text-decoration: none;
-}
-
-	#gallery{
-	    position: relative;
-	    top: 50px;
-	    left: 300px;
-	    margin-right: 700px;
-	    bottom: 32px;
-	    z-index: 2;	   
-	    /* border: 1px solid black; */
-	    height: 170px;
-	    
-	    
-	/* overflow: auto; */
+	/* advanced switch */
+	.sidebar .Panel.advancedSwitch {
+		background-color: #fff;
+	}
+	.sidebar>.Panel .switchButton {
+		font-size: 1em; letter-spacing: 0.1em;
+		color: #e57245;
+		text-decoration: none;
 	}
 
-	#cameraPanel{
-	    width:35%;
-	    float: left;
-	    
+	/* menu lists */
+	.sidebar .Panel.menu {
+		width: 16em;
 	}
-
-	#cameraArrayList{
-	    /* border: 1px solid blue; */
-	    overflow-x:scroll;
-	    overflow-y:hidden;
-	    white-space:nowrap;
-	    height: 140px;
-	    margin-Left:7px;
-	    margin-top:5px;
-	    background: #eee;
-	    border-radius: 10px;
+	.sidebar ul.menu {
+		list-style: none;
+		margin: 0; padding: 0;
 	}
-
-	#cameraArrayList>.Panel{
-	    margin-top:-5px;
-	    margin-left:5px;
-	    text-align:center;
+	.sidebar ul.menu li {
+		/* display: inline-block; */
 	}
-
-	#cameraArrayList>.Panel>.Panel{
-	    float:left;	    
+	.sidebar ul.menu a {
+		cursor: pointer;
+		display: block; padding: 0.5em 1em;
+		border-bottom: 1px solid #ccc;
 	}
-
-	#imageList{
-	    /* border: 1px solid blue; */
-	    overflow-x:scroll;
-	    overflow-y:hidden;
-	    white-space:nowrap;
-	    height: 140px;
-	    margin-Left:7px;
-	    margin-top:5px;
-	    background: #eee;
-	    border-radius: 10px;
+	.sidebar ul.menu a:hover {
+		background-color: #fff;
 	}
-
-	#imageList>.Panel{
-	    margin-top:-15px;
-	}
-
-	.imageContainer{
-	    float:left;	
-	}
-
-	.imageContainer:hover a .galleryDeleteIcon{display:block; cursor:pointer;}
-
 	
-
-	.imageContainer a img{
-	    width: 310px; 
-	    height: 140px;
-	    border: solid 1px #ccc; 
-	    padding: 1px;
+	/* scene fancy select */
+	
+	.sidebar .Panel.FancySelect {
+		cursor: default;
+		overflow: auto;
+		outline: none;
+		height: 12em;
+		color: #444;
+		width: 16em;
+		float: right;
 	}
-
-	.galleryDeleteIcon{
-	    /* position : absolute; */
-	    display:none;
-	    background: url('../images/Delete.png') right top no-repeat;
-	    margin: -125px 10px 0px 285px; 
-	    height: 16px; 
-	    width: 16px;
-	    position: relative; 
-	    z-index: 100; 
-	    opacity: 0.8; 
-	    filter: alpha(opacity=80);
-
-	    /* z-index:100 */
+	.sidebar .Panel.FancySelect .option {
+		padding: 0.4em 0.8em;
+		white-space: nowrap;
 	}
-
-	#imagePanel{
-	    width:65%;
-	    float:left;
+	.sidebar .Panel.FancySelect .option.active {
+		background-color: #fff;
 	}
-
-
-	#galleryUpload{
-	    position: relative;
-	    top: 60px;
-	    left: 305px;
-	    margin-right: 705px;
-	    bottom: 32px;
-	    z-index: 2;
-	    height: 215px;
-	    /* display:none; */
-	    background-color:#eee;
-	}
-
-	.galleryUploadPanel{
-	    width: 49%;
-	    height:100%;
-	    float: left;
-	    margin-left:5px;
-	    /* border: 1px solid black; */
-	}
-
-	.galleryUploadPanel > input{
-	    margin: 5px auto -10px;
-	    display: block;
-	    padding: 5px;
-	    width: 90%;
-	}
-
-	.galleryUploadPanel > textarea{
-	    margin: 5px auto;
-	    display: block;
-	    padding: 5px;
-	    width: 90%;
-	    
-	    padding-bottom: 10px;
-	}
-
-	.galleryUploadPanel > button{
-	    margin: 15px auto 0px auto;
-	    display: block;
-	    padding: 10px 80px;
-	    position:
-	}
-
-
-.sidebar .Panel.FancySelect {
-	cursor: default;
-	overflow: auto;
-	outline: none;
-	height: 12em;
-	color: #444;
-}
-.sidebar .Panel.FancySelect .option {
-	padding: 0.4em 0.8em;
-	white-space: nowrap;
-}
-.sidebar .Panel.FancySelect .option.active {
-	background-color: #fff;
+	
+	
+	
+	
+#gallery{
+    position: relative;
+    top: 50px;
+    left: 300px;
+    margin-right: 700px;
+    bottom: 32px;
+    z-index: 2;	   
+    /* border: 1px solid black; */
+    height: 170px;
+	/* overflow: auto; */
 }
 
+#cameraPanel{
+    width:35%;
+    float: left;
+}
+
+#cameraArrayList{
+    /* border: 1px solid blue; */
+    overflow-x:scroll;
+    overflow-y:hidden;
+    white-space:nowrap;
+    height: 140px;
+    margin-Left:7px;
+    margin-top:5px;
+    background: #eee;
+    border-radius: 10px;
+}
+
+#cameraArrayList>.Panel{
+    margin-top:-5px;
+    margin-left:5px;
+    text-align:center;
+}
+
+#cameraArrayList>.Panel>.Panel{
+    float:left;	    
+}
+
+#imageList{
+    /* border: 1px solid blue; */
+    overflow-x:scroll;
+    overflow-y:hidden;
+    white-space:nowrap;
+    height: 140px;
+    margin-Left:7px;
+    margin-top:5px;
+    background: #eee;
+    border-radius: 10px;
+}
+
+#imageList>.Panel{
+    margin-top:-15px;
+}
+
+.imageContainer{
+    float:left;	
+}
+
+.imageContainer:hover a .galleryDeleteIcon{display:block; cursor:pointer;}
+
+
+
+.imageContainer a img{
+    width: 310px; 
+    height: 140px;
+    border: solid 1px #ccc; 
+    padding: 1px;
+}
+
+.galleryDeleteIcon{
+    /* position : absolute; */
+    display:none;
+    background: url('../images/Delete.png') right top no-repeat;
+    margin: -125px 10px 0px 285px; 
+    height: 16px; 
+    width: 16px;
+    position: relative; 
+    z-index: 100; 
+    opacity: 0.8; 
+    filter: alpha(opacity=80);
+
+    /* z-index:100 */
+}
+
+#imagePanel{
+    width:65%;
+    float:left;
+}
+
+
+#galleryUpload{
+    position: relative;
+    top: 60px;
+    left: 305px;
+    margin-right: 705px;
+    bottom: 32px;
+    z-index: 2;
+    height: 215px;
+    /* display:none; */
+    background-color:#eee;
+}
+
+.galleryUploadPanel{
+    width: 49%;
+    height:100%;
+    float: left;
+    margin-left:5px;
+    /* border: 1px solid black; */
+}
+
+.galleryUploadPanel > input{
+    margin: 5px auto -10px;
+    display: block;
+    padding: 5px;
+    width: 90%;
+}
+
+.galleryUploadPanel > textarea{
+    margin: 5px auto;
+    display: block;
+    padding: 5px;
+    width: 90%;
+    
+    padding-bottom: 10px;
+}
+
+.galleryUploadPanel > button{
+    margin: 15px auto 0px auto;
+    display: block;
+    padding: 10px 80px;
+    position:
+}
