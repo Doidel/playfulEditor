@@ -8,11 +8,25 @@ Sidebars.Help = function ( editor ) {
 	$("<h2/>").html("Help").appendTo(container.dom);
 	var menu = new UI.Panel();
 	
+	// Create a button for each menu item
+	var sourceButton = $("<a/>").html("Source Code").on("click",function(e)
+	{
+		window.open( 'https://github.com/mrdoob/three.js/tree/master/editor', '_blank' )
+	});
+	
+	var aboutButton = $("<a/>").html("About").on("click",function(e)
+	{
+		window.open( 'http://threejs.org', '_blank' );
+	});
+		
+	// Create a list of the menu items
 	$("<ul/>")
 		.addClass("menu")
-		.html("<li>Source Code</li><li>About</li>")
+		.append( $("<li/>").html(sourceButton) )
+		.append( $("<li/>").html(aboutButton) )
 		.appendTo(menu.dom);
 	
+	// Add signal listener to show/hide this sidebar panel
 	signals.menuButtonClicked.add( function(name) {
 		if(name=="file+help")
 		{

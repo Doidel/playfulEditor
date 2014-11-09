@@ -8,6 +8,7 @@ var Sidebars = function ( editor ) {
 	leftSidebar.add( new Sidebars.File( editor ) );
 	leftSidebar.add( new Sidebars.Help( editor ) );
 	leftSidebar.add( new Sidebars.Add( editor ) );
+	leftSidebar.add( new Sidebars.View( editor ) );
 	
 	//rightSidebar.add( new Sidebars.Renderer( editor ) );
 	rightSidebar.add( new Sidebars.Scene( editor ) );
