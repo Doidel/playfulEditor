@@ -216,6 +216,13 @@ THREE.PlayfulExporter.prototype = {
 			if ( object instanceof THREE.Scene ) {
 
 				data.type = 'Scene';
+				
+				if ( object.hasLeapBox === false ) {
+					
+					data.hasLeapBox = object.hasLeapBox;
+					
+				}
+				
 				if ( object.fog != undefined ) {
 					data.fog = {
 						type: object.fog instanceof THREE.Fog ? 'Fog' : 'FogExp2',
