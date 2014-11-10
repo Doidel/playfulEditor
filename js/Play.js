@@ -90,6 +90,8 @@ Play.prototype.start = function ( ) {
 	document.body.addEventListener('keydown', this._inputEvents.down);
 	document.body.addEventListener('keyup', this._inputEvents.up);
 	editor._activeControls.domElement.addEventListener('mousemove', this._inputEvents.move, false);
+	editor._activeControls.target.z = -20;
+	editor._activeControls.target.y = -5;
 	
 	this.startLeap();
 	document.getElementById('menubar').appendChild( this.gestureDisplay );
@@ -296,6 +298,21 @@ Play.prototype.startLeap = function ( ) {
 					var x = hand.palmPosition[0];
 					var newpos = new THREE.Vector3( x * modifier, y * modifier, z * modifier ).applyQuaternion( new THREE.Quaternion( 0, editor.play._camera.quaternion.y, 0, editor.play._camera.quaternion.w ) );
 					character.position.multiplyScalar( 0.6 ).add( newpos.multiplyScalar( 0.4 ) ); //linear interpolation
+					
+					
+					// calculate camera pos according according to character pos
+					
+					// the camera is on the surface of a large sphere. The camera is looking towards the center. The character is always in the center of the camera's view.
+					
+					var r = 1000;
+					var spherePos = new THREE.Vector3( 0, 0, 7 - r );
+					var currentDifference = new THREE.Vector3().subVectors( character.position, spherePos );
+					var entireDifference = currentDifference.clone().multiplyScalar( r / currentDifference.length() );
+					entireDifference.y += 2;
+					entireDifference.z += character.position.z * 0.6;
+					editor._activeControls.setTranslate( spherePos.add( entireDifference ) );
+					
+					console.log( currentDifference );
 				
 				} else {
 				

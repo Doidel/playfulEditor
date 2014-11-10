@@ -118,12 +118,6 @@ Menubar.File = function ( editor ) {
 		
 		// END CUSTOM
 
-		/*var blob = new Blob( [ output ], { type: 'text/plain' } );
-		var objectURL = URL.createObjectURL( blob );
-		
-		window.open( objectURL, '_blank' );
-		window.focus();*/
-
 	}
 	
 	editor.storage.createZip = function ( callback ) {
