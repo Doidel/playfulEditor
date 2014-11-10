@@ -8,13 +8,12 @@ Sidebars.Properties.AdvancedSwitch = function ( editor ) {
 	
 	var switchButton = $("<a/>").attr("href","#switchMode").addClass("switchButton");
 	
-	var advMode = false;
 	var switchMode = function(advanced)
 	{
-		if(advanced===false || (advanced===undefined && advMode))
+		if ( advanced === false || ( advanced === undefined && workMode == 'advanced' ) )
 		{
 			// Switch to easy
-			advMode = false;
+			workMode = 'easy';
 			switchButton
 				.removeClass("advanced icon-open-small").addClass("easy icon-closed-small")
 				.html("Show advanced settings");
@@ -22,17 +21,19 @@ Sidebars.Properties.AdvancedSwitch = function ( editor ) {
 		else
 		{
 			// Switch to advanced
-			advMode = true;
+			workMode = 'advanced';
 			switchButton
 				.removeClass("easy icon-closed-small").addClass("advanced icon-open-small")
 				.html("Hide advanced settings");
 		}
+		
+		editor.signals.objectSelected.dispatch( editor.selected );
 	};
-	switchMode(false);
+	switchMode( false );
 	
-	switchButton.on("click",function(e) { e.preventDefault(); switchMode() });		
+	switchButton.on( "click", function(e) { e.preventDefault(); switchMode(); } );		
 	
-	switchButton.appendTo(container.dom);
+	switchButton.appendTo( container.dom );
 	
 	return container;
 }
