@@ -237,6 +237,11 @@ Editor.prototype = {
 		
 			var egh = new THREE.EdgesHelper( object, 0xffffff );
 			egh.name = 'Helper';
+			var posArr = egh.geometry.attributes.position.array;
+			for (var x = 0, l = posArr.length; x < l; x++) {
+				posArr[ x ] *= 1.01;
+			}
+			egh.geometry.attributes.position.needsUpdate = true;
 			egh.geometry.computeBoundingSphere();
 			
 			//remove doubles

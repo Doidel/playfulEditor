@@ -657,7 +657,9 @@ Play.prototype.runtimeMaterials = {
 					var vScale = 1 + scale / 10;
 					var total = 1 / prevScale * vScale;
 					for (var x = 0, l = posArr.length; x < l; x++) {
+						posArr[ x ] -= 0.01;
 						posArr[ x ] *= total;
+						posArr[ x ] += 0.01;
 					}
 					edge._previousScale = vScale;
 					edge.geometry.attributes.position.needsUpdate = true;
