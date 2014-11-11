@@ -11,9 +11,9 @@ var Editor = function () {
 		stop: new SIGNALS.Signal(),
 
 
-		//scene gallery
-		//renderingRequested: new SIGNALS.Signal(),		
-		//newImageAvailable: new SIGNALS.Signal(),
+	    	    //scene gallery
+	    renderingRequested: new SIGNALS.Signal(),		
+	    newImageAvailable: new SIGNALS.Signal(),
 
 		// notifications
 

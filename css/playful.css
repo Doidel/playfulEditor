@@ -276,10 +276,9 @@
 	    margin-right: 705px;
 	    bottom: 32px;
 	    z-index: 2;
-	    height: 240px;
+	    height: 215px;
 	    /* display:none; */
 	    background-color:#eee;
-	    border-radius: 10px;
 	}
 
 	.galleryUploadPanel{
@@ -291,7 +290,7 @@
 	}
 
 	.galleryUploadPanel > input{
-	    margin: 5px auto;
+	    margin: 5px auto -10px;
 	    display: block;
 	    padding: 5px;
 	    width: 90%;
