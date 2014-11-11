@@ -92,7 +92,9 @@
 		<script src="js/sidebars/Sidebars.js"></script>
 		<script src="js/sidebars/Sidebars.Add.js"></script>
 		<script src="js/sidebars/Sidebars.File.js"></script>
+		<script src="js/sidebars/Sidebars.File.ExportSceneHelper.js"></script>
 		<script src="js/sidebars/Sidebars.Help.js"></script>
+		<script src="js/sidebars/Sidebars.View.js"></script>
 		<script src="js/sidebars/Sidebars.Scene.js"></script>
 		<script src="js/sidebars/Sidebars.Properties.js"></script>
 		<script src="js/sidebars/Sidebars.Renderer.js"></script>
@@ -111,6 +113,7 @@
 		<script src="js/sidebars/Sidebars.Properties.Material.js"></script>
 		<script src="js/sidebars/Sidebars.Properties.Physics.js"></script>
 		<script src="js/sidebars/Sidebars.Properties.Events.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.AdvancedSwitch.js"></script>
 
 		<script src="js/Tools.js"></script>
 		<script src="js/Tools.Menu.js"></script>
@@ -331,6 +334,8 @@
 						
 						}
 
+						object.hasLeapBox = data.hasLeapBox;
+						
 						break;
 
 					case 'PerspectiveCamera':

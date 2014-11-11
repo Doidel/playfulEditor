@@ -18,11 +18,13 @@ var Editor = function () {
 		// notifications
 
 		themeChanged: new SIGNALS.Signal(),
+		themeLoaded: new SIGNALS.Signal(),
 
 		transformModeChanged: new SIGNALS.Signal(),
 		snapChanged: new SIGNALS.Signal(),
 		spaceChanged: new SIGNALS.Signal(),
 		rendererChanged: new SIGNALS.Signal(),
+		effectChanged: new SIGNALS.Signal(),
 
 		sceneGraphChanged: new SIGNALS.Signal(),
 
@@ -44,6 +46,7 @@ var Editor = function () {
 		fogColorChanged: new SIGNALS.Signal(),
 		fogParametersChanged: new SIGNALS.Signal(),
 		skyboxChanged: new SIGNALS.Signal(),
+		leapBoxChanged: new SIGNALS.Signal(),
 		windowResize: new SIGNALS.Signal(),
 		
 		menuButtonClicked: new SIGNALS.Signal()
@@ -235,6 +238,11 @@ Editor.prototype = {
 		
 			var egh = new THREE.EdgesHelper( object, 0xffffff );
 			egh.name = 'Helper';
+			var posArr = egh.geometry.attributes.position.array;
+			for (var x = 0, l = posArr.length; x < l; x++) {
+				posArr[ x ] *= 1.01;
+			}
+			egh.geometry.attributes.position.needsUpdate = true;
 			egh.geometry.computeBoundingSphere();
 			
 			//remove doubles

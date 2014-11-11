@@ -85,7 +85,6 @@ Sidebars.Properties.Scene = function ( editor ) {
 	// fog near
 
 	var fogNearRow = new UI.Panel();
-	fogNearRow.setDisplay( 'none' );
 
 	var fogNear = new UI.Number( 1 ).setWidth( '60px' ).setRange( 0, Infinity ).onChange( updateFogParameters );
 
@@ -94,10 +93,9 @@ Sidebars.Properties.Scene = function ( editor ) {
 
 	container.add( fogNearRow );
 
-	var fogFarRow = new UI.Panel();
-	fogFarRow.setDisplay( 'none' );
-
 	// fog far
+
+	var fogFarRow = new UI.Panel();
 
 	var fogFar = new UI.Number( 5000 ).setWidth( '60px' ).setRange( 0, Infinity ).onChange( updateFogParameters );
 
@@ -109,7 +107,6 @@ Sidebars.Properties.Scene = function ( editor ) {
 	// fog density
 
 	var fogDensityRow = new UI.Panel();
-	fogDensityRow.setDisplay( 'none' );
 
 	var fogDensity = new UI.Number( 0.00025 ).setWidth( '60px' ).setRange( 0, 0.1 ).setPrecision( 5 ).onChange( updateFogParameters );
 
@@ -194,6 +191,20 @@ Sidebars.Properties.Scene = function ( editor ) {
 
 	container.add( skyboxRow );
 	
+	// leapbox
+	var leapBoxRow = new UI.Panel();
+
+	var leapBox = new UI.Checkbox( false ).onChange( function( evt ) {
+
+		signals.leapBoxChanged.dispatch( evt.target.checked );
+	
+	} );
+
+	leapBoxRow.add( new UI.Text( 'LeapBox' ).setWidth( '90px' ) );
+	leapBoxRow.add( leapBox );
+
+	container.add( leapBoxRow );
+	
 	//
 
 	var refreshFogUI = function () {
@@ -211,7 +222,8 @@ Sidebars.Properties.Scene = function ( editor ) {
 	var propertyVisibilities = {
 		'fogNear': 2,
 		'fogFar': 2,
-		'fogDensity': 2
+		'fogDensity': 2,
+		'leapBox': 1
 	};
 	
 	function updateRows() {
@@ -221,7 +233,8 @@ Sidebars.Properties.Scene = function ( editor ) {
 		var properties = {
 			'fogNear': fogNearRow,
 			'fogFar': fogFarRow,
-			'fogDensity': fogDensityRow
+			'fogDensity': fogDensityRow,
+			'leapBox': leapBoxRow
 		};
 
 		for ( var property in properties ) {
@@ -306,6 +319,8 @@ Sidebars.Properties.Scene = function ( editor ) {
 			skyboxImage.setValue( "none" );
 
 		}
+		
+		leapBox.setValue( scene.hasLeapBox === false ? false : true );
 		
 		updateSceneOptionsDisplay( editor.selected );
 	});

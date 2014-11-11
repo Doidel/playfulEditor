@@ -65,6 +65,9 @@ Play.prototype.playAction = function ( object, eventIndex, args ) {
 		case 'Stop sounds':
 			editor.soundCollection.stopAll( object._panner );
 		break;
+		case 'Custom':
+			action.func.apply( object );
+		break;
 	}
 	
 	object._eventsLastFired[ eventIndex ] = new Date().getTime();
@@ -90,6 +93,8 @@ Play.prototype.start = function ( ) {
 	document.body.addEventListener('keydown', this._inputEvents.down);
 	document.body.addEventListener('keyup', this._inputEvents.up);
 	editor._activeControls.domElement.addEventListener('mousemove', this._inputEvents.move, false);
+	editor._activeControls.target.z = -20;
+	editor._activeControls.target.y = -5;
 	
 	this.startLeap();
 	document.getElementById('menubar').appendChild( this.gestureDisplay );
@@ -254,7 +259,7 @@ Play.prototype.startLeap = function ( ) {
 				editor.play.effects.displayGestureType( gestureType );
 				
 			
-				if ( hand.type == "right" ) {
+				//if ( hand.type == "right" ) {
 			
 					// The Leap movements should take place according to screen dimensions, in order to fill the position range of the screen. The screen's left to right have to be "filled" by leap.
 					// Approximate ranges: x = -210 to 210 to , y = 0 to 400, z = -230 to 230
@@ -296,8 +301,21 @@ Play.prototype.startLeap = function ( ) {
 					var x = hand.palmPosition[0];
 					var newpos = new THREE.Vector3( x * modifier, y * modifier, z * modifier ).applyQuaternion( new THREE.Quaternion( 0, editor.play._camera.quaternion.y, 0, editor.play._camera.quaternion.w ) );
 					character.position.multiplyScalar( 0.6 ).add( newpos.multiplyScalar( 0.4 ) ); //linear interpolation
+					
+					
+					// calculate camera pos according according to character pos
+					
+					// the camera is on the surface of a large sphere. The camera is looking towards the center. The character is always in the center of the camera's view.
+					
+					var r = 1000;
+					var spherePos = new THREE.Vector3( 0, 0, 7 - r );
+					var currentDifference = new THREE.Vector3().subVectors( character.position, spherePos );
+					var entireDifference = currentDifference.clone().multiplyScalar( r / currentDifference.length() );
+					entireDifference.y += 2;
+					entireDifference.z += character.position.z * 0.6;
+					editor._activeControls.setTranslate( spherePos.add( entireDifference ) );
 				
-				} else {
+				/*} else {
 				
 					var modifier = 0.002;
 					
@@ -335,7 +353,7 @@ Play.prototype.startLeap = function ( ) {
 					}
 					
 				
-				}
+				}*/
 
 			}
 		});
@@ -657,7 +675,9 @@ Play.prototype.runtimeMaterials = {
 					var vScale = 1 + scale / 10;
 					var total = 1 / prevScale * vScale;
 					for (var x = 0, l = posArr.length; x < l; x++) {
+						posArr[ x ] -= 0.01;
 						posArr[ x ] *= total;
+						posArr[ x ] += 0.01;
 					}
 					edge._previousScale = vScale;
 					edge.geometry.attributes.position.needsUpdate = true;

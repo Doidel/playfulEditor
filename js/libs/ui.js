@@ -1111,9 +1111,10 @@ UI.EventList = function (  ) {
 		<option>Play sound</option>\
 		<option>Stop sounds</option>\
 		<option>Change Static</option>\
+		<option>Custom</option>\
 	</select>\
 	<button style="display: none;">+</button>\
-	<button class="eventDeleteButton"><img src="images/Delete.png" /></button>\
+	<button class="eventDeleteButton"><img src="images/iconset/Delete.png" /></button>\
 	<div class="eventProperties" style="display: none;"></div>';
 	
 	
@@ -1255,7 +1256,31 @@ UI.EventList.prototype.actionProperties = {
 
 		}
 	},
-	"Stop sounds": { }
+	"Stop sounds": { },
+	"Custom": {
+		getUI: function ( eventNode ) {
+		
+			var container = new UI.Panel();
+			
+			container.add( new UI.Text( 'Action' ).setWidth( '90px' ) );
+			container.add( new UI.TextArea().onChange( this.fireChange ) );
+			
+			return container;
+			
+		},
+		getData: function ( container, resultObject, eventNode ) {
+			
+			var customFunction = container.dom.querySelector('textarea');
+			resultObject.func = customFunction.value;
+
+		},
+		setData: function ( container, dataObject ) {
+
+			var customFunction = container.dom.querySelector('textarea');
+			customFunction.value = dataObject.func;
+
+		}
+	},
 	
 };
 
@@ -1463,7 +1488,7 @@ UI.RuntimeMaterial = function (  ) {
 		<option>Edges</option>\
 	</select>\
 	<button style="display: none;">+</button>\
-	<button class="eventDeleteButton"><img src="images/Delete.png" /></button>\
+	<button class="eventDeleteButton"><img src="images/iconset/Delete.png" /></button>\
 	<div class="eventProperties" style="display: none;"></div>';
 	
 	

@@ -1,4 +1,7 @@
 _lS = {
+
+	name: 'edges',
+	
 	/* init will be called either at scene creation or theme selection */
 	init: function() {
 	
@@ -53,26 +56,151 @@ _lS = {
 	
 	},
 	
+	
 	prefabsList: {
 		// name: function to create it
-		'Resurrection Sphere': function ( ) {
+		'Box': function ( ) {
+			var width = 1;
+			var height = 1;
+			var depth = 1;
+	
+			var widthSegments = 1;
+			var heightSegments = 1;
+			var depthSegments = 1;
+	
+			var geometry = new THREE.BoxGeometry( width, height, depth, widthSegments, heightSegments, depthSegments );
+			var material = Physijs.createMaterial(
+				new THREE.MeshPhongMaterial( { ambient: 0x555555, color: 0x555555, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading }  ),
+				0.5,
+				0.5
+			);
+			var mesh = new Physijs.BoxMesh( geometry, material );
 			
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			mesh.isStatic = true;
+			
+			return mesh;
+		},
+		'Sphere': function ( ) {
+			var radius = 0.5;
+			var widthSegments = 32;
+			var heightSegments = 16;
+	
+			var geometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments );
+			var material = Physijs.createMaterial(
+				new THREE.MeshPhongMaterial( { ambient: 0x555555, color: 0x555555, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading }  ),
+				0.5,
+				0.5
+			);
+			var mesh = new Physijs.SphereMesh( geometry, material );
+			
+			// Enable CCD if the object moves more than 1 meter in one simulation frame
+			mesh.setCcdMotionThreshold(1);
+			// Set the radius of the embedded sphere such that it is smaller than the object
+			mesh.setCcdSweptSphereRadius(0.2);
+			
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			mesh.isStatic = true;
+	
+			editor.addObject( mesh );
+			editor.select( mesh );
+		},
+		'Cylinder': function ( ) {
+			var radiusTop = 0.5;
+			var radiusBottom = 0.5;
+			var height = 1;
+			var radiusSegments = 8;
+			var heightSegments = 1;
+			var openEnded = false;
+	
+			var geometry = new THREE.CylinderGeometry( radiusTop, radiusBottom, height, radiusSegments, heightSegments, openEnded );
+			var material = Physijs.createMaterial(
+				new THREE.MeshPhongMaterial( { ambient: 0x555555, color: 0x555555, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading }  ),
+				0.5,
+				0.5
+			);
+			var mesh = new Physijs.CylinderMesh( geometry, material );
+			
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			mesh.isStatic = true;
+	
+			editor.addObject( mesh );
+			editor.select( mesh );
+		},
+		'Resurrection Sphere': function ( ) {
 			var mesh = new Physijs.SphereMesh(
 				new THREE.SphereGeometry( 0.5, 32, 16 ),
 				Physijs.createMaterial(
-					new THREE.MeshPhongMaterial( { ambient: 0x555555, color: 0x555555, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading }  ),
+					new THREE.MeshPhongMaterial( { ambient: 0x555555, color: 0x555555, specular: 0xffffff, shininess: 10, shading: THREE.FlatShading }  ),
 					0.5,
 					0.5
 				)
 			);
-			
+				
+			var loader = new THREE.JSONLoader();
+			loader.load( "meshes/exampleObject.js", function( geometry, materials ) {
+				mesh.geometry = geometry;
+				mesh.geometry.needsUpdate = true;
+				editor.signals.objectChanged.dispatch( mesh );
+			});
+				
 			// Enable CCD if the object moves more than 1 meter in one simulation frame
 			mesh.setCcdMotionThreshold(1);
 
 			// Set the radius of the embedded sphere such that it is smaller than the object
-			mesh.setCcdSweptSphereRadius(0.2);
+			mesh.setCcdSweptSphereRadius(0.2);			
 			
 			mesh.isStatic = true;
+			
+			mesh.events = [
+				{
+					'action': {
+						type: "Toss",
+						x: 0,
+						y: 0,
+						z: 0
+					},
+					'trigger': {
+						type: "Touch Fist"
+					}
+				},
+				{
+					'action': {
+						type: "Custom",
+						func: function() {
+							if ( !this._resurrectionPos ) {
+								this._resurrectionPos = this.position.clone();
+								this._resurrectionRot = this.rotation.clone();
+							}
+						}
+					},
+					'trigger': {
+						type: "Touch Fist"
+					}
+				},
+				{
+					'action': {
+						type: "Custom",
+						func: function() {
+							if ( ! this._resurrectionTimer ) {
+								this._resurrectionTimer = setTimeout( function() {
+									this.position = this._resurrectionPos.clone();
+									this.rotation = this._resurrectionRot.clone();
+									this.__dirtyPosition = true;
+									this.__dirtyRotation = true;
+									this._resurrectionTimer = undefined;
+								}.bind( this ), 4000 );
+							}
+						}
+					},
+					'trigger': {
+						type: "Collision"
+					}
+				}
+			];
 			
 			return mesh;
 			
@@ -89,5 +217,11 @@ _lS = {
 		
 		return mesh;
 	
+	},
+	
+	getImage: function( name ) {
+		
+		return 'js/themes/edges/' + name + '.png';
+		
 	}
 }

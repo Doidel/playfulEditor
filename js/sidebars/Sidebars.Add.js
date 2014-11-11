@@ -8,10 +8,37 @@ Sidebars.Add = function ( editor ) {
 	$("<h2/>").html("Add Object").appendTo(container.dom);
 	var addmenu = new UI.Panel();
 	
-	$("<ul/>")
+	var list = $("<ul/>")
 		.addClass("menu object")
-		.html("<li>[BILD] Rocket</li><li>[BILD] Grumpy Box</li><li>[BILD] Object 3</li><li>[BILD] Object 4</li><li>...</li>")
 		.appendTo(addmenu.dom);
+	
+	editor.signals.themeLoaded.add( function( ) {
+		
+		list.empty();
+	
+		// populate with prefabs
+		if ( editor.theme.currentTheme.prefabsList ) {
+		
+			var prefabs = Object.keys( editor.theme.currentTheme.prefabsList );
+			for ( var x = 0; x < prefabs.length; x++ ) {
+				
+				var name = prefabs[ x ];
+				
+				var prefabLink = $('<a><img src="' + editor.theme.currentTheme.getImage( name ) + '"/> ' + name + '</a></li>');
+				prefabLink.click( function (e) {
+					
+					var p = editor.theme.currentTheme.getPrefab( this );
+					editor.addObject( p );
+					editor.select( p );
+				
+				}.bind( name ) );
+				$('<li/>').html(prefabLink).appendTo( list );
+				
+			}
+			
+		}
+		
+	} );
 	
 	container.add(addmenu);
 	

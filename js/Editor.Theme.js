@@ -4,7 +4,7 @@ Editor.Theme = function ( editor ) {
 
 	editor.signals.themeChanged.add( function ( value ) {
 		
-		console.log('load');
+		console.log('load', value);
 		$.ajax({
 			url: 'js/themes/' + value + '.js',
 			dataType: 'script',
@@ -28,10 +28,11 @@ Editor.Theme = function ( editor ) {
 				});
 				
 				editor.signals.sceneGraphChanged.dispatch();
+				editor.signals.themeLoaded.dispatch( value );
 				
 			}
 		}).done(function() {
-			console.log('test2');
+		
 		}).fail(function(v1, v2, v3) {
 			console.log(v1, v2, v3);
 		});
