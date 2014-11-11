@@ -1,7 +1,7 @@
 Sidebars.File.exportSceneHelper = function ( editor, exporterClass, callback, noDownload ) {
 
 	var exporter = new exporterClass();
-
+	
 	var output = exporter.parse( editor.scene );
 
 	if ( exporter instanceof THREE.ObjectExporter || exporter instanceof THREE.PlayfulExporter ) {
@@ -10,8 +10,6 @@ Sidebars.File.exportSceneHelper = function ( editor, exporterClass, callback, no
 		output = output.replace( /[\n\t]+([\d\.e\-\[\]]+)/g, '$1' );
 
 	}
-	
-	// CUSTOM
 	
 	var zip = new JSZip();
 	zip.file("Sceneobjects.json", output);
@@ -72,13 +70,4 @@ Sidebars.File.exportSceneHelper = function ( editor, exporterClass, callback, no
 	} else {
 		createDownload();
 	}
-	
-	// END CUSTOM
-
-	/*var blob = new Blob( [ output ], { type: 'text/plain' } );
-	var objectURL = URL.createObjectURL( blob );
-	
-	window.open( objectURL, '_blank' );
-	window.focus();*/
-
 }
