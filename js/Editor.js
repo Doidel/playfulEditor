@@ -18,6 +18,7 @@ var Editor = function () {
 		// notifications
 
 		themeChanged: new SIGNALS.Signal(),
+		themeLoaded: new SIGNALS.Signal(),
 
 		transformModeChanged: new SIGNALS.Signal(),
 		snapChanged: new SIGNALS.Signal(),
