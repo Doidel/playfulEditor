@@ -1,4 +1,7 @@
 _lS = {
+
+	name: 'edges',
+	
 	/* init will be called either at scene creation or theme selection */
 	init: function() {
 	
@@ -66,17 +69,66 @@ _lS = {
 			);
 				
 			var loader = new THREE.JSONLoader();
-			loader.load( "meshes/example.js", function( geometry, materials ) {
+			loader.load( "meshes/exampleObject.js", function( geometry, materials ) {
 				mesh.geometry = geometry;
+				mesh.geometry.needsUpdate = true;
+				editor.signals.objectChanged.dispatch( mesh );
 			});
 				
 			// Enable CCD if the object moves more than 1 meter in one simulation frame
 			mesh.setCcdMotionThreshold(1);
 
 			// Set the radius of the embedded sphere such that it is smaller than the object
-			mesh.setCcdSweptSphereRadius(0.2);
+			mesh.setCcdSweptSphereRadius(0.2);			
 			
 			mesh.isStatic = true;
+			
+			mesh.events = [
+				{
+					'action': {
+						type: "Toss",
+						x: 0,
+						y: 0,
+						z: 0
+					},
+					'trigger': {
+						type: "Touch Fist"
+					}
+				},
+				{
+					'action': {
+						type: "Custom",
+						func: function() {
+							if ( !this._resurrectionPos ) {
+								this._resurrectionPos = this.position.clone();
+								this._resurrectionRot = this.rotation.clone();
+							}
+						}
+					},
+					'trigger': {
+						type: "Touch Fist"
+					}
+				},
+				{
+					'action': {
+						type: "Custom",
+						func: function() {
+							if ( ! this._resurrectionTimer ) {
+								this._resurrectionTimer = setTimeout( function() {
+									this.position = this._resurrectionPos.clone();
+									this.rotation = this._resurrectionRot.clone();
+									this.__dirtyPosition = true;
+									this.__dirtyRotation = true;
+									this._resurrectionTimer = undefined;
+								}.bind( this ), 4000 );
+							}
+						}
+					},
+					'trigger': {
+						type: "Collision"
+					}
+				}
+			];
 			
 			return mesh;
 			
@@ -93,5 +145,11 @@ _lS = {
 		
 		return mesh;
 	
+	},
+	
+	getImage: function( name ) {
+		
+		return 'js/themes/edges/' + name + '.png';
+		
 	}
 }

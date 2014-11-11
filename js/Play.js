@@ -65,6 +65,9 @@ Play.prototype.playAction = function ( object, eventIndex, args ) {
 		case 'Stop sounds':
 			editor.soundCollection.stopAll( object._panner );
 		break;
+		case 'Custom':
+			action.func.apply( object );
+		break;
 	}
 	
 	object._eventsLastFired[ eventIndex ] = new Date().getTime();
@@ -311,8 +314,6 @@ Play.prototype.startLeap = function ( ) {
 					entireDifference.y += 2;
 					entireDifference.z += character.position.z * 0.6;
 					editor._activeControls.setTranslate( spherePos.add( entireDifference ) );
-					
-					console.log( currentDifference );
 				
 				/*} else {
 				

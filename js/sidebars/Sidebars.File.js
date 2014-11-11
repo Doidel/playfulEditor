@@ -64,6 +64,7 @@ Sidebars.File = function ( editor ) {
 	container.add(menu);
 	
 	//
+	
 	editor.storage.createZip = function ( callback ) {
 		Sidebars.File.exportSceneHelper( editor, THREE.PlayfulExporter, callback, true );
 	};
