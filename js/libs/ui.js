@@ -1113,7 +1113,7 @@ UI.EventList = function (  ) {
 		<option>Change Static</option>\
 	</select>\
 	<button style="display: none;">+</button>\
-	<button class="eventDeleteButton"><img src="images/Delete.png" /></button>\
+	<button class="eventDeleteButton"><img src="images/iconset/Delete.png" /></button>\
 	<div class="eventProperties" style="display: none;"></div>';
 	
 	
@@ -1463,7 +1463,7 @@ UI.RuntimeMaterial = function (  ) {
 		<option>Edges</option>\
 	</select>\
 	<button style="display: none;">+</button>\
-	<button class="eventDeleteButton"><img src="images/Delete.png" /></button>\
+	<button class="eventDeleteButton"><img src="images/iconset/Delete.png" /></button>\
 	<div class="eventProperties" style="display: none;"></div>';
 	
 	

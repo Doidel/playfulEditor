@@ -294,7 +294,7 @@
 .galleryDeleteIcon{
     /* position : absolute; */
     display:none;
-    background: url('../images/Delete.png') right top no-repeat;
+    background: url('../images/iconset/Delete.png') right top no-repeat;
     margin: -125px 10px 0px 285px; 
     height: 16px; 
     width: 16px;
