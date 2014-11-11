@@ -256,7 +256,7 @@ Play.prototype.startLeap = function ( ) {
 				editor.play.effects.displayGestureType( gestureType );
 				
 			
-				if ( hand.type == "right" ) {
+				//if ( hand.type == "right" ) {
 			
 					// The Leap movements should take place according to screen dimensions, in order to fill the position range of the screen. The screen's left to right have to be "filled" by leap.
 					// Approximate ranges: x = -210 to 210 to , y = 0 to 400, z = -230 to 230
@@ -314,7 +314,7 @@ Play.prototype.startLeap = function ( ) {
 					
 					console.log( currentDifference );
 				
-				} else {
+				/*} else {
 				
 					var modifier = 0.002;
 					
@@ -352,7 +352,7 @@ Play.prototype.startLeap = function ( ) {
 					}
 					
 				
-				}
+				}*/
 
 			}
 		});
