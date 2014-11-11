@@ -199,6 +199,21 @@
 		background-color: #fff;
 	}
 	
+	/* object menu list */
+	.sidebar ul.menu.object li {
+		float: left; width: 50%;
+	}
+	.sidebar ul.menu.object li a {
+		padding: 1em;
+		border-right: 1px solid #e6e6e6;
+	}
+	.sidebar ul.menu.object li:nth-of-type(2n-1) a {
+		border-right: 1px solid #ccc;
+	}
+	.sidebar ul.menu.object li img {
+		width: 100%; height: auto;
+	}
+	
 	/* scene fancy select */
 	
 	.sidebar .Panel.FancySelect {
