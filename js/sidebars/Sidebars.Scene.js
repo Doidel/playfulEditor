@@ -37,8 +37,8 @@ Sidebars.Scene = function ( editor ) {
 
 					var html = pad + '<span class="type ' + objectType + '"></span> ' + '<span class="objNameDisplay">' + object.name + '</span>';
 					
-					html += ' <span class="icon-dupli-small"></span>';
-					html += ' <span class="icon-del-small"></span>';
+					html += ' <span class="icon-del-small" title="Delete object"></span>';
+					html += ' <span class="icon-dupli-small" title="Duplicate object"></span>';
 
 					/*if ( object instanceof THREE.Mesh ) {
 

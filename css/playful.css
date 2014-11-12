@@ -222,15 +222,33 @@
 		outline: none;
 		height: 12em;
 		color: #444;
-		width: 16em;
+		width: 18em;
 		float: right;
 	}
 	.sidebar .Panel.FancySelect .option {
 		padding: 0.4em 0.8em;
 		white-space: nowrap;
 	}
-	.sidebar .Panel.FancySelect .option.active {
+	.sidebar .Panel.FancySelect .option.active, .sidebar .Panel.FancySelect .option:hover {
 		background-color: #fff;
+	}
+	.sidebar .Panel.FancySelect .objNameDisplay {
+		display: inline-block;
+		max-width: 10em;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+	.sidebar .Panel.FancySelect .option span[class^="icon-"] {
+		font-size: 1.2em; line-height: 0.6em;
+		float: right;
+		color: #ccc;
+		cursor: pointer; margin-left: 0.4em;
+	}
+	.sidebar .Panel.FancySelect .option:hover span.icon-dupli-small {
+		color: #5365d3;
+	}
+	.sidebar .Panel.FancySelect .option:hover span.icon-del-small {
+		color: #d00;
 	}
 	
 	
@@ -368,11 +386,4 @@
     display: block;
     padding: 10px 80px;
     position:
-}
-
-
-.objNameDisplay {
-	display: inline-block;
-	max-width: 126px;
-	overflow: hidden;
 }
