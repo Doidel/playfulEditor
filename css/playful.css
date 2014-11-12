@@ -189,14 +189,21 @@
 		margin: 0; padding: 0;
 	}
 	.sidebar ul.menu li {
+		float: left; width: 100%;
 		/* display: inline-block; */
 	}
 	.sidebar ul.menu a {
 		cursor: pointer;
-		display: block; padding: 0.5em 1em;
+		display: block; padding: 0.7em 1em;
 		border-bottom: 1px solid #ccc;
 	}
-	.sidebar ul.menu a:hover {
+	.sidebar ul.menu li.twoup {
+		float: left; width: 50%;
+	}
+	.sidebar ul.menu li.twoup a{
+		border-right: 1px solid #ccc;
+	}
+	.sidebar ul.menu a:hover, .sidebar ul.menu a.active {
 		background-color: #fff;
 	}
 	

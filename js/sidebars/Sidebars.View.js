@@ -13,11 +13,17 @@ Sidebars.View = function ( editor ) {
 	var d2Button = $("<a/>").html("2D Display").on("click",function(e)
 	{
 		editor.signals.effectChanged.dispatch( undefined );
+		
+		d3Button.removeClass("active");
+		$(this).addClass("active");
 	});
 	
 	var d3Button = $("<a/>").html("3D Stereo").on("click",function(e)
 	{
 		editor.signals.effectChanged.dispatch( 'StereoEffect' );
+		
+		d2Button.removeClass("active");
+		$(this).addClass("active");
 	});
 	
 	var cameraPanelButton = $("<a/>").html("Show / Hide Camera Panel").on("click",function(e)
@@ -42,8 +48,8 @@ Sidebars.View = function ( editor ) {
 	// Create a list of the menu items
 	$("<ul/>")
 		.addClass("menu")
-		.append( $("<li/>").html(d2Button) )
-		.append( $("<li/>").html(d3Button) )
+		.append( $("<li/>").addClass("twoup").html(d2Button) )
+		.append( $("<li/>").addClass("twoup").html(d3Button) )
 		.append( $("<li/>").html(cameraPanelButton) )
 		.append( $("<li/>").html(uploadPanelButton) )
 		.appendTo(menu.dom);
