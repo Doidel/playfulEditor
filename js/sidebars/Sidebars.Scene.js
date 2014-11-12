@@ -36,8 +36,11 @@ Sidebars.Scene = function ( editor ) {
 					var objectType = editor.getObjectType( object );
 
 					var html = pad + '<span class="type ' + objectType + '"></span> ' + object.name;
+					
+					html += ' <span class="icon-dupli-small"></span>';
+					html += ' <span class="icon-del-small"></span>';
 
-					if ( object instanceof THREE.Mesh ) {
+					/*if ( object instanceof THREE.Mesh ) {
 
 						var geometry = object.geometry;
 						var material = object.material;
@@ -48,7 +51,7 @@ Sidebars.Scene = function ( editor ) {
 						html += ' <span class="type ' + geometryType + '"></span> ' + geometry.name;
 						html += ' <span class="type ' + materialType + '"></span> ' + material.name;
 
-					}
+					}*/
 
 					options.push( { value: object.id, html: html } );
 
@@ -66,6 +69,36 @@ Sidebars.Scene = function ( editor ) {
 
 			outliner.setValue( editor.selected.id );
 
+		}
+		
+		for ( var x = 0; x < options.length; x++ ) {
+			var child = $(outliner.dom.children[ x ]);
+			var duplicateBtn = child.find('.icon-dupli-small');
+			var deleteBtn = child.find('.icon-del-small');
+			
+			if ( duplicateBtn.length > 0 ) $( duplicateBtn[0] ).click( function ( el ) {
+				
+				var object = editor.scene.getObjectById( this.valueOf(), true );
+
+				if ( object.parent === undefined ) return; // avoid cloning the camera or scene
+
+				var clone = object.clone();
+				clone.material = clone.material.clone();
+
+				editor.addObject( clone );
+				editor.select( clone );
+				
+			}.bind(options[ x ].value));
+			
+			if ( deleteBtn.length > 0 ) $( deleteBtn[0] ).click( function ( el ) {
+			
+				var object = editor.scene.getObjectById( this.valueOf(), true );
+
+				var parent = object.parent;
+				editor.removeObject( object );
+				editor.select( parent );
+				
+			}.bind(options[ x ].value));
 		}
 
 	} );
