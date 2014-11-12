@@ -3,8 +3,8 @@ Sidebars.Properties.AdvancedSwitch = function ( editor ) {
 	var signals = editor.signals;
 
 	var container = new UI.Panel();
-	container.setClass("Panel advancedSwitch")
-	// container.setDisplay( 'none' );
+	container.setClass("Panel advancedSwitch");
+	container.setDisplay( 'none' );
 	
 	var switchButton = $("<a/>").attr("href","#switchMode").addClass("switchButton");
 	
@@ -34,6 +34,15 @@ Sidebars.Properties.AdvancedSwitch = function ( editor ) {
 	switchButton.on( "click", function(e) { e.preventDefault(); switchMode(); } );		
 	
 	switchButton.appendTo( container.dom );
+	
+	//
+	
+	signals.objectSelected.add( function ( object ) {
+
+		container.setDisplay( object ? '' : 'none' );
+
+	} );
+	
 	
 	return container;
 }

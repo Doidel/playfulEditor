@@ -1,7 +1,7 @@
 
 #viewport {
 	position: absolute;
-	top: 32px;
+	top: 0px;  /*32px; // without menubar now*/
 	left: 0px;
 	right: 0;
 	bottom: 0;
@@ -368,4 +368,11 @@
     display: block;
     padding: 10px 80px;
     position:
+}
+
+
+.objNameDisplay {
+	display: inline-block;
+	max-width: 126px;
+	overflow: hidden;
 }

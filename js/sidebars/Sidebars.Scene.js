@@ -35,7 +35,7 @@ Sidebars.Scene = function ( editor ) {
 				
 					var objectType = editor.getObjectType( object );
 
-					var html = pad + '<span class="type ' + objectType + '"></span> ' + object.name;
+					var html = pad + '<span class="type ' + objectType + '"></span> ' + '<span class="objNameDisplay">' + object.name + '</span>';
 					
 					html += ' <span class="icon-dupli-small"></span>';
 					html += ' <span class="icon-del-small"></span>';
