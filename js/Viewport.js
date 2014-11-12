@@ -195,84 +195,74 @@ var Viewport = function ( editor ) {
 	var leapBoxWalls;
 	//leapbox with
 	function addLeapBox() {
-		/*var leapBox = new THREE.Object3D();
-		leapBox.name = "LeapBox";
-		new THREE.Mesh( new THREE.BoxGeometry( 10, 10, 10, 1, 1, 1 ),
-			new THREE.MeshPhongMaterial( {
-				ambient: 0x555555,
-				color: 0x555555,
-				specular: 0xffffff,
-				shininess: 50,
-				shading: THREE.SmoothShading,
-				opacity: 0.2,
-				transparent: true,
-				side: THREE.BackSide
-			} )
-		);*/
-		var planeMat = Physijs.createMaterial(
-			new THREE.MeshPhongMaterial( {
-				ambient: 0x555555,
-				color: 0x555555,
-				specular: 0xffffff,
-				shininess: 50,
-				shading: THREE.SmoothShading,
-				opacity: 0.2,
-				transparent: true,
-				side: THREE.BackSide
-			}  ),
-			0.5,
-			0.5
-		);
-		//var planeGeom = new THREE.BoxGeometry( 1, 10, 10, 1, 1, 1 );
-		var planeGeom = new THREE.BoxGeometry( 10, 10, 0.1, 1, 1 );
-		leapBoxWalls = [
-			new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
-			new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
-			new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
-			new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
-			new Physijs.BoxMesh( planeGeom, planeMat, 0 )
-		];
-		for (var x = 0; x < leapBoxWalls.length; x++) leapBoxWalls[x].name = 'LeapBoxWall' + x;
-		leapBoxWalls[0].position.x = 5;
-		leapBoxWalls[0].position.y = 5;
-		leapBoxWalls[0].rotation.y = Math.PI / 2;
-		leapBoxWalls[1].position.z = 5;
-		leapBoxWalls[1].position.y = 5;
-		leapBoxWalls[1].rotation.y = 0;
-		leapBoxWalls[2].position.x = -5;
-		leapBoxWalls[2].position.y = 5;
-		leapBoxWalls[2].rotation.y = -Math.PI / 2;
-		leapBoxWalls[3].position.z = -5;
-		leapBoxWalls[3].position.y = 5;
-		leapBoxWalls[3].rotation.y = Math.PI;
-		leapBoxWalls[4].position.y = 10;
-		leapBoxWalls[4].rotation.x = Math.PI / 2;
-		leapBoxWalls[4].rotation.y = Math.PI;
-		editor.scene.add(leapBoxWalls[0]);
-		editor.scene.add(leapBoxWalls[1]);
-		editor.scene.add(leapBoxWalls[2]);
-		editor.scene.add(leapBoxWalls[3]);
-		editor.scene.add(leapBoxWalls[4]);
-	}
-	
-	
-	
-	/*var directionalLights;
-	function assignCameraPositionToLights() {
-		directionalLights = [];
-		editor.scene.traverse( function( obj ) {
-			if (obj instanceof THREE.DirectionalLight) {
-				obj.position = (editor._activeCamera instanceof THREE.PerspectiveCamera ? editor._activeCamera : yawObject).position;
-				directionalLights.push( obj );
-			}
-		});
-	}
-	
-	function updateShadowPosition() {
-		for ( var x = 0; x < directionalLights.length; x++ ) {
-			directionalLights[ x ].target.position = 
+		
+		if ( !leapBoxWalls ) {
+		
+			var planeMat = Physijs.createMaterial(
+				new THREE.MeshPhongMaterial( {
+					ambient: 0x555555,
+					color: 0x555555,
+					specular: 0xffffff,
+					shininess: 50,
+					shading: THREE.SmoothShading,
+					opacity: 0.2,
+					transparent: true,
+					side: THREE.BackSide
+				}  ),
+				0.5,
+				0.5
+			);
+			//var planeGeom = new THREE.BoxGeometry( 1, 10, 10, 1, 1, 1 );
+			var planeGeom = new THREE.BoxGeometry( 10, 10, 0.1, 1, 1 );
+			leapBoxWalls = [
+				new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
+				new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
+				new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
+				new Physijs.BoxMesh( planeGeom, planeMat, 0 ),
+				new Physijs.BoxMesh( planeGeom, planeMat, 0 )
+			];
+			for (var x = 0; x < leapBoxWalls.length; x++) leapBoxWalls[x].name = 'LeapBoxWall' + x;
+			leapBoxWalls[0].position.x = 5;
+			leapBoxWalls[0].position.y = 5;
+			leapBoxWalls[0].rotation.y = Math.PI / 2;
+			leapBoxWalls[1].position.z = 5;
+			leapBoxWalls[1].position.y = 5;
+			leapBoxWalls[1].rotation.y = 0;
+			leapBoxWalls[2].position.x = -5;
+			leapBoxWalls[2].position.y = 5;
+			leapBoxWalls[2].rotation.y = -Math.PI / 2;
+			leapBoxWalls[3].position.z = -5;
+			leapBoxWalls[3].position.y = 5;
+			leapBoxWalls[3].rotation.y = Math.PI;
+			leapBoxWalls[4].position.y = 10;
+			leapBoxWalls[4].rotation.x = Math.PI / 2;
+			leapBoxWalls[4].rotation.y = Math.PI;
+			editor.scene.add(leapBoxWalls[0]);
+			editor.scene.add(leapBoxWalls[1]);
+			editor.scene.add(leapBoxWalls[2]);
+			editor.scene.add(leapBoxWalls[3]);
+			editor.scene.add(leapBoxWalls[4]);
+			
 		}
-	}*/
+		
+	}
+	
+	function removeLeapBox() {
+	
+		if ( leapBoxWalls !== undefined ) {
+			for (var x = 0; x < leapBoxWalls.length; x++) editor.scene.remove( leapBoxWalls[ x ] );
+			leapBoxWalls = undefined;
+		}
+	
+	}	
+	
+	signals.leapBoxChanged.add( function( val ) {
+		
+		editor.scene.hasLeapBox = val;
+		if ( val === false ) removeLeapBox();
+		else if ( container.play === true ) addLeapBox();
+		
+	} );
 	
 	signals.play.add( function() {
 		
@@ -307,7 +297,7 @@ var Viewport = function ( editor ) {
 		//scene.resetSimulation();
 		editor.startPlay();
 		scene.add( playCamera );
-		addLeapBox();
+		if ( editor.scene.hasLeapBox !== false ) addLeapBox();
 		container.play = true;
 		
 	} );
@@ -318,10 +308,9 @@ var Viewport = function ( editor ) {
 		//pointerLockControls.enabled = false;
 		editor._activeCamera = camera;
 		//scene.remove( yawObject );
-		editor._activeControls = transformControls;
 		scene.remove( playCamera );
 		
-		for (var x = 0; x < leapBoxWalls.length; x++) editor.scene.remove( leapBoxWalls[ x ] );
+		removeLeapBox();
 		render();
 		
 		container.play = false;
@@ -329,6 +318,7 @@ var Viewport = function ( editor ) {
 		//give the simulation time to run out
 		setTimeout( function() {
 			editor.resetPlay();
+			editor._activeControls = transformControls;
 			render();
 		}, 100);
 		
@@ -884,14 +874,6 @@ var Viewport = function ( editor ) {
 
 		effect = new THREE[ editor.config.getKey( 'effect' ) ]( renderer );
 
-	} else {
-		
-		//effect = new THREE.AnaglyphEffect( renderer );
-		//effect.setFocalLength( 12.5 );
-		effect = new THREE.StereoEffect( renderer );
-		effect.separation = 0.1;
-		e = effect;
-		
 	}
 	
 	//renderer = new THREE.WebGLDeferredRenderer( { antialias: true } );
@@ -916,6 +898,28 @@ var Viewport = function ( editor ) {
 	
 	
 	editor._renderer = renderer;
+	
+	//TODO: signals.effectChanged.dispatch( 'StereoEffect' );
+	signals.effectChanged.add( function( type ) {
+	
+		switch ( type ) {
+			case 'StereoEffect':
+				effect = new THREE.StereoEffect( renderer );
+				effect.separation = -.63; //wrong way round?
+				break;
+			case undefined:
+				effect = undefined;
+				break;
+		}
+		
+		editor.config.setKey( 'effect', type )
+		
+		signals.windowResize.dispatch();
+		render();
+		//e = effect;
+		
+	} );
+	
 
 	//
 
@@ -1061,10 +1065,6 @@ var Viewport = function ( editor ) {
 		}
 	    }
 	    
-	      
-
-	    
-	    
 	});
 
 
@@ -1078,23 +1078,23 @@ var Viewport = function ( editor ) {
 		// update
 		
 		renderer.clear();
-		(effect ? effect : renderer).render( scene, editor._activeCamera );
+		(effect && container.play ? effect : renderer).render( scene, editor._activeCamera );
 
 	    
 
 		if ( !container.play && renderer instanceof THREE.RaytracingRenderer === false ) {
 
 		    if( takeScreenShot === true ){
-			// var imageType = editor.config.getKey( 'imageType' ) || 'png';
-			// imageType = "image/"+imageType.toLowerCase();
-			//console.log("imagetype:"+imageType);
-			var imageType = "image/png"
-			//editor.takeScreenShot = false;
-			signals.newImageAvailable.dispatch( renderer.domElement.toDataURL( imageType ) );
+				// var imageType = editor.config.getKey( 'imageType' ) || 'png';
+				// imageType = "image/"+imageType.toLowerCase();
+				//console.log("imagetype:"+imageType);
+				var imageType = "image/png"
+				//editor.takeScreenShot = false;
+				signals.newImageAvailable.dispatch( renderer.domElement.toDataURL( imageType ) );
 		    }
 
 
-			(effect ? effect : renderer).render( sceneHelpers, editor._activeCamera );
+			renderer.render( sceneHelpers, editor._activeCamera );
 
 		}
 
