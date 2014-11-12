@@ -25,12 +25,13 @@
 	background-color: #e6e6e6;
 	border-radius: 0.2em;
 	border: 1px solid #ccc;
-	position: absolute; top: 0.8em; left: 0.3em;
+	position: absolute; top: 0.3em; left: 0.3em;
 }
 
 #view.buttongroup {
 	top: auto;
 	bottom: 0.3em;
+	display: none;
 }
 #modes.buttongroup {
 	left: auto;
@@ -124,7 +125,7 @@
 
 #sidebars .sidebar {
 	position: absolute;
-	top: 9.5em;
+	top: 7em;
 	bottom: 1.5em;
 	width: 25em;
 	overflow: auto;
@@ -135,7 +136,7 @@
 #sidebars .sidebar.left {
 	right: auto;
 	left: 1.5em;
-	bottom: 7.5em;
+	/* bottom: 7.5em; */
 }
 #sidebars .sidebar.right {
 	left: auto;
