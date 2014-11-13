@@ -37,16 +37,23 @@ Play.prototype.playAction = function ( object, eventIndex, args ) {
 	
 	switch ( action.type ) {
 		case 'Toss':
+		
 			//make it dynamic
 			object.mass = object._originalMass;
 			
 			var multFactor = Math.max( -editor.scene._gravity.y, 1 ) * object.mass;
-			object.applyCentralImpulse( new THREE.Vector3(
+			var impulse = new THREE.Vector3(
 				action.x * multFactor, 
 				action.y * multFactor,
 				action.z * multFactor 
-			));
+			);
+			
+			// if the object has the "rocket" behavior the object's world rotation will be take into account when applying the impulse
+			if ( object.behaviors && object.behaviors.hasOwnProperty('rocket') ) impulse.applyMatrix4( new THREE.Matrix4().extractRotation( object.matrixWorld ) );
+			
+			object.applyCentralImpulse( impulse, object.behaviors );
 			break;
+			
 		case 'Play sound':
 			console.log('play');
 			var speed = args.relative_velocity != undefined ? args.relative_velocity.length() : 1;
@@ -97,7 +104,7 @@ Play.prototype.start = function ( ) {
 	editor._activeControls.target.y = -5;
 	
 	this.startLeap();
-	document.getElementById('menubar').appendChild( this.gestureDisplay );
+	//document.getElementById('menubar').appendChild( this.gestureDisplay );
 	
 	// analyser temp array
 	this._analyserArray = new Uint8Array(512); //half fft count
@@ -130,7 +137,7 @@ Play.prototype.stop = function ( ) {
 	this.removePlayerCharacter();	
 	this.stopLeap();
 	
-	document.getElementById('menubar').removeChild( this.gestureDisplay );
+	//document.getElementById('menubar').removeChild( this.gestureDisplay );
 };
 
 Play.prototype.createPlayerCharacter = function ( color ) {

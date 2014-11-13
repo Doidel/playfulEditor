@@ -114,6 +114,7 @@
 		<script src="js/sidebars/Sidebars.Properties.Physics.js"></script>
 		<script src="js/sidebars/Sidebars.Properties.Events.js"></script>
 		<script src="js/sidebars/Sidebars.Properties.AdvancedSwitch.js"></script>
+		<script src="js/sidebars/Sidebars.Properties.Behaviors.js"></script>
 
 		<script src="js/Tools.js"></script>
 		<script src="js/Tools.Menu.js"></script>
@@ -425,6 +426,12 @@
 							
 							object.events = data.events;
 							traverseForSound( object.events );
+						}
+						
+						if ( data.behaviors !== undefined ) {
+						
+							object.behaviors = data.behaviors;
+						
 						}
 						
 						// every object will have shadows so it's not exported/imported

@@ -572,6 +572,20 @@ Editor.prototype = {
 				}
 			
 			}
+			//if ( this.behaviors.resurrection) console.log(this.behaviors, this.behaviors.resurrection.activator);
+			if ( this.behaviors && this.behaviors.hasOwnProperty('resurrection') && this._resurrectionBehaviorTimeout === undefined && this.behaviors.resurrection.activator == 'collision' ) {
+				console.log('put timeout');
+				this._resurrectionBehaviorTimeout = setTimeout( function() {
+				
+					console.log('timeout', this._resurrectionPos.clone());
+					this.position.copy( this._resurrectionPos );
+					this.rotation.copy( this._resurrectionRot );
+					this.__dirtyPosition = true;
+					this.__dirtyRotation = true;
+					this._resurrectionBehaviorTimeout = undefined;
+				
+				}.bind(this), this.behaviors.resurrection.delay * 1000 );
+			}
 			
 		};
 		
@@ -668,6 +682,12 @@ Editor.prototype = {
 			if ( child._physijs ) {
 				
 				var clone = child.clone();
+				
+				clone.behaviors = child.behaviors;
+				if ( clone.behaviors && clone.behaviors.hasOwnProperty('resurrection') ) {
+					clone._resurrectionPos = clone.position.clone();
+					clone._resurrectionRot = clone.rotation.clone();
+				}
 				
 				if ( child.events != undefined ) {
 					clone.events = child.events;

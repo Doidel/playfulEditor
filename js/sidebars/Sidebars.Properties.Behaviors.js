@@ -13,56 +13,76 @@ Sidebars.Properties.Behaviors = function ( editor ) {
 	container.add( new UI.Text( 'BEHAVIORS' ) );
 	container.add( new UI.Break(), new UI.Break() );
 
-	// friction
+	
+	// rocket
 
-	var physicsFrictionRow = new UI.Panel();
-	var physicsFriction = new UI.Number( 0.5 ).setRange( 0, 1 ).onChange( update );
+	var rocketRow = new UI.Panel();
+	var rocket = new UI.Behavior( 'Rocket' ).onChange( update );
+	//rocket.setProperties( '' );
 
-	physicsFrictionRow.add( new UI.Text( 'Friction' ).setWidth( '90px' ) );
-	physicsFrictionRow.add( physicsFriction );
+	rocketRow.add( rocket );
 
-	container.add( physicsFrictionRow );
+	container.add( rocketRow );
 
-	// restitution
+	
+	// resurrection
 
-	var physicsRestitutionRow = new UI.Panel();
-	var physicsRestitution = new UI.Number( 0.5 ).setRange( 0, 1 ).onChange( update );
+	var resurrectionRow = new UI.Panel();
+	var resurrection = new UI.Behavior( 'Resurrection' ).onChange( update );
+	
+	var resurrectionPropertiesPanel = new UI.Panel();
+	resurrectionPropertiesPanel.add( new UI.Text('Activator').setWidth('90px') );
+	var resurrectionPropertiesActivator = new UI.Select().setOptions({ 'collision':'Collision' }).setWidth('150px').onChange( resurrection.fireChange );
+	resurrectionPropertiesPanel.add( resurrectionPropertiesActivator );
+	resurrectionPropertiesPanel.add( new UI.Text('Delay (sec)').setWidth('90px') );
+	var resurrectionPropertiesDelay = new UI.Number( 0.5 ).setRange(0, 10000).onChange( resurrection.fireChange );
+	resurrectionPropertiesPanel.add( resurrectionPropertiesDelay );
+	resurrection.setPropertiesDOM( resurrectionPropertiesPanel.dom );
+	
+	resurrection.setProperties = function ( properties ) {
+	
+		resurrectionPropertiesActivator.setValue( properties.activator );
+		resurrectionPropertiesDelay.setValue( properties.delay );
+		
+	};
+	resurrection.getProperties = function (  ) {
+		
+		return { activator: resurrectionPropertiesActivator.getValue(), delay: resurrectionPropertiesDelay.getValue() };
+		
+	};
 
-	physicsRestitutionRow.add( new UI.Text( 'Bounciness' ).setWidth( '90px' ) );
-	physicsRestitutionRow.add( physicsRestitution );
+	resurrectionRow.add( resurrection );
 
-	container.add( physicsRestitutionRow );
-
-	// static or dynamic
-
-	var physicsModeRow = new UI.Panel();
-	var physicsMode = new UI.Checkbox( false ).onChange( update );
-
-	physicsModeRow.add( new UI.Text( 'Static' ).setWidth( '90px' ) );
-	physicsModeRow.add( physicsMode );
-
-	container.add( physicsModeRow );
+	container.add( resurrectionRow );
 	
 	//
-
+	
+	var behaviorList = {
+		'rocket': rocket,
+		'resurrection': resurrection
+	}
+	
 	function update() {
 		
-			var physics = physijsSelected;
-
-			if ( physics ) {
+		if ( objectSelected ) {
+		
+			var behaviors = {};
 			
-				physics.friction = physicsFriction.getValue();
-
-				physics.restitution = physicsRestitution.getValue();
-
-				objectSelected.isStatic = physicsMode.getValue();
-
+			for ( var behavior in behaviorList ) {
+				
+				if ( behaviorList[ behavior ].getValue() ) behaviors[ behavior ] = behaviorList[ behavior ].getProperties() || 1; // need the 1 in order to have the JSON export it...
+				
 			}
+			
+			// assign behaviors to the object
+			objectSelected.behaviors = behaviors;
+			
+		}
 
 	};
 
 	// 1 = visible in easy mode, 2 = visible in advanced mode, not part of this list = visible in both modes
-	var propertyVisibilities = {
+	/*var propertyVisibilities = {
 		'friction': 2,
 		'restitution': 2
 	};
@@ -84,31 +104,34 @@ Sidebars.Properties.Behaviors = function ( editor ) {
 
 		}
 
-	};
+	};*/
 	
 	// events
 
 	signals.objectSelected.add( function ( object ) {
 
-		if ( object && object.material && object.material._physijs ) {
+		if ( object && object.material && object.material._physijs && workMode == 'advanced' ) {
 		
 			objectSelected = object;
-			physijsSelected = object.material._physijs;
 
 			container.setDisplay( '' );
 
-			var physics = object.material._physijs;
+			var behaviors = object.behaviors || {};
+			keys = Object.keys( behaviors );
 			
-			if ( physics.friction === undefined ) physics.friction = 0.5;
-			physicsFriction.setValue( physics.friction );
+			// init all values
+			for ( var behavior in behaviorList ) {
+				
+				if ( keys.indexOf( behavior ) > -1 ) {
+					behaviorList[ behavior ].setValue( true );
+					behaviorList[ behavior ].setProperties( behaviors[ behavior ] );
+				} else {
+					behaviorList[ behavior ].setValue( false );
+				}
+				
+			}
 			
-			if ( physics.restitution === undefined ) physics.restitution = 0.5;
-			physicsRestitution.setValue( physics.restitution );
-			
-			if ( object.isStatic == undefined ) object.isStatic = false;
-			physicsMode.setValue( object.isStatic );
-			
-			updateRows();
+			//updateRows();
 
 		} else {
 

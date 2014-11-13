@@ -89,47 +89,21 @@ _lS = {
 					'action': {
 						type: "Toss",
 						x: 0,
-						y: 0,
+						y: 1,
 						z: 0
 					},
 					'trigger': {
 						type: "Touch Fist"
 					}
-				},
-				{
-					'action': {
-						type: "Custom",
-						func: function() {
-							if ( !this._resurrectionPos ) {
-								this._resurrectionPos = this.position.clone();
-								this._resurrectionRot = this.rotation.clone();
-							}
-						}
-					},
-					'trigger': {
-						type: "Touch Fist"
-					}
-				},
-				{
-					'action': {
-						type: "Custom",
-						func: function() {
-							if ( ! this._resurrectionTimer ) {
-								this._resurrectionTimer = setTimeout( function() {
-									this.position = this._resurrectionPos.clone();
-									this.rotation = this._resurrectionRot.clone();
-									this.__dirtyPosition = true;
-									this.__dirtyRotation = true;
-									this._resurrectionTimer = undefined;
-								}.bind( this ), 4000 );
-							}
-						}
-					},
-					'trigger': {
-						type: "Collision"
-					}
 				}
 			];
+			
+			mesh.behaviors = {
+				'resurrection': {
+					activator: 'collision',
+					delay: 4
+				}
+			};
 			
 			return mesh;
 			

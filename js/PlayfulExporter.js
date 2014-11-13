@@ -339,6 +339,12 @@ THREE.PlayfulExporter.prototype = {
 					traverseForSoundAndClone( object.events, data.events );
 				
 				}
+				
+				if ( object.behaviors != undefined ) {
+				
+					data.behaviors = object.behaviors;
+				
+				}
 				// END CUSTOM
 
 			} else if ( object instanceof THREE.Sprite ) {
@@ -373,7 +379,7 @@ THREE.PlayfulExporter.prototype = {
 		}
 
 		output.object = parseObject( object );
-
+		
 		return output;
 
 	},

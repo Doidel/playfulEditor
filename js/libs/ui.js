@@ -1111,7 +1111,6 @@ UI.EventList = function (  ) {
 		<option>Play sound</option>\
 		<option>Stop sounds</option>\
 		<option>Change Static</option>\
-		<option>Custom</option>\
 	</select>\
 	<button style="display: none;">+</button>\
 	<button class="eventDeleteButton"><img src="images/iconset/Delete.png" /></button>\
@@ -1257,30 +1256,6 @@ UI.EventList.prototype.actionProperties = {
 		}
 	},
 	"Stop sounds": { },
-	"Custom": {
-		getUI: function ( eventNode ) {
-		
-			var container = new UI.Panel();
-			
-			container.add( new UI.Text( 'Action' ).setWidth( '90px' ) );
-			container.add( new UI.TextArea().onChange( this.fireChange ) );
-			
-			return container;
-			
-		},
-		getData: function ( container, resultObject, eventNode ) {
-			
-			var customFunction = container.dom.querySelector('textarea');
-			resultObject.func = customFunction.value;
-
-		},
-		setData: function ( container, dataObject ) {
-
-			var customFunction = container.dom.querySelector('textarea');
-			customFunction.value = dataObject.func;
-
-		}
-	},
 	
 };
 
@@ -1757,4 +1732,88 @@ UI.RuntimeMaterial.prototype.add = function() {
 	this.runtimematerialList.push( clone );
 	
 	return clone;
+};
+
+// Behaviors
+UI.Behavior = function ( name ) {
+
+	UI.Element.call( this );
+
+	var scope = this;
+
+	this.dom = document.createElement( 'div' );
+	this.dom.className = 'Behavior';
+	
+	this.dom._changeEvent = document.createEvent('HTMLEvents');
+	this.dom._changeEvent.initEvent( 'change', true, true );
+	this.fireChange = function() { this.dom.dispatchEvent( this.dom._changeEvent ); }.bind( this );
+	
+	this.dom.appendChild( new UI.Text( name ).setWidth( '90px' ).dom );
+	
+	this.dom.behaviorCheckbox = new UI.Checkbox( false ).setWidth( '50px' );
+	this.dom.behaviorCheckbox.onChange( this.fireChange );
+	this.dom.appendChild( this.dom.behaviorCheckbox.dom );
+	
+	this.dom.addButton = document.createElement( 'button' );
+	this.dom.addButton.textContent = '+';	
+	this.dom.addButton.style.display = 'none';	
+	this.dom.addButton.addEventListener('click', this.toggleProperties.bind( this ), false);
+	this.dom.appendChild( this.dom.addButton );
+	
+	this.dom.behaviorProperties = document.createElement( 'div' );
+	this.dom.behaviorProperties.className = 'behaviorProperties';
+	this.dom.behaviorProperties.style.display = 'none';
+	this.dom.appendChild( this.dom.behaviorProperties );
+
+	return this;
+	
+};
+
+UI.Behavior.prototype = Object.create( UI.Element.prototype );
+
+UI.Behavior.prototype.toggleProperties = function (  ) {
+
+	//get the next (hidden) select
+	if (this.dom.behaviorProperties.style.display == 'none') {
+		//selected the empty option.remove selection
+		this.dom.behaviorProperties.style.display = '';
+		this.dom.addButton.innerHTML = '-';
+	} else {
+		this.dom.behaviorProperties.style.display = 'none';
+		this.dom.addButton.innerHTML = '+';
+	}
+	
+};
+
+UI.Behavior.prototype.getValue = function (  ) {
+	
+	return this.dom.behaviorCheckbox.getValue();
+	
+};
+
+UI.Behavior.prototype.setValue = function ( value ) {
+	
+	this.dom.behaviorCheckbox.setValue( value );
+	this.fireChange();
+	
+};
+
+UI.Behavior.prototype.getProperties = function (  ) { };
+UI.Behavior.prototype.setProperties = function (  ) { };
+UI.Behavior.prototype.setPropertiesDOM = function ( html ) {
+	
+	this.dom.addButton.style.display = html == undefined ? 'none' : '';
+
+	if ( html !== undefined ) {
+		if ( typeof html == 'string' ) {
+			
+			this.dom.behaviorProperties.innerHTML = html;
+			
+		} else {
+			
+			this.dom.behaviorProperties.innerHTML = '';
+			this.dom.behaviorProperties.appendChild( html );
+			
+		}
+	}
 };
