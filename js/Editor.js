@@ -575,6 +575,7 @@ Editor.prototype = {
 					console.log('timeout', this._resurrectionPos.clone());
 					this.position.copy( this._resurrectionPos );
 					this.rotation.copy( this._resurrectionRot );
+					this.mass = this._resurrectionMass;
 					this.__dirtyPosition = true;
 					this.__dirtyRotation = true;
 					this._resurrectionBehaviorTimeout = undefined;
@@ -679,10 +680,6 @@ Editor.prototype = {
 				var clone = child.clone();
 				
 				clone.behaviors = child.behaviors;
-				if ( clone.behaviors && clone.behaviors.hasOwnProperty('resurrection') ) {
-					clone._resurrectionPos = clone.position.clone();
-					clone._resurrectionRot = clone.rotation.clone();
-				}
 				
 				if ( child.events != undefined ) {
 					clone.events = child.events;
@@ -725,6 +722,12 @@ Editor.prototype = {
 				
 				//TODO: Does this destroy anything?
 				clone.material = child.material.clone();
+				
+				if ( clone.behaviors && clone.behaviors.hasOwnProperty('resurrection') ) {
+					clone._resurrectionPos = clone.position.clone();
+					clone._resurrectionRot = clone.rotation.clone();
+					clone._resurrectionMass = clone.mass;
+				}
 				
 				child.parent._cloneEquivalent.add( clone );
 				

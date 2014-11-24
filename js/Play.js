@@ -6,7 +6,7 @@ var Play = function ( editor ) {
 		characterCreated: undefined
 	};
 	
-	this.characterLineDrawDistanceTreshold = 3;
+	this.characterLineDrawDistanceTreshold = 1.5;
 	
 	this.effects = new Play.Effects();
 	
@@ -111,9 +111,10 @@ Play.prototype.start = function ( ) {
 	
 	this._playTimeStart = (new Date()).getTime();
 	
-	this._character.add( this._lines[0] );
-	this._character.add( this._lines[1] );
-	this._character.add( this._lines[2] );
+	
+	for (var x = 0; x < this._lines.length; x++) {
+		this._character.add( this._lines[x] );
+	}
 	
 	
 	//calc the ratio between camera fov scaled to charcter zpos and clientX/Y
@@ -473,20 +474,11 @@ lineGeom.vertices.push(new THREE.Vector3(0, 0, 0));
 lineGeom.vertices.push(new THREE.Vector3(0, 10, 0));
 
 Play.prototype._lines = (function() {
-	var lines = [
-		new THREE.Line(lineGeom, lineMat, THREE.LineStrip),
-		new THREE.Line(lineGeom.clone(), lineMat, THREE.LineStrip),
-		new THREE.Line(lineGeom.clone(), lineMat, THREE.LineStrip),
-		new THREE.Line(lineGeom.clone(), lineMat, THREE.LineStrip),
-		new THREE.Line(lineGeom.clone(), lineMat, THREE.LineStrip),
-		new THREE.Line(lineGeom.clone(), lineMat, THREE.LineStrip)
-	];
-	lines[0].visible = false;
-	lines[1].visible = false;
-	lines[2].visible = false;
-	lines[3].visible = false;
-	lines[4].visible = false;
-	lines[5].visible = false;
+	var lines = [ ];
+	for (var x = 0; x < 20; x++) {
+		lines.push( new THREE.Line(lineGeom.clone(), lineMat, THREE.LineStrip) );
+		lines[ x ].visible = false;
+	}
 	return lines;
 })();
 
@@ -582,17 +574,17 @@ Play.prototype._playLoop = function ( delta ) {
 		if ( el._physijs && el.events && el.events.length > 0 ) {
 			
 			if ( ! el.geometry.boundingSphere ) el.geometry.computeBoundingSphere();
-			editor.play._character.localToWorld( editor.play._character.position.clone() )
+			//editor.play._character.localToWorld( editor.play._character.position.clone() )
 			
-			dist = el.localToWorld( el.position.clone() ).sub( editor.play._character.localToWorld( editor.play._character.position.clone() ) );
+			dist = el.localToWorld( new THREE.Vector3() ).sub( editor.play._character.localToWorld( new THREE.Vector3() ) );
 			
 			//are we within the boundingsphere's radius + distance treshold?
-			if ( dist.length() - el.geometry.boundingSphere.radius <= editor.play.characterLineDrawDistanceTreshold ) {
+			if ( ( dist.length() - el.geometry.boundingSphere.radius <= editor.play.characterLineDrawDistanceTreshold ) && editor.play._lines[ lineCount ] ) {
 				
 				// TODO: are we really near the object, or just near the bounding sphere? (think huge plate)
 				
 				// draw line
-				editor.play._lines[ lineCount ].geometry.vertices[1] = dist.multiplyScalar(0.5);
+				editor.play._lines[ lineCount ].geometry.vertices[1] = dist;
 				editor.play._lines[ lineCount ].geometry.verticesNeedUpdate = true;
 				editor.play._lines[ lineCount ].visible = true;
 				lineCount++;
