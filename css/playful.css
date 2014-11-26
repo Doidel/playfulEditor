@@ -242,7 +242,7 @@
 	}
 	.sidebar .Panel.FancySelect .objNameDisplay {
 		display: inline-block;
-		max-width: 10em;
+		max-width: 9em;
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}

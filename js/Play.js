@@ -100,8 +100,6 @@ Play.prototype.start = function ( ) {
 	document.body.addEventListener('keydown', this._inputEvents.down);
 	document.body.addEventListener('keyup', this._inputEvents.up);
 	editor._activeControls.domElement.addEventListener('mousemove', this._inputEvents.move, false);
-	editor._activeControls.target.z = -20;
-	editor._activeControls.target.y = -5;
 	
 	this.startLeap();
 	//document.getElementById('menubar').appendChild( this.gestureDisplay );
@@ -233,7 +231,7 @@ Play.prototype.startLeap = function ( ) {
 					
 				// which gesture is it?
 				
-				var gestureType = 'stroke';	
+				var gestureType = 'stroke';
 				if (hand.confidence >= 0.4) {
 					
 					if ( hand.indexFinger.extended ) {
@@ -300,7 +298,7 @@ Play.prototype.startLeap = function ( ) {
 					var character = editor.play._character;
 					if ( !character ) return;
 					
-					var modifier = 0.05;
+					var modifier = 0.08;
 					
 					var zModifier = -400;
 					
@@ -395,6 +393,10 @@ Play.prototype.startLeap = function ( ) {
 				
 			}
 			
+			editor._activeControls.target.x = 0;
+			editor._activeControls.target.z = -20;
+			editor._activeControls.target.y = -5;
+			
 			/*editor._pointerLockControls.enabled = false;
 			//adjust position/rotation to fixed camera pos
 			var yawObject = editor._pointerLockControls.getObject();
@@ -426,6 +428,10 @@ Play.prototype.startLeap = function ( ) {
 				editor.play._character.mass = 0.01;
 				
 			}
+			
+			editor._activeControls.target.x = 0;
+			editor._activeControls.target.z = 0;
+			editor._activeControls.target.y = 0;
 			
 			// reenable mouse and keyboard movement if the blocker isn't there
 			//if (editor._pointerLockControls.blocker.dom.style.display == 'none') editor._pointerLockControls.enabled = true;

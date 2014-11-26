@@ -578,6 +578,8 @@ Editor.prototype = {
 					this.mass = this._resurrectionMass;
 					this.__dirtyPosition = true;
 					this.__dirtyRotation = true;
+					this.setAngularVelocity( new THREE.Vector3() );
+					this.setLinearVelocity( new THREE.Vector3() );
 					this._resurrectionBehaviorTimeout = undefined;
 				
 				}.bind(this), this.behaviors.resurrection.delay * 1000 );

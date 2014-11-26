@@ -247,6 +247,18 @@ var Viewport = function ( editor ) {
 		
 	}
 	
+	function updateLeapBoxVisibility() {
+		
+		if ( leapBoxWalls ) {
+			leapBoxWalls[0].visible = editor._activeCamera.position.x < 4.8;
+			leapBoxWalls[2].visible = editor._activeCamera.position.x > -4.8;
+			leapBoxWalls[1].visible = editor._activeCamera.position.z < 4.8;
+			leapBoxWalls[3].visible = editor._activeCamera.position.z > -4.8;
+			leapBoxWalls[4].visible = editor._activeCamera.position.y < 9.8;
+		}
+		
+	}
+	
 	function removeLeapBox() {
 	
 		if ( leapBoxWalls !== undefined ) {
@@ -1017,6 +1029,8 @@ var Viewport = function ( editor ) {
 			if ( document.getElementById('blocker').style.display == 'none') scene.simulate( delta / 1000 ); // run physics
 			
 			//editor._activeControls.update( delta );
+			
+			updateLeapBoxVisibility();
 			
 			editor.play._playLoop( delta );
 			
