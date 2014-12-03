@@ -8,8 +8,7 @@ Sidebars.Properties.Events = function ( editor ) {
 	container.setDisplay( 'none' );
 	//container.dom.classList.add( 'Material' );
 
-	container.add( new UI.Text( 'EVENTS' ) );
-	container.add( new UI.Break(), new UI.Break() );
+	$("<h3/>",{ html: "Events" }).appendTo( container.dom );
 
 	// event list
 

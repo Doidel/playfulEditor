@@ -8,10 +8,9 @@ Sidebars.Properties.Behaviors = function ( editor ) {
 
 	var container = new UI.Panel();
 	container.setDisplay( 'none' );
-	//container.dom.classList.add( 'Material' );
-
-	container.add( new UI.Text( 'BEHAVIORS' ) );
-	container.add( new UI.Break(), new UI.Break() );
+	container.setClass("Panel advanced");
+	
+	$("<h3/>",{ html: "Behaviours" }).appendTo( container.dom );
 
 	
 	// rocket
@@ -110,7 +109,7 @@ Sidebars.Properties.Behaviors = function ( editor ) {
 
 	signals.objectSelected.add( function ( object ) {
 
-		if ( object && object.material && object.material._physijs && workMode == 'advanced' ) {
+		if ( object && object.material && object.material._physijs ) {
 		
 			objectSelected = object;
 

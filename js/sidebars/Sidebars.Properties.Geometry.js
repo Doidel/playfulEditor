@@ -4,9 +4,9 @@ Sidebars.Properties.Geometry = function ( editor ) {
 
 	var container = new UI.Panel();
 	container.setDisplay( 'none' );
-
-	container.add( new UI.Text().setValue( 'GEOMETRY' ) );
-	container.add( new UI.Break(), new UI.Break() );
+	container.setClass("Panel advanced");
+	
+	$("<h3/>",{ html: "Geometry" }).appendTo( container.dom );
 
 	// uuid
 

@@ -162,6 +162,19 @@
 	pointer-events: auto;
 }
 
+.sidebar>.Panel .Panel h3, .sidebar>.Panel .Panel span.objectType  {
+	color: #5365d3;
+	text-transform: uppercase;
+	font-size: 0.9em;
+	font-weight: normal;
+	margin: 0 0 1.5em 0;
+	letter-spacing: 0.1em;
+}
+.sidebar>.Panel .Panel span.objectType {
+	float: right; margin-top: -2.5em;
+	margin-bottom: 0;
+}
+
 .sidebar>.Panel>.Panel>.Panel {
 	padding: 1em;
 	border-top: 1px solid #ccc;
@@ -178,6 +191,13 @@
 		font-size: 1em; letter-spacing: 0.1em;
 		color: #e57245;
 		text-decoration: none;
+	}
+	
+	.sidebar .Panel.advancedMode .advanced {
+		display: block;
+	}
+	.sidebar .Panel.easyMode .advanced, .sidebar .Panel .disabled {
+		display: none !important;
 	}
 
 	/* menu lists */

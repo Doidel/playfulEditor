@@ -7,10 +7,9 @@ Sidebars.Properties.Physics = function ( editor ) {
 
 	var container = new UI.Panel();
 	container.setDisplay( 'none' );
-	//container.dom.classList.add( 'Material' );
-
-	container.add( new UI.Text( 'PHYSICS' ) );
-	container.add( new UI.Break(), new UI.Break() );
+	container.setClass("Panel advanced");
+	
+	$("<h3/>",{ html: "Physics" }).appendTo( container.dom );
 
 	// friction
 
@@ -51,37 +50,10 @@ Sidebars.Properties.Physics = function ( editor ) {
 			if ( physics ) {
 			
 				physics.friction = physicsFriction.getValue();
-
 				physics.restitution = physicsRestitution.getValue();
-
 				objectSelected.isStatic = physicsMode.getValue();
 
 			}
-
-	};
-
-	// 1 = visible in easy mode, 2 = visible in advanced mode, not part of this list = visible in both modes
-	var propertyVisibilities = {
-		'friction': 2,
-		'restitution': 2
-	};
-	
-	function updateRows() {
-
-		var properties = {
-			'friction': physicsFrictionRow,
-			'restitution': physicsRestitutionRow,
-			'mode': physicsModeRow
-		};
-		
-		var object = editor.selected;
-
-		for ( var property in properties ) {
-		
-			var visible = (workMode == 'advanced' && propertyVisibilities[ property ] == 2) || ( workMode == 'easy' && propertyVisibilities[ property ] == 1 ) || propertyVisibilities[ property ] == undefined;
-			properties[ property ].setDisplay( visible ? '' : 'none' );
-
-		}
 
 	};
 	
@@ -106,8 +78,6 @@ Sidebars.Properties.Physics = function ( editor ) {
 			
 			if ( object.isStatic == undefined ) object.isStatic = false;
 			physicsMode.setValue( object.isStatic );
-			
-			updateRows();
 
 		} else {
 

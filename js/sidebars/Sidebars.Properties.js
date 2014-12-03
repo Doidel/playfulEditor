@@ -10,14 +10,14 @@ Sidebars.Properties = function ( editor ) {
 	properties.add( new Sidebars.Properties.Events( editor ) );
 	properties.add( new Sidebars.Properties.Scene( editor ) );
 	
-	properties.add( new Sidebars.Properties.AdvancedSwitch( editor ) );
-	
 	properties.add( new Sidebars.Properties.Object3D( editor ) );
 	properties.add( new Sidebars.Properties.Geometry( editor ) );
 	properties.add( new Sidebars.Properties.Physics( editor ) );
 	properties.add( new Sidebars.Properties.Material( editor ) );
 	properties.add( new Sidebars.Properties.Animation( editor ) );
 	properties.add( new Sidebars.Properties.Behaviors( editor ) );
+	
+	properties.add( new Sidebars.Properties.AdvancedSwitch( editor, container ) );
 
 	container.add(properties);
 	return container;

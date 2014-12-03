@@ -268,8 +268,8 @@ UI.Select = function () {
 
 	var dom = document.createElement( 'select' );
 	dom.className = 'Select';
-	dom.style.width = '64px';
-	dom.style.height = '16px';
+	dom.style.width = '10em';
+	dom.style.height = '2em';
 	dom.style.border = '0px';
 	dom.style.padding = '0px';
 
@@ -530,8 +530,8 @@ UI.Color = function () {
 
 	var dom = document.createElement( 'input' );
 	dom.className = 'Color';
-	dom.style.width = '64px';
-	dom.style.height = '16px';
+	dom.style.width = '4em';
+	dom.style.height = '2em';
 	dom.style.border = '0px';
 	dom.style.padding = '0px';
 	dom.style.backgroundColor = 'transparent';
