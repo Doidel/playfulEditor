@@ -5,63 +5,42 @@ var GalleryUploadPanel = function( editor ){
 
     var inputPanel = new UI.Panel().setClass('galleryUploadPanel'); 
        
-    var labelMail = document.createElement("label");
-    labelMail.innerHTML = "E-Mail:";
-    inputPanel.dom.appendChild( labelMail );
+    var labelMail = $( document.createElement('label') ).text('E-Mail:');
+    inputPanel.dom.appendChild( labelMail[0] );
     
     inputPanel.dom.appendChild( document.createElement("br") );
 
-    var inputMail = document.createElement("input");
-    inputMail.type = "text";
-    inputMail.name = "email";
-    inputMail.size = "30";
-    inputPanel.dom.appendChild( inputMail );
+    var inputMail = $( document.createElement('input') ).attr('type','text').attr('name','email').attr('size','30');
+    inputPanel.dom.appendChild( inputMail[0] );
 
     inputPanel.dom.appendChild( document.createElement("br") );
 
-    var labelName = document.createElement("label");
-    labelName.innerHTML = "Name:";
-    inputPanel.dom.appendChild( labelName );    
+    var labelName = $( document.createElement('label') ).text('Name:');
+    inputPanel.dom.appendChild( labelName[0] );    
     
 
     inputPanel.dom.appendChild( document.createElement("br") );
 
-     var inputName = document.createElement("input");
-    inputName.type = "text";
-    inputName.name = "name";
-    inputName.size = "30";
-    inputPanel.dom.appendChild( inputName );
+    var inputName = $( document.createElement('input') ).attr('type','text').attr('name','nickname').attr('size','30');
+    inputPanel.dom.appendChild( inputName[0] );
 
     inputPanel.dom.appendChild( document.createElement("br") );
     
-
-    var labelDescription = document.createElement("label");
-    labelDescription.innerHTML = "Description:";
-    inputPanel.dom.appendChild( labelDescription );
+    var labelDescription = $( document.createElement('label') ).text('Description:');
+    inputPanel.dom.appendChild( labelDescription[0] );
 
     inputPanel.dom.appendChild( document.createElement("br") );
 
-    var inputDescription = document.createElement("textarea");
-    inputMail.rows = "4";
-    inputMail.cols = "50";
-
-    inputPanel.dom.appendChild( inputDescription );
+    var inputDescription = $( document.createElement('textarea') ).attr('rows','4').attr('cols','50');
+    inputPanel.dom.appendChild( inputDescription[0] );
     container.add( inputPanel  );
 
     //----------------------------------------------------------------------------------------
     
     var infoPanel = new UI.Panel().setClass('galleryUploadPanel'); 
 
-    var uploadButton = document.createElement("button");
-    uploadButton.innerHTML = "Upload";
-    uploadButton.className = "galleryUploadButton";
-    infoPanel.dom.appendChild( uploadButton );
-
-    
-    // var closeButton = document.createElement("button");
-    // closeButton.innerHTML = "Close";
-    // closeButton.className = "galleryUploadButton";
-    // infoPanel.dom.appendChild( closeButton );
+    var uploadButton = $( document.createElement('button') ).text('Upload').addClass('galleryUploadButton');
+    infoPanel.dom.appendChild( uploadButton[0] );
 
     infoPanel.dom.appendChild( document.createElement("br") );
 
@@ -69,24 +48,10 @@ var GalleryUploadPanel = function( editor ){
     
     infoPanel.dom.appendChild( document.createElement("br") );
 
-    var statusLabel =  document.createElement("label");
-    statusLabel.innerHTML = "status";
-    statusLabel.id = "galleryUploadStatus";
-    infoPanel.dom.appendChild( statusLabel );
+    var statusLabel =  $( document.createElement('label') ).text('status').attr('id','galleryUploadStatus');   
+    infoPanel.dom.appendChild( statusLabel[0] );
 
     container.add( infoPanel );
-    
-    //inputName.id   = "galleryUploadInputName";
-
-
-    //labelName.id = "galleryUploadInputName";
-    
-    
-   
-
-    
-
-    // console.log(inputPanel);
 
     return container;
 

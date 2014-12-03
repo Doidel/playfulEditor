@@ -156,6 +156,7 @@ var GalleryPanel = function( editor ){
 		renderer.clear();
 		
 		renderer.render( scene, galleryCamera, textureRTT, true );
+		renderer.render( scene, camera );
 
 		var width  = textureRTT.width;
 		var height = textureRTT.height;
@@ -172,84 +173,54 @@ var GalleryPanel = function( editor ){
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		
 	
-		var canvas = $( document.createElement('canvas') );
-		//document.body.appendChild(canvas);
-		
-		var iconDelete = $( document.createElement('span') ).addClass('galleryDeleteIcon');
-				
-		var scrollContainer = $('#imageList').first();	
-		
-		
-		var imageItem = $( document.createElement('div') ).addClass('imageContainer');		
-		scrollContainer.append( imageItem );
-
-		var a = $( document.createElement('a') );	
-		a.append( canvas );
-		a.append( iconDelete );
-		imageItem.append( a );	
-		
-		a.onclick = function(){
-			console.log("click");
-			console.log( canvas[0].toDataURL('image/png') );
-			window.open ( canvas[0].toDataURL('image/png'),"","menubar=0,resizable=1");
-		};
-		
-
-		
-		var ctx = canvas[0].getContext('2d');
-			
-		var imgData = ctx.getImageData(0, 0, width, height);
-		
+		var canvas = $( document.createElement('canvas') ).attr('width',width).attr('height',height);		
+		var ctx = canvas[0].getContext('2d');			
+		var imgData = ctx.getImageData(0, 0, width, height);		
 		for (var i = 0; i < size ; i += 4) {
 			imgData.data[i+0] = pixelBuffer[size-(i)];
 			imgData.data[i+1] = pixelBuffer[size-(i-1)];
 			imgData.data[i+2] = pixelBuffer[size-(i-2)];
 			imgData.data[i+3] = pixelBuffer[size-(i-3)];
-		}
+		}		
+		ctx.putImageData(imgData, 0, 0);
 		
-		ctx.putImageData(imgData, 0, 0);		
-	
-		console.log(canvas);
+		// canvas.appendTo("body");
+		// canvas.css('position','relative');
+		// canvas.css('z-index','999');
 		
-		// var blob = new Blob( [ pixels ], { type: "image/png" } );
-		// var urlCreator = window.URL || window.webkitURL;
-		// var imageUrl = urlCreator.createObjectURL( blob );
-		
-		
-		// console.log(imageUrl);
-		
-		// var imageType = "image/png";
-		// var imgData = imageUrl;//rendererRTT.domElement.toDataURL( imageType );
-		
-		// var scrollContainer = document.getElementById("imageList").firstChild;
-		// var img = document.createElement("img");
-		// img.setAttribute( "src", imgData );
-		// img.onclick = function(){
-			// window.open (imgData,"","menubar=0,resizable=1");
-		// };
+		var iconDelete = $( document.createElement('span') ).addClass('galleryDeleteIcon');				
+		var scrollContainer = $('#imageList').children().first();			
+		var imageItem = $( document.createElement('div') ).addClass('imageContainer');		
+		scrollContainer.append( imageItem );
 
-		// var iconDelete = document.createElement("span");
-		// iconDelete.className = "galleryDeleteIcon";
-	
-		// var imageItem = document.createElement("div");
-		// imageItem.className = "imageContainer";
-		// scrollContainer.appendChild( imageItem );
-
-		// var a = document.createElement("a");	
-		// a.appendChild( img );
-		// a.appendChild( iconDelete );
-
-		// imageItem.appendChild( a );	
-
-		// iconDelete.onclick = function(){
-			// scrollContainer.removeChild( imageItem );
-			// var currentWidth = parseInt( scrollContainer.style.width ,10 );
-			// scrollContainer.style.width = (currentWidth - 320)+'px';
+		// var img = $( document.createElement('img') );
+		// img.attr( 'src', canvas[0].toDataURL('image/png') );
+		// img.click( function(){
+			 // window.open (canvas[0].toDataURL('image/png'),"","menubar=0,resizable=1");
+		// });
+		
+		var img = canvas[0];
+		//img.attr( 'src', canvas[0].toDataURL('image/png') );
+		imageItem.click( function(e){		
+			 window.open (img.toDataURL('image/png'),"","menubar=0,resizable=1");
+		});
+		
+		
+		var a = $( document.createElement('a') );	
+		a.append( img );
+		a.append( iconDelete );
+		imageItem.append( a );	
+		
+		var currentWidth = parseInt( scrollContainer.css('width') ,10 );
+		scrollContainer.css('width', (currentWidth + 320)+'px');
+		
+		iconDelete.click( function(){
+			imageItem.remove();
+			//scrollContainer.removeChild( imageItem );
+			var currentWidth = parseInt( scrollContainer.css('width') ,10 );
+			scrollContainer.css('width', (currentWidth - 320)+'px');
 				
-		// };
-
-		// var currentWidth = parseInt( scrollContainer.style.width ,10 );
-		// scrollContainer.style.width = (currentWidth + 320)+'px';
+		});		
 			
 	};
 	
@@ -261,41 +232,25 @@ var GalleryPanel = function( editor ){
 		galleryCamera.position.fromArray(position);		
 		galleryCamera.lookAt( new THREE.Vector3().fromArray(lookAt) );
 		
-		renderToTexture();
-		// sceneHelpers.updateMatrixWorld();
-		// scene.updateMatrixWorld();
-		
-		// if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( galleryCamera );
-		// renderer.clear();
-		
-		// galleryCamera.position.fromArray( editor.config.getKey( 'camera' ).position );
-		// galleryCamera.lookAt( new THREE.Vector3().fromArray( editor.config.getKey( 'camera' ).target ) );
-		// renderer.render( scene, galleryCamera, textureRTT, true );
-		// rendererRTT.render( sceneRTT, orthoCam  );
-		//cameraArray = [];
-		
+		renderToTexture();		
 	});    
 
     var takeArrayScreenshot = new UI.Button( 'Take Photo from Array' ).setMarginTop('5px').setMarginLeft( '7px' ).onClick( function () {
 		cameraArray = [];
 		
 		var panels = document.getElementById('cameraArrayList').firstChild.getElementsByTagName("div");
+		var position = [];
+		var lookAt   = [];
 		for( var i = 0; i < panels.length; i++){
 			cameraArray[ i ] = [];
 			var numbers = panels[i].getElementsByTagName("input");
 			//console.log( numbers[0].value );
-			cameraArray[i][0] = numbers[0].value;
-			cameraArray[i][1] = numbers[1].value;
-			cameraArray[i][2] = numbers[2].value;
-			cameraArray[i][3] = numbers[3].value;
-			cameraArray[i][4] = numbers[4].value;
-			cameraArray[i][5] = numbers[5].value;
+			position = [ numbers[0].value, numbers[1].value, numbers[2].value ];
+			lookAt   = [ numbers[3].value, numbers[4].value, numbers[5].value ];
+			galleryCamera.position.fromArray(position);		
+			galleryCamera.lookAt( new THREE.Vector3().fromArray(lookAt) );
+			renderToTexture();	
 		}
-		//console.log(cameraArray);
-		if( cameraArray.length > 0 ){
-			//signals.renderingRequested.dispatch( cameraArray );
-		}
-		//
     });
 
     imagePanel.add(takeScreenshot, takeArrayScreenshot, new UI.Break());

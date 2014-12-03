@@ -324,8 +324,16 @@
 .imageContainer:hover a .galleryDeleteIcon{display:block; cursor:pointer;}
 
 
-
+/*
 .imageContainer a img{
+    width: 310px; 
+    height: 140px;
+    border: solid 1px #ccc; 
+    padding: 1px;
+}
+*/
+
+.imageContainer a canvas{
     width: 310px; 
     height: 140px;
     border: solid 1px #ccc; 
@@ -356,13 +364,15 @@
 #galleryUpload{
     position: relative;
     top: 60px;
-    left: 305px;
+    left: 306px;
     margin-right: 705px;
     bottom: 32px;
     z-index: 2;
     height: 215px;
     /* display:none; */
     background-color:#eee;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
 }
 
 .galleryUploadPanel{
