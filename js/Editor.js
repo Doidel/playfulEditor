@@ -140,11 +140,11 @@ Editor.prototype = {
 
 			scope.addHelper( child );
 			
-			if ( object._physijs ) editor.theme.currentTheme.decorate( object );
+			if ( object._physijs && !editor._isLoadingFile ) editor.theme.currentTheme.decorate( object );
 
 		} );
 		
-		if ( object._physijs ) editor.theme.currentTheme.decorate( object );
+		if ( object._physijs && !editor._isLoadingFile  ) editor.theme.currentTheme.decorate( object );
 		
 		/*if ( object.geometry != undefined ) {
 			object.castShadow = true;
@@ -229,49 +229,23 @@ Editor.prototype = {
 		var colors = [57 / 256, 181 / 256, 74 / 256, 229 / 256, 114 / 256, 69 / 256, 83 / 256, 101 / 256, 211 / 256];
 		//var colors = [0,0,1,0,1,0,0.99,0.1,0.1];
 		
-		if ( !object._egh ) {
-		
-			var egh = new THREE.EdgesHelper( object, 0xffffff );
-			egh.name = 'Helper';
-			var posArr = egh.geometry.attributes.position.array;
-			for (var x = 0, l = posArr.length; x < l; x++) {
-				posArr[ x ] *= 1.01;
-			}
-			egh.geometry.attributes.position.needsUpdate = true;
-			egh.geometry.computeBoundingSphere();
-			
-			//remove doubles
-
-			/*var verticesMap = {}; // Hashmap for looking up vertice by position coordinates (and making sure they are unique)
-			var unique = [];
-
-			var key;
-			var precisionPoints = 4; // number of decimal points, eg. 4 for epsilon of 0.0001
-			var precision = Math.pow( 10, precisionPoints );
-			var i,il;
-			var vertices = egh.geometry.attributes.position.array;
-
-			for ( i = 0, il = vertices.length; i < il; i += 3 ) {
-
-				key = Math.round( vertices[ i ] * precision ) + '_' + Math.round( vertices[ i + 1 ] * precision ) + '_' + Math.round( vertices[ i + 2 ] * precision );
-
-				if ( verticesMap[ key ] === undefined ) {
-
-					verticesMap[ key ] = i;
-					unique.push( vertices[ i ], vertices[ i + 1 ], vertices[ i + 2 ] );
-
-				}
-
-			};
-
-			// Use unique set of vertices
-
-			egh.geometry.attributes.position.array = new Float32Array( unique );
-			egh.geometry.attributes.position.needsUpdate = true;*/
-			
-			object.add( egh );
-			object._egh = egh;
+		if ( object._egh ) {
+			object.remove( object._egh );
+			delete object._egh;
 		}
+	
+		var egh = new THREE.EdgesHelper( object, 0xffffff );
+		egh.name = 'Helper';
+		var posArr = egh.geometry.attributes.position.array;
+		for (var x = 0, l = posArr.length; x < l; x++) {
+			posArr[ x ] *= 1.01;
+		}
+		egh.geometry.attributes.position.needsUpdate = true;
+		egh.geometry.computeBoundingSphere();
+		
+		object.add( egh );
+		object._egh = egh;
+		
 		
 		if ( !object._egh.geometry.attributes.color ) {
 			

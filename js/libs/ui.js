@@ -1073,7 +1073,6 @@ UI.Sound.prototype.play = function() {
 }
 
 UI.Sound.prototype.stop = function() {
-	console.log('stop', this.sound);
 	if (this.sound) {
 		editor.soundCollection.stop(this.sound);
 	}
@@ -1200,11 +1199,11 @@ UI.EventList.prototype.actionProperties = {
 				
 				if ( event.buffer ) {
 					
-					if ( editor.config.getKey('defaultColor') == 'RMS' ) {
+					/*if ( editor.config.getKey('defaultColor') == 'RMS' ) {
 					
 						editor.signals.soundAdded.dispatch( event.buffer, editor.selected.material );
 						
-					}
+					}*/
 					
 				}
 				

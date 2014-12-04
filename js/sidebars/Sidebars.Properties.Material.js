@@ -628,6 +628,7 @@ Sidebars.Properties.Material = function ( editor ) {
 		for ( var property in properties ) {
 		
 			var visible = material[ property ] !== undefined ? true: false;
+
 			properties[ property ].setDisplay( visible ? '' : 'none' );
 
 		}
@@ -802,6 +803,12 @@ Sidebars.Properties.Material = function ( editor ) {
 
 	} );
 
+	signals.objectChanged.add( function ( object ) {
+	
+		editor.setEdge( object, !object.events ? 1 : object.events.length );
+	
+	});
+	
 	return container;
 
 }

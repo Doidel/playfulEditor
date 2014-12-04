@@ -40,6 +40,7 @@ Sidebars.Properties.Events = function ( editor ) {
 			container.setDisplay( '' );
 			
 			eventList.setValue( object.events );
+			update();
 
 		} else {
 

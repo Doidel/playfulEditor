@@ -625,6 +625,19 @@ var Viewport = function ( editor ) {
 		render();
 
 	} );
+	
+	signals.objectChanged.add( function ( object ) {
+
+		if ( object != undefined && object == editor.selected ) {
+
+			selectionBox.update( object );
+			selectionBox.visible = true;
+
+		}
+
+		render();
+
+	} );
 
 	signals.objectAdded.add( function ( object ) {
 

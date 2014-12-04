@@ -28,6 +28,8 @@ Sidebars.Add = function ( editor ) {
 				prefabLink.click( function (e) {
 					
 					var p = editor.theme.currentTheme.getPrefab( this );
+					if (p.geometry.boundingBox == undefined) p.geometry.computeBoundingBox();
+					p.position.y = p.geometry.boundingBox.size().y / 2;
 					editor.addObject( p );
 					editor.select( p );
 				

@@ -24,15 +24,18 @@ _lS = {
 	
 	/* decorate will be called on object creation, scene creation or theme selection */
 	decorate: function( object ) {
-				
-		if ( object._physijs && !object._egh ) {
+		
+		console.log(object)
+		o = object;
+		if ( object instanceof THREE.Mesh ) {
 			
 			if ( object.name != "Ground" ) {
 				object.material.opacity = 0.4;
+				object.material.transparent = true;
 				object.material.needsUpdate = true;
 			}
 			
-			editor.setEdge( object, !object.events ? 1 : object.events.length );
+			if (!object._egh) editor.setEdge( object, !object.events ? 1 : object.events.length );
 		
 		}
 		

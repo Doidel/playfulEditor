@@ -8,6 +8,8 @@ var Loader = function ( editor ) {
 
 	this.loadFile = function ( file ) {
 
+		editor._isLoadingFile = true; // fix to not decorate imported objects...
+	
 		var filename = file.name;
 		var extension = filename.split( '.' ).pop().toLowerCase();
 
@@ -415,6 +417,8 @@ var Loader = function ( editor ) {
 			}, '' );
 
 		}
+		
+		editor._isLoadingFile = false;
 
 	};
 
