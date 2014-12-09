@@ -4,7 +4,7 @@ Editor.Theme = function ( editor ) {
 
 	editor.signals.themeChanged.add( function ( value ) {
 		
-		
+			editor.theme.isLoading = true;
 		
 			$.ajax({
 				url: 'js/themes/' + value + '.js',
@@ -26,7 +26,7 @@ Editor.Theme = function ( editor ) {
 					
 					//decorate objects if theme was changed
 					if ( editor.config.getKey( 'theme' ) != value ) {
-						console.log( 'decorate', editor.config.getKey( 'theme' ),  value );
+					
 						editor.scene.traverse( function( el ) {
 							
 							editor.theme.currentTheme.decorate( el );
@@ -35,14 +35,15 @@ Editor.Theme = function ( editor ) {
 						editor.config.setKey( 'theme', value );
 					}
 					
+					editor.theme.isLoading = false;
+					
 					editor.signals.sceneGraphChanged.dispatch();
 					editor.signals.themeLoaded.dispatch( value );
 					
 				}
-			}).done(function() {
-			
 			}).fail(function(v1, v2, v3) {
-				console.log(v1, v2, v3);
+				console.warn(v1, v2, v3);
+				editor.theme.isLoading = false;
 			});
 		
 	});

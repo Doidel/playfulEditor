@@ -5,11 +5,14 @@ _lS = {
 	/* init will be called either at scene creation or theme selection */
 	init: function() {
 	
-		var fogColor = new THREE.Color( 0x0099bb );
-		editor.signals.fogTypeChanged.dispatch( 'Fog' );
-		editor.signals.fogColorChanged.dispatch( fogColor.getHex() );
-		editor.signals.fogParametersChanged.dispatch( 0.01, 50, 0.00025 );
-		
+		if ( !editor._isLoadingFile ) {
+			console.log(' set theme fog ');
+			var fogColor = new THREE.Color( 0x0099bb );
+			editor.signals.fogTypeChanged.dispatch( 'Fog' );
+			editor.signals.fogColorChanged.dispatch( fogColor.getHex() );
+			editor.signals.fogParametersChanged.dispatch( 0.01, 50, 0.00025 );
+		}
+			
 		// Customize the play character
 		editor.play.callbacks.characterCreated = function( character ) {
 			var egh = new THREE.EdgesHelper( character, 0x00ffff );

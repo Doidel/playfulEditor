@@ -1793,7 +1793,7 @@ UI.Behavior.prototype.getValue = function (  ) {
 UI.Behavior.prototype.setValue = function ( value ) {
 	
 	this.dom.behaviorCheckbox.setValue( value );
-	this.fireChange();
+	//this.fireChange();
 	
 };
 

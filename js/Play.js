@@ -298,7 +298,7 @@ Play.prototype.startLeap = function ( ) {
 					var character = editor.play._character;
 					if ( !character ) return;
 					
-					var modifier = 0.08;
+					var modifier = 0.12; //0.08
 					
 					var zModifier = -400;
 					

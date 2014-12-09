@@ -65,6 +65,8 @@ Sidebars.Properties.Behaviors = function ( editor ) {
 		
 		if ( objectSelected ) {
 		
+			var object = objectSelected;
+		
 			var behaviors = {};
 			
 			for ( var behavior in behaviorList ) {
@@ -74,7 +76,9 @@ Sidebars.Properties.Behaviors = function ( editor ) {
 			}
 			
 			// assign behaviors to the object
-			objectSelected.behaviors = behaviors;
+			object.behaviors = behaviors;
+			
+			signals.objectChanged.dispatch( object );
 			
 		}
 
@@ -116,7 +120,7 @@ Sidebars.Properties.Behaviors = function ( editor ) {
 			container.setDisplay( '' );
 
 			var behaviors = object.behaviors || {};
-			keys = Object.keys( behaviors );
+			var keys = Object.keys( behaviors );
 			
 			// init all values
 			for ( var behavior in behaviorList ) {

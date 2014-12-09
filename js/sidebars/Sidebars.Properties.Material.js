@@ -805,7 +805,7 @@ Sidebars.Properties.Material = function ( editor ) {
 
 	signals.objectChanged.add( function ( object ) {
 	
-		editor.setEdge( object, !object.events ? 1 : object.events.length );
+		if ( object._egh ) editor.setEdge( object, !object.events ? 1 : object.events.length );
 	
 	});
 	

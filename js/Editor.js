@@ -167,11 +167,11 @@ Editor.prototype = {
 
 	},
 
-	removeObject: function ( object ) {
+	removeObject: function ( object, noConfirm ) {
 
 		if ( object.parent === undefined ) return; // avoid deleting the camera or scene
 
-		if ( confirm( 'Delete ' + object.name + '?' ) === false ) return;
+		if ( !noConfirm && confirm( 'Delete ' + object.name + '?' ) === false ) return;
 
 		var scope = this;
 
