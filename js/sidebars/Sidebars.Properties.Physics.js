@@ -55,6 +55,7 @@ Sidebars.Properties.Physics = function ( editor ) {
 
 			}
 
+			signals.objectChanged.dispatch( objectSelected );
 	};
 	
 	// events

@@ -6,7 +6,6 @@ Sidebars.Properties.Events = function ( editor ) {
 
 	var container = new UI.Panel();
 	container.setDisplay( 'none' );
-	//container.dom.classList.add( 'Material' );
 
 	$("<h3/>",{ html: "Events" }).appendTo( container.dom );
 
@@ -26,6 +25,8 @@ Sidebars.Properties.Events = function ( editor ) {
 		objectSelected.events = eventList.getValue();
 		
 		if ( objectSelected._egh ) editor.setEdge( objectSelected, !objectSelected.events ? 3 : objectSelected.events.length );
+			
+		signals.objectChanged.dispatch( objectSelected );
 
 	};
 
