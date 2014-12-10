@@ -24,7 +24,7 @@ Sidebars.Properties.Events = function ( editor ) {
 		
 		objectSelected.events = eventList.getValue();
 		
-		if ( objectSelected._egh ) editor.setEdge( objectSelected, !objectSelected.events ? 3 : objectSelected.events.length );
+		if ( objectSelected._egh ) editor.setEdge( objectSelected );
 			
 		signals.objectChanged.dispatch( objectSelected );
 

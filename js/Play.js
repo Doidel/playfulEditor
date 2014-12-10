@@ -636,7 +636,8 @@ Play.prototype.runtimeMaterials = {
 				if ( object._analyser ) {
 					object._analyser.getByteFrequencyData(array);
 					var average = editor.play.Audio.getAverageVolume(array);
-					val = average / 15; //TODO: Don't use fixed value, instead calc max per sound
+					val = average / 15 * (args.trigger.scale ? parseFloat(args.trigger.scale) : 1); //TODO: Don't use fixed value, instead calc max per sound
+					//console.log( parseFloat(args.trigger.scale), val);
 				}
 				
 				break;

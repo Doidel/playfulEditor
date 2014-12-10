@@ -435,6 +435,11 @@
 						object.castShadow = true;
 						object.receiveShadow = true;
 						
+						
+						if ( material.edges ) {
+							editor.setEdge( object );
+						}
+						
 						/*if ( object.material.map ) {
 							console.log('has map');
 							object.material.map.image.addEventListener( 'load', function( event ) {

@@ -381,6 +381,8 @@ Sidebars.Properties.Material = function ( editor ) {
 				delete object._egh;
 			
 			}
+			material.edges = edgesCheckbox.getValue();
+			console.log('EDGES', material.edges);
 
 			if ( material.ambient !== undefined ) {
 
@@ -584,7 +586,7 @@ Sidebars.Properties.Material = function ( editor ) {
 			
 			material.runtimeMaterials = runtimeMaterial.getValue();
 
-			updateRows();
+			//updateRows();
 
 			signals.materialChanged.dispatch( material );
 
@@ -627,7 +629,7 @@ Sidebars.Properties.Material = function ( editor ) {
 
 		for ( var property in properties ) {
 		
-			var visible = material[ property ] !== undefined ? true: false;
+			//var visible = material[ property ] !== undefined ? true: false;
 
 			properties[ property ].setDisplay( visible ? '' : 'none' );
 
@@ -673,7 +675,11 @@ Sidebars.Properties.Material = function ( editor ) {
 
 			}
 			
-			edgesCheckbox.setValue( object._egh !== undefined );
+			edgesCheckbox.setValue( object.material.edges );
+			console.log('HASEDGES', object.material.edges );
+			if ( object.material.edges ) {
+				editor.setEdge( object );
+			}
 
 			if ( material.ambient !== undefined ) {
 
@@ -793,7 +799,7 @@ Sidebars.Properties.Material = function ( editor ) {
 			
 			}
 
-			updateRows();
+			//updateRows();
 
 		} else {
 
@@ -805,7 +811,7 @@ Sidebars.Properties.Material = function ( editor ) {
 
 	signals.objectChanged.add( function ( object ) {
 	
-		if ( object._egh ) editor.setEdge( object, !object.events ? 1 : object.events.length );
+		if ( object._egh ) editor.setEdge( object );
 	
 	});
 	

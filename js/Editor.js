@@ -220,19 +220,44 @@ Editor.prototype = {
 
 	},
 
-	setEdge: function ( object, colorsAmount ) {
+	setEdge: function ( object ) {
 		
-		colorsAmount = colorsAmount >= 1 ? colorsAmount : 1;
-	
+		var types = [false, false, false];
+		if ( object.events ) {
+			for ( var e = 0; e < object.events.length; e++ ) {
+				switch (object.events[e].trigger.type) {
+					case "Touch Stroke":
+						types[0] = true;
+						break;
+					case "Touch Point":
+						types[1] = true;
+						break;
+					case "Touch Fist":
+						types[2] = true;
+						break;
+				}
+			}
+		}
+		
 		var colorsArr;
-		//var colors = [57, 181, 74, 229, 114, 69, 83, 101, 211];
-		var colors = [57 / 256, 181 / 256, 74 / 256, 229 / 256, 114 / 256, 69 / 256, 83 / 256, 101 / 256, 211 / 256];
-		//var colors = [0,0,1,0,1,0,0.99,0.1,0.1];
+		var colors = [];
+		if ( types[0] ) {
+			colors.push(57 / 256, 181 / 256, 74 / 256);
+		}
+		if ( types[1] ) {
+			colors.push(229 / 256, 114 / 256, 69 / 256);
+		}
+		if ( types[2] ) {
+			colors.push(83 / 256, 101 / 256, 211 / 256);
+		}
+		var colorsAmount = colors.length / 3;
 		
 		if ( object._egh ) {
 			object.remove( object._egh );
 			delete object._egh;
 		}
+		
+		if ( colors.length == 0 ) return;
 	
 		var egh = new THREE.EdgesHelper( object, 0xffffff );
 		egh.name = 'Helper';
@@ -257,6 +282,7 @@ Editor.prototype = {
 		
 		// assign colors
 		for (var x = 0, l = colorsArr.length; x < l; x += 3) {
+			//var col = Math.floor( (x / 6) % colorsAmount ) * 3;
 			var col = Math.floor( (x / 6) % colorsAmount ) * 3;
 			colorsArr[ x ] = colors[ col ];
 			colorsArr[ x + 1 ] = colors[ col + 1 ];
