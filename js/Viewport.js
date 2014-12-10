@@ -90,7 +90,7 @@ var Viewport = function ( editor ) {
 	playCamera.name = 'playCamera';
 	
 	editor.play.setLeapCamera( playCamera );
-	console.log(container);
+	//console.log(container);
 	var orbitControls = new THREE.OrbitControls( playCamera, container.dom );
 	
 	
@@ -323,7 +323,6 @@ var Viewport = function ( editor ) {
 		scene.remove( playCamera );
 		
 		removeLeapBox();
-		render();
 		
 		container.play = false;
 		
@@ -331,7 +330,9 @@ var Viewport = function ( editor ) {
 		setTimeout( function() {
 			editor.resetPlay();
 			editor._activeControls = transformControls;
-			render();
+			
+			// Call resize method to make sure that viewport is rendered correctly after play mode in 3D
+			signals.windowResize.dispatch();
 		}, 100);
 		
 	} );
