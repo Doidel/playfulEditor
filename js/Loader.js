@@ -10,7 +10,7 @@ var Loader = function ( editor ) {
 
 		editor._isLoadingFile = true; // fix to not decorate imported objects...
 	
-		var filename = file.name;
+		var filename = file.name || 'playful.playful';
 		var extension = filename.split( '.' ).pop().toLowerCase();
 
 		switch ( extension ) {
