@@ -4,41 +4,47 @@ Editor.Theme = function ( editor ) {
 
 	editor.signals.themeChanged.add( function ( value ) {
 		
-		console.log('load', value);
-		$.ajax({
-			url: 'js/themes/' + value + '.js',
-			dataType: 'script',
-			success: function() {
-				
-				console.log('theme loaded');
-			
-				//remove old theme
-				if ( editor.theme.currentTheme ) editor.theme.currentTheme.remove();
-				//assign the loaded script as current theme
-				editor.theme.currentTheme = _lS;
-				
-				//merge with defaults
-				editor.theme.mergeDefaults();
-				
-				//execute the init function
-				editor.theme.currentTheme.init();
-				
-				//decorate objects
-				editor.scene.traverse( function( el ) {
-					
-					editor.theme.currentTheme.decorate( el );
-					
-				});
-				
-				editor.signals.sceneGraphChanged.dispatch();
-				editor.signals.themeLoaded.dispatch( value );
-				
-			}
-		}).done(function() {
+			editor.theme.isLoading = true;
 		
-		}).fail(function(v1, v2, v3) {
-			console.log(v1, v2, v3);
-		});
+			$.ajax({
+				url: 'js/themes/' + value + '.js',
+				dataType: 'script',
+				success: function() {
+					
+					console.log('theme loaded');
+				
+					//remove old theme
+					if ( editor.theme.currentTheme ) editor.theme.currentTheme.remove();
+					//assign the loaded script as current theme
+					editor.theme.currentTheme = _lS;
+					
+					//merge with defaults
+					editor.theme.mergeDefaults();
+					
+					//execute the init function
+					editor.theme.currentTheme.init();
+					
+					//decorate objects if theme was changed
+					if ( editor.config.getKey( 'theme' ) != value ) {
+					
+						editor.scene.traverse( function( el ) {
+							
+							editor.theme.currentTheme.decorate( el );
+							
+						});
+						editor.config.setKey( 'theme', value );
+					}
+					
+					editor.theme.isLoading = false;
+					
+					editor.signals.sceneGraphChanged.dispatch();
+					editor.signals.themeLoaded.dispatch( value );
+					
+				}
+			}).fail(function(v1, v2, v3) {
+				console.warn(v1, v2, v3);
+				editor.theme.isLoading = false;
+			});
 		
 	});
 
@@ -50,6 +56,7 @@ Editor.Theme = function ( editor ) {
 		remove: function() {}
 	};
 	
+	// add default functions if none exist already by the theme
 	this.mergeDefaults = function ( ) {
 		
 		if ( editor.theme.currentTheme ) {
@@ -63,6 +70,7 @@ Editor.Theme = function ( editor ) {
 				mesh.name = name;
 				mesh.castShadow = true;
 				mesh.receiveShadow = true;
+				editor.theme.currentTheme.decorate( mesh );
 				
 				return mesh;
 			

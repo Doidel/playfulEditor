@@ -7,9 +7,8 @@ Sidebars.Properties.Animation = function ( editor ) {
 
 	var container = new UI.Panel();
 	container.setDisplay( 'none' );
-
-	container.add( new UI.Text( 'Animation' ) );
-	container.add( new UI.Break(), new UI.Break() );
+	
+	$("<h3/>",{ html: "Animation" }).appendTo( container.dom );
 
 	var AnimationsRow = new UI.Panel();
 	var Animations = new UI.Select().setOptions( options ).setWidth( '130px' ).setColor( '#444' ).setFontSize( '12px' );

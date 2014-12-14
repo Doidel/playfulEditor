@@ -22,12 +22,10 @@ Sidebars.Properties.Material = function ( editor ) {
 
 	var container = new UI.Panel();
 	container.setDisplay( 'none' );
-	container.dom.classList.add( 'Material' );
 
-	container.add( new UI.Text().setValue( 'MATERIAL' ) );
-	container.add( new UI.Break(), new UI.Break() );
+	$("<h3/>",{ html: "Material" }).appendTo( container.dom );
 
-	// uuid
+	// uuid (disabled)
 
 	var materialUUIDRow = new UI.Panel();
 	var materialUUID = new UI.Input().setWidth( '115px' ).setColor( '#444' ).setFontSize( '12px' ).setDisabled( true );
@@ -37,30 +35,30 @@ Sidebars.Properties.Material = function ( editor ) {
 		update();
 
 	} );
-
 	materialUUIDRow.add( new UI.Text( 'UUID' ).setWidth( '90px' ) );
 	materialUUIDRow.add( materialUUID );
 	materialUUIDRow.add( materialUUIDRenew );
-
 	//container.add( materialUUIDRow );
 
-	// name
+
+	// name (disabled)
 
 	var materialNameRow = new UI.Panel();
+	materialNameRow.setClass("easy");
 	var materialName = new UI.Input().setWidth( '150px' ).setColor( '#444' ).setFontSize( '12px' ).onChange( function () {
 
 		editor.setMaterialName( editor.selected.material, materialName.getValue() );
 
 	} );
-
 	materialNameRow.add( new UI.Text( 'Name' ).setWidth( '90px' ) );
 	materialNameRow.add( materialName );
-
 	//container.add( materialNameRow );
 
-	// class
+	
+	// class (disabled)
 
 	var materialClassRow = new UI.Panel();
+	materialClassRow.setClass("advanced");
 	var materialClass = new UI.Select().setOptions( {
 
 		'LineBasicMaterial': 'LineBasicMaterial',
@@ -74,15 +72,15 @@ Sidebars.Properties.Material = function ( editor ) {
 		'SpriteMaterial': 'SpriteMaterial'
 
 	} ).setWidth( '150px' ).setColor( '#444' ).setFontSize( '12px' ).onChange( update );
-
 	materialClassRow.add( new UI.Text( 'Type' ).setWidth( '90px' ) );
 	materialClassRow.add( materialClass );
-
 	//container.add( materialClassRow );
+
 
 	// color
 
 	var materialColorRow = new UI.Panel();
+	materialColorRow.setClass("easy");
 	var materialColor = new UI.Color().onChange( update );
 
 	materialColorRow.add( new UI.Text( 'Color' ).setWidth( '90px' ) );
@@ -90,59 +88,65 @@ Sidebars.Properties.Material = function ( editor ) {
 
 	container.add( materialColorRow );
 	
+	
 	// edges
 	
 	var edgesRow = new UI.Panel();
+	edgesRow.setClass("advanced");
 	var edgesCheckbox = new UI.Checkbox( false ).onChange( update );
-	
 	edgesRow.add( new UI.Text( 'Edges' ).setWidth( '90px' ) );
 	edgesRow.add( edgesCheckbox );
-
 	container.add( edgesRow );
 
-	// ambient
+	
+	// ambient (disabled)
 
 	var materialAmbientRow = new UI.Panel();
+	materialAmbientRow.setClass("disabled");
 	var materialAmbient = new UI.Color().onChange( update );
 
 	materialAmbientRow.add( new UI.Text( 'Ambient' ).setWidth( '90px' ) );
 	materialAmbientRow.add( materialAmbient );
+	container.add( materialAmbientRow );
 
-	//container.add( materialAmbientRow );
 
-	// emissive
+	// emissive (disabled)
 
 	var materialEmissiveRow = new UI.Panel();
+	materialEmissiveRow.setClass("disabled");
 	var materialEmissive = new UI.Color().onChange( update );
 
 	materialEmissiveRow.add( new UI.Text( 'Emissive' ).setWidth( '90px' ) );
 	materialEmissiveRow.add( materialEmissive );
 
-	//container.add( materialEmissiveRow );
+	container.add( materialEmissiveRow );
 
-	// specular
+	
+	// specular (disabled)
 
 	var materialSpecularRow = new UI.Panel();
 	var materialSpecular = new UI.Color().onChange( update );
 
 	materialSpecularRow.add( new UI.Text( 'Specular' ).setWidth( '90px' ) );
 	materialSpecularRow.add( materialSpecular );
-
 	//container.add( materialSpecularRow );
 
-	// shininess
+	
+	// shininess (disabled)
 
 	var materialShininessRow = new UI.Panel();
+	materialShininessRow.setClass("disabled");
 	var materialShininess = new UI.Number( 30 ).onChange( update );
 
 	materialShininessRow.add( new UI.Text( 'Shininess' ).setWidth( '90px' ) );
 	materialShininessRow.add( materialShininess );
+	container.add( materialShininessRow );
 
-	//container.add( materialShininessRow );
 
-	// vertex colors
+	// vertex colors (disabled)
 
 	var materialVertexColorsRow = new UI.Panel();
+	materialVertexColorsRow.setClass("disabled");
 	var materialVertexColors = new UI.Select().setOptions( {
 
 		0: 'No',
@@ -153,13 +157,13 @@ Sidebars.Properties.Material = function ( editor ) {
 
 	materialVertexColorsRow.add( new UI.Text( 'Vertex Colors' ).setWidth( '90px' ) );
 	materialVertexColorsRow.add( materialVertexColors );
-
-	//container.add( materialVertexColorsRow );
+	container.add( materialVertexColorsRow );
 
 
 	// map
 
 	var materialMapRow = new UI.Panel();
+	materialMapRow.setClass("advanced");
 	var materialMapEnabled = new UI.Checkbox( false ).onChange( update );
 	var materialMap = new UI.Texture().setColor( '#444' ).onChange( update );
 
@@ -170,9 +174,10 @@ Sidebars.Properties.Material = function ( editor ) {
 	container.add( materialMapRow );
 
 
-	// light map
+	// light map (disabled)
 
 	var materialLightMapRow = new UI.Panel();
+	materialLightMapRow.setClass("disabled");
 	var materialLightMapEnabled = new UI.Checkbox( false ).onChange( update );
 	var materialLightMap = new UI.Texture().setColor( '#444' ).onChange( update );
 
@@ -180,12 +185,13 @@ Sidebars.Properties.Material = function ( editor ) {
 	materialLightMapRow.add( materialLightMapEnabled );
 	materialLightMapRow.add( materialLightMap );
 
-	//container.add( materialLightMapRow );
+	container.add( materialLightMapRow );
 
 
-	// bump map
+	// bump map (disabled)
 
 	var materialBumpMapRow = new UI.Panel();
+	materialBumpMapRow.setClass("disabled");
 	var materialBumpMapEnabled = new UI.Checkbox( false ).onChange( update );
 	var materialBumpMap = new UI.Texture().setColor( '#444' ).onChange( update );
 	var materialBumpScale = new UI.Number( 1 ).setWidth( '30px' ).onChange( update );
@@ -195,12 +201,13 @@ Sidebars.Properties.Material = function ( editor ) {
 	materialBumpMapRow.add( materialBumpMap );
 	materialBumpMapRow.add( materialBumpScale );
 
-	//container.add( materialBumpMapRow );
+	container.add( materialBumpMapRow );
 
 
-	// normal map
+	// normal map (disabled)
 
 	var materialNormalMapRow = new UI.Panel();
+	materialNormalMapRow.setClass("disabled");
 	var materialNormalMapEnabled = new UI.Checkbox( false ).onChange( update );
 	var materialNormalMap = new UI.Texture().setColor( '#444' ).onChange( update );
 
@@ -208,12 +215,13 @@ Sidebars.Properties.Material = function ( editor ) {
 	materialNormalMapRow.add( materialNormalMapEnabled );
 	materialNormalMapRow.add( materialNormalMap );
 
-	//container.add( materialNormalMapRow );
+	container.add( materialNormalMapRow );
 
 
-	// specular map
+	// specular map (disabled)
 
 	var materialSpecularMapRow = new UI.Panel();
+	materialSpecularMapRow.setClass("disabled");
 	var materialSpecularMapEnabled = new UI.Checkbox( false ).onChange( update );
 	var materialSpecularMap = new UI.Texture().setColor( '#444' ).onChange( update );
 
@@ -221,12 +229,13 @@ Sidebars.Properties.Material = function ( editor ) {
 	materialSpecularMapRow.add( materialSpecularMapEnabled );
 	materialSpecularMapRow.add( materialSpecularMap );
 
-	//container.add( materialSpecularMapRow );
+	container.add( materialSpecularMapRow );
 
 
-	// env map
+	// env map (disabled)
 
 	var materialEnvMapRow = new UI.Panel();
+	materialEnvMapRow.setClass("disabled");
 	var materialEnvMapEnabled = new UI.Checkbox( false ).onChange( update );
 	var materialEnvMap = new UI.CubeTexture().setColor( '#444' ).onChange( update );
 	var materialReflectivity = new UI.Number( 1 ).setWidth( '30px' ).onChange( update );
@@ -236,12 +245,13 @@ Sidebars.Properties.Material = function ( editor ) {
 	materialEnvMapRow.add( materialEnvMap );
 	materialEnvMapRow.add( materialReflectivity );
 
-	//container.add( materialEnvMapRow );
+	container.add( materialEnvMapRow );
 
 
 	// blending
 
 	var materialBlendingRow = new UI.Panel();
+	materialBlendingRow.setClass("advanced");
 	var materialBlending = new UI.Select().setOptions( {
 
 		0: 'No',
@@ -259,9 +269,10 @@ Sidebars.Properties.Material = function ( editor ) {
 	container.add( materialBlendingRow );
 
 
-	// side
+	// side (disabled)
 
 	var materialSideRow = new UI.Panel();
+	materialSideRow.setClass("disabled");
 	var materialSide = new UI.Select().setOptions( {
 
 		0: 'Front',
@@ -273,7 +284,7 @@ Sidebars.Properties.Material = function ( editor ) {
 	materialSideRow.add( new UI.Text( 'Side' ).setWidth( '90px' ) );
 	materialSideRow.add( materialSide );
 
-	//container.add( materialSideRow );
+	container.add( materialSideRow );
 
 
 	// opacity
@@ -287,20 +298,22 @@ Sidebars.Properties.Material = function ( editor ) {
 	container.add( materialOpacityRow );
 
 
-	// transparent
+	// transparent (disabled)
 
 	var materialTransparentRow = new UI.Panel();
+	materialTransparentRow.setClass("disabled");
 	var materialTransparent = new UI.Checkbox().setLeft( '100px' ).onChange( update );
 
 	materialTransparentRow.add( new UI.Text( 'Transparent' ).setWidth( '90px' ) );
 	materialTransparentRow.add( materialTransparent );
 
-	//container.add( materialTransparentRow );
+	container.add( materialTransparentRow );
 
 
-	// wireframe
+	// wireframe (disabled)
 
 	var materialWireframeRow = new UI.Panel();
+	materialWireframeRow.setClass("disabled");
 	var materialWireframe = new UI.Checkbox( false ).onChange( update );
 	var materialWireframeLinewidth = new UI.Number( 1 ).setWidth( '60px' ).setRange( 0, 100 ).onChange( update );
 
@@ -308,11 +321,13 @@ Sidebars.Properties.Material = function ( editor ) {
 	materialWireframeRow.add( materialWireframe );
 	materialWireframeRow.add( materialWireframeLinewidth );
 
-	//container.add( materialWireframeRow );
+	container.add( materialWireframeRow );
+	
 	
 	// runtime material
 
 	var runtimeMaterialRow = new UI.Panel();
+	runtimeMaterialRow.setClass("advanced");
 	var runtimeMaterial = new UI.RuntimeMaterial(  ).onChange( update );
 	
 	runtimeMaterialRow.add( new UI.Text( 'Runtime material changes' ).setWidth( '300px' ) )
@@ -366,6 +381,8 @@ Sidebars.Properties.Material = function ( editor ) {
 				delete object._egh;
 			
 			}
+			material.edges = edgesCheckbox.getValue();
+			console.log('EDGES', material.edges);
 
 			if ( material.ambient !== undefined ) {
 
@@ -569,7 +586,7 @@ Sidebars.Properties.Material = function ( editor ) {
 			
 			material.runtimeMaterials = runtimeMaterial.getValue();
 
-			updateRows();
+			//updateRows();
 
 			signals.materialChanged.dispatch( material );
 
@@ -583,28 +600,6 @@ Sidebars.Properties.Material = function ( editor ) {
 
 	};
 
-	// 1 = visible in easy mode, 2 = visible in advanced mode, not part of this list = visible in both modes
-	var propertyVisibilities = {
-		'ambient': 2,
-		'emissive': 2,
-		'specular': 2,
-		'shininess': 2,
-		'vertexColors': 2,
-		'map': 2,
-		'lightMap': 2,
-		'bumpMap': 2,
-		'normalMap': 2,
-		'specularMap': 2,
-		'envMap': 2,
-		'blending': 2,
-		'side': 2,
-		'opacity': 2,
-		'transparent': 2,
-		'wireframe': 2,
-		'runtimeMaterials': 2,
-		'edges': 2
-	};
-	
 	function updateRows() {
 
 		var properties = {
@@ -634,9 +629,8 @@ Sidebars.Properties.Material = function ( editor ) {
 
 		for ( var property in properties ) {
 		
-			var visible = material[ property ] !== undefined ?
-				( workMode == 'advanced' && propertyVisibilities[ property ] == 2) || ( workMode == 'easy' && propertyVisibilities[ property ] == 1 ) || propertyVisibilities[ property ] == undefined
-				: false;
+			//var visible = material[ property ] !== undefined ? true: false;
+
 			properties[ property ].setDisplay( visible ? '' : 'none' );
 
 		}
@@ -681,7 +675,11 @@ Sidebars.Properties.Material = function ( editor ) {
 
 			}
 			
-			edgesCheckbox.setValue( object._egh !== undefined );
+			edgesCheckbox.setValue( object.material.edges );
+			console.log('HASEDGES', object.material.edges );
+			if ( object.material.edges ) {
+				editor.setEdge( object );
+			}
 
 			if ( material.ambient !== undefined ) {
 
@@ -801,7 +799,7 @@ Sidebars.Properties.Material = function ( editor ) {
 			
 			}
 
-			updateRows();
+			//updateRows();
 
 		} else {
 
@@ -811,6 +809,12 @@ Sidebars.Properties.Material = function ( editor ) {
 
 	} );
 
+	signals.objectChanged.add( function ( object ) {
+	
+		if ( object._egh ) editor.setEdge( object );
+	
+	});
+	
 	return container;
 
 }

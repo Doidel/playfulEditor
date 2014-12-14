@@ -268,8 +268,8 @@ UI.Select = function () {
 
 	var dom = document.createElement( 'select' );
 	dom.className = 'Select';
-	dom.style.width = '64px';
-	dom.style.height = '16px';
+	dom.style.width = '10em';
+	dom.style.height = '2em';
 	dom.style.border = '0px';
 	dom.style.padding = '0px';
 
@@ -530,8 +530,8 @@ UI.Color = function () {
 
 	var dom = document.createElement( 'input' );
 	dom.className = 'Color';
-	dom.style.width = '64px';
-	dom.style.height = '16px';
+	dom.style.width = '4em';
+	dom.style.height = '2em';
 	dom.style.border = '0px';
 	dom.style.padding = '0px';
 	dom.style.backgroundColor = 'transparent';
@@ -1073,7 +1073,6 @@ UI.Sound.prototype.play = function() {
 }
 
 UI.Sound.prototype.stop = function() {
-	console.log('stop', this.sound);
 	if (this.sound) {
 		editor.soundCollection.stop(this.sound);
 	}
@@ -1200,11 +1199,11 @@ UI.EventList.prototype.actionProperties = {
 				
 				if ( event.buffer ) {
 					
-					if ( editor.config.getKey('defaultColor') == 'RMS' ) {
+					/*if ( editor.config.getKey('defaultColor') == 'RMS' ) {
 					
 						editor.signals.soundAdded.dispatch( event.buffer, editor.selected.material );
 						
-					}
+					}*/
 					
 				}
 				
@@ -1488,7 +1487,31 @@ UI.RuntimeMaterial.prototype = Object.create( UI.Element.prototype );
 // tripperProperties and actionProperties is where you can define your triggers and actions!
 UI.RuntimeMaterial.prototype.triggerProperties = {
 	"Amplitude": {
+		getUI: function ( eventNode ) {
 		
+			var container = new UI.Panel();
+			
+			container.add( new UI.Text( 'Scale' ).setWidth( '90px' ) );
+			var scale = new UI.Number(1).setRange(0,100);
+			scale.setClass('amplitudeScale');
+			scale.onChange( this.fireChange );
+			container.add( scale );
+			
+			return container;
+			
+		},
+		getData: function ( container, resultObject, eventNode ) {
+			
+			var scale = container.dom.querySelector('.amplitudeScale');
+			resultObject.scale = scale.value;
+
+		},
+		setData: function ( container, dataObject ) {
+
+			var scale = container.dom.querySelector('.amplitudeScale');
+			scale.value = dataObject.scale;
+
+		}
 	},
 	"Time": {
 		getUI: function ( eventNode ) {
@@ -1534,20 +1557,23 @@ UI.RuntimeMaterial.prototype.actionProperties = {
 			var container = new UI.Panel();
 			
 			container.add( new UI.Text( 'Color' ).setWidth( '90px' ) );
-			container.add( ( new UI.Color() ).onChange( this.fireChange ) );
+			var colorInput = new UI.Color();
+			colorInput.setClass('colorSelect');
+			colorInput.onChange( this.fireChange );
+			container.add( colorInput );
 			
 			return container;
 			
 		},
 		getData: function ( container, resultObject, eventNode ) {
 			
-			var colorSelect = container.dom.querySelector('input');
+			var colorSelect = container.dom.querySelector('.colorSelect');
 			resultObject.color = colorSelect.value;
 
 		},
 		setData: function ( container, dataObject ) {
 
-			var colorSelect = container.dom.querySelector('input');
+			var colorSelect = container.dom.querySelector('.colorSelect');
 			colorSelect.value = dataObject.color;
 
 		}
@@ -1794,7 +1820,7 @@ UI.Behavior.prototype.getValue = function (  ) {
 UI.Behavior.prototype.setValue = function ( value ) {
 	
 	this.dom.behaviorCheckbox.setValue( value );
-	this.fireChange();
+	//this.fireChange();
 	
 };
 

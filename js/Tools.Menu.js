@@ -6,7 +6,7 @@ Tools.Menu = function ( editor ) {
 	
 	buttonpanel.addButton( "icon-file", function() { signals.menuButtonClicked.dispatch("file+help"); } );
 	buttonpanel.addButton( "icon-add", function() { signals.menuButtonClicked.dispatch("add"); } );
-	buttonpanel.addButton( "icon-sound", function() { signals.menuButtonClicked.dispatch("sound"); } );
+	//buttonpanel.addButton( "icon-sound", function() { signals.menuButtonClicked.dispatch("sound"); } );
 	
 	return buttonpanel;
 

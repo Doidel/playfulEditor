@@ -32,6 +32,11 @@ Sidebars.File = function ( editor ) {
 		fileInput.addEventListener( 'change', onFileInputChange);
 		
 		function onFileInputChange ( event ) {
+			//remove default elements
+			var ground = editor.scene.getChildByName("Ground");
+			if ( ground ) editor.removeObject( ground, true );
+			
+			//load
 			editor.loader.loadFile( fileInput.files[ 0 ] );
 		}
 		

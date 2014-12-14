@@ -140,11 +140,11 @@ Editor.prototype = {
 
 			scope.addHelper( child );
 			
-			if ( object._physijs ) editor.theme.currentTheme.decorate( object );
+			if ( object._physijs && !editor._isLoadingFile ) editor.theme.currentTheme.decorate( object );
 
 		} );
 		
-		if ( object._physijs ) editor.theme.currentTheme.decorate( object );
+		if ( object._physijs && !editor._isLoadingFile  ) editor.theme.currentTheme.decorate( object );
 		
 		/*if ( object.geometry != undefined ) {
 			object.castShadow = true;
@@ -167,11 +167,11 @@ Editor.prototype = {
 
 	},
 
-	removeObject: function ( object ) {
+	removeObject: function ( object, noConfirm ) {
 
 		if ( object.parent === undefined ) return; // avoid deleting the camera or scene
 
-		if ( confirm( 'Delete ' + object.name + '?' ) === false ) return;
+		if ( !noConfirm && confirm( 'Delete ' + object.name + '?' ) === false ) return;
 
 		var scope = this;
 
@@ -220,58 +220,57 @@ Editor.prototype = {
 
 	},
 
-	setEdge: function ( object, colorsAmount ) {
+	setEdge: function ( object ) {
 		
-		colorsAmount = colorsAmount >= 1 ? colorsAmount : 1;
-	
-		var colorsArr;
-		//var colors = [57, 181, 74, 229, 114, 69, 83, 101, 211];
-		var colors = [57 / 256, 181 / 256, 74 / 256, 229 / 256, 114 / 256, 69 / 256, 83 / 256, 101 / 256, 211 / 256];
-		//var colors = [0,0,1,0,1,0,0.99,0.1,0.1];
-		
-		if ( !object._egh ) {
-		
-			var egh = new THREE.EdgesHelper( object, 0xffffff );
-			egh.name = 'Helper';
-			var posArr = egh.geometry.attributes.position.array;
-			for (var x = 0, l = posArr.length; x < l; x++) {
-				posArr[ x ] *= 1.01;
-			}
-			egh.geometry.attributes.position.needsUpdate = true;
-			egh.geometry.computeBoundingSphere();
-			
-			//remove doubles
-
-			/*var verticesMap = {}; // Hashmap for looking up vertice by position coordinates (and making sure they are unique)
-			var unique = [];
-
-			var key;
-			var precisionPoints = 4; // number of decimal points, eg. 4 for epsilon of 0.0001
-			var precision = Math.pow( 10, precisionPoints );
-			var i,il;
-			var vertices = egh.geometry.attributes.position.array;
-
-			for ( i = 0, il = vertices.length; i < il; i += 3 ) {
-
-				key = Math.round( vertices[ i ] * precision ) + '_' + Math.round( vertices[ i + 1 ] * precision ) + '_' + Math.round( vertices[ i + 2 ] * precision );
-
-				if ( verticesMap[ key ] === undefined ) {
-
-					verticesMap[ key ] = i;
-					unique.push( vertices[ i ], vertices[ i + 1 ], vertices[ i + 2 ] );
-
+		var types = [false, false, false];
+		if ( object.events ) {
+			for ( var e = 0; e < object.events.length; e++ ) {
+				switch (object.events[e].trigger.type) {
+					case "Touch Stroke":
+						types[0] = true;
+						break;
+					case "Touch Point":
+						types[1] = true;
+						break;
+					case "Touch Fist":
+						types[2] = true;
+						break;
 				}
-
-			};
-
-			// Use unique set of vertices
-
-			egh.geometry.attributes.position.array = new Float32Array( unique );
-			egh.geometry.attributes.position.needsUpdate = true;*/
-			
-			object.add( egh );
-			object._egh = egh;
+			}
 		}
+		
+		var colorsArr;
+		var colors = [];
+		if ( types[0] ) {
+			colors.push(57 / 256, 181 / 256, 74 / 256);
+		}
+		if ( types[1] ) {
+			colors.push(229 / 256, 114 / 256, 69 / 256);
+		}
+		if ( types[2] ) {
+			colors.push(83 / 256, 101 / 256, 211 / 256);
+		}
+		var colorsAmount = colors.length / 3;
+		
+		if ( object._egh ) {
+			object.remove( object._egh );
+			delete object._egh;
+		}
+		
+		if ( colors.length == 0 ) return;
+	
+		var egh = new THREE.EdgesHelper( object, 0xffffff );
+		egh.name = 'Helper';
+		var posArr = egh.geometry.attributes.position.array;
+		for (var x = 0, l = posArr.length; x < l; x++) {
+			posArr[ x ] *= 1.01;
+		}
+		egh.geometry.attributes.position.needsUpdate = true;
+		egh.geometry.computeBoundingSphere();
+		
+		object.add( egh );
+		object._egh = egh;
+		
 		
 		if ( !object._egh.geometry.attributes.color ) {
 			
@@ -283,6 +282,7 @@ Editor.prototype = {
 		
 		// assign colors
 		for (var x = 0, l = colorsArr.length; x < l; x += 3) {
+			//var col = Math.floor( (x / 6) % colorsAmount ) * 3;
 			var col = Math.floor( (x / 6) % colorsAmount ) * 3;
 			colorsArr[ x ] = colors[ col ];
 			colorsArr[ x + 1 ] = colors[ col + 1 ];

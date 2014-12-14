@@ -1,5 +1,7 @@
 Sidebars.File.exportSceneHelper = function ( editor, exporterClass, callback, noDownload ) {
 
+	if ( editor._isLoadingFile ) return;
+
 	var exporter = new exporterClass();
 	
 	var output = exporter.parse( editor.scene );

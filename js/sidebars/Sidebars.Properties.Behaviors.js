@@ -8,10 +8,9 @@ Sidebars.Properties.Behaviors = function ( editor ) {
 
 	var container = new UI.Panel();
 	container.setDisplay( 'none' );
-	//container.dom.classList.add( 'Material' );
-
-	container.add( new UI.Text( 'BEHAVIORS' ) );
-	container.add( new UI.Break(), new UI.Break() );
+	container.setClass("Panel advanced");
+	
+	$("<h3/>",{ html: "Behaviours" }).appendTo( container.dom );
 
 	
 	// rocket
@@ -66,6 +65,8 @@ Sidebars.Properties.Behaviors = function ( editor ) {
 		
 		if ( objectSelected ) {
 		
+			var object = objectSelected;
+		
 			var behaviors = {};
 			
 			for ( var behavior in behaviorList ) {
@@ -75,7 +76,9 @@ Sidebars.Properties.Behaviors = function ( editor ) {
 			}
 			
 			// assign behaviors to the object
-			objectSelected.behaviors = behaviors;
+			object.behaviors = behaviors;
+			
+			signals.objectChanged.dispatch( object );
 			
 		}
 
@@ -110,14 +113,14 @@ Sidebars.Properties.Behaviors = function ( editor ) {
 
 	signals.objectSelected.add( function ( object ) {
 
-		if ( object && object.material && object.material._physijs && workMode == 'advanced' ) {
+		if ( object && object.material && object.material._physijs ) {
 		
 			objectSelected = object;
 
 			container.setDisplay( '' );
 
 			var behaviors = object.behaviors || {};
-			keys = Object.keys( behaviors );
+			var keys = Object.keys( behaviors );
 			
 			// init all values
 			for ( var behavior in behaviorList ) {

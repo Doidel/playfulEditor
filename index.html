@@ -209,10 +209,6 @@
 							
 						}
 						
-					} else {
-					
-						console.warn( 'Could not find soundfile ' + data.map );
-					
 					}					
 					
 					//if physijs data was stored create a physical material instead
@@ -284,9 +280,10 @@
 
 						object = new THREE.Scene();
 						
-						if ( data.fog != undefined ) {
+						if ( data.fog !== undefined ) {
 							object.fog = new THREE[ data.fog.type ]( data.fog.color, data.fog.type == 'Fog' ? data.fog.near : data.fog.density, data.fog.far );
 							editor.signals.fogColorChanged.dispatch( data.fog.color );
+							console.log('loaded fog', object.fog);
 						}
 						
 						if ( data.skybox ) {
@@ -437,6 +434,11 @@
 						// every object will have shadows so it's not exported/imported
 						object.castShadow = true;
 						object.receiveShadow = true;
+						
+						
+						if ( material.edges ) {
+							editor.setEdge( object );
+						}
 						
 						/*if ( object.material.map ) {
 							console.log('has map');
@@ -674,7 +676,6 @@
 				
 				editor.storage.get( function ( state ) {
 
-					console.log(state);
 					if ( state !== undefined ) {
 
 						/*var loader = new THREE.ObjectLoader();
@@ -682,7 +683,21 @@
 
 						editor.setScene( scene );*/
 						state.type = 'application/zip';
-						editor.loader.loadFile( state );
+						
+						// before load select theme, as it may alter the (default/loaded) scene and objects
+						editor.setTheme( editor.config.getKey( 'theme' ) );
+						
+						if ( !editor.theme.isLoading ) {
+						
+							editor.loader.loadFile( state );
+						
+						} else {
+							
+							editor.signals.themeLoaded.addOnce( function () {
+								editor.loader.loadFile( this );
+							}.bind( state ) );
+						
+						}
 
 					} else {
 					
@@ -743,6 +758,8 @@
 
 						editor.addObject( mesh );
 						
+						editor.setTheme( editor.config.getKey( 'theme' ) );
+						
 					}
 
 					var selected = editor.config.getKey( 'selected' );
@@ -752,9 +769,6 @@
 						editor.selectByUuid( selected );
 
 					}
-
-					// after load select theme, as it may alter the (default/loaded) scene and objects
-					editor.setTheme( editor.config.getKey( 'theme' ) );
 
 				} );
 

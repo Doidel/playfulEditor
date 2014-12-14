@@ -6,10 +6,8 @@ Sidebars.Properties.Events = function ( editor ) {
 
 	var container = new UI.Panel();
 	container.setDisplay( 'none' );
-	//container.dom.classList.add( 'Material' );
 
-	container.add( new UI.Text( 'EVENTS' ) );
-	container.add( new UI.Break(), new UI.Break() );
+	$("<h3/>",{ html: "Events" }).appendTo( container.dom );
 
 	// event list
 
@@ -26,7 +24,9 @@ Sidebars.Properties.Events = function ( editor ) {
 		
 		objectSelected.events = eventList.getValue();
 		
-		if ( objectSelected._egh ) editor.setEdge( objectSelected, !objectSelected.events ? 3 : objectSelected.events.length );
+		if ( objectSelected._egh ) editor.setEdge( objectSelected );
+			
+		signals.objectChanged.dispatch( objectSelected );
 
 	};
 
@@ -41,6 +41,7 @@ Sidebars.Properties.Events = function ( editor ) {
 			container.setDisplay( '' );
 			
 			eventList.setValue( object.events );
+			update();
 
 		} else {
 

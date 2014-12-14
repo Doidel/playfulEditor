@@ -298,7 +298,7 @@ Play.prototype.startLeap = function ( ) {
 					var character = editor.play._character;
 					if ( !character ) return;
 					
-					var modifier = 0.08;
+					var modifier = 0.12; //0.08
 					
 					var zModifier = -400;
 					
@@ -636,7 +636,7 @@ Play.prototype.runtimeMaterials = {
 				if ( object._analyser ) {
 					object._analyser.getByteFrequencyData(array);
 					var average = editor.play.Audio.getAverageVolume(array);
-					val = average / 15; //TODO: Don't use fixed value, instead calc max per sound
+					val = average / 50 * (args.trigger.scale ? parseFloat(args.trigger.scale) : 1); //TODO: Don't use fixed value, instead calc max per sound
 				}
 				
 				break;
@@ -673,18 +673,26 @@ Play.prototype.runtimeMaterials = {
 			case 'Edges':
 				var edge = object.getObjectByName("Helper");
 				if ( edge ) {
-					/*object._egh.material.linewidth = Math.round( scale * 5 );
-					object._egh.material.needsUpdate = true;*/
 					var posArr = edge.geometry.attributes.position.array;
-					var prevScale = edge._previousScale ? edge._previousScale : 1;
-					var vScale = 1 + scale / 10;
-					var total = 1 / prevScale * vScale;
-					for (var x = 0, l = posArr.length; x < l; x++) {
-						posArr[ x ] -= 0.01;
-						posArr[ x ] *= total;
-						posArr[ x ] += 0.01;
+					
+					// Make a copy (clone, not reference) of the initial positions array
+					if(edge._initialPosArray==undefined)
+					{
+						edge._initialPosArray = new Array();
+						for (var x = 0, l = posArr.length; x < l; x++) {
+							edge._initialPosArray[x] = posArr[ x ];
+						}
 					}
-					edge._previousScale = vScale;
+					
+					var vScale = 1;
+					for (var x = 0, l = posArr.length; x < l; x++)
+					{
+						// Define scale of each position as a mixture of the runtime scale and a random number
+						// in order to create a dynamic visual effect
+						posScale = 1 + scale + Math.random()*scale;
+						// Set position to original position multiplied with the calculated scale
+						posArr[ x ] = edge._initialPosArray[x] * posScale;
+					}
 					edge.geometry.attributes.position.needsUpdate = true;
 				}
 				break;

@@ -5,8 +5,7 @@ Sidebars.Properties.Scene = function ( editor ) {
 	var container = new UI.Panel();
 	container.setDisplay( 'none' );
 
-	container.add( new UI.Text().setValue( 'SCENE PROPERTIES' ) );
-	container.add( new UI.Break(), new UI.Break() );
+	$("<h3/>",{ html: "Scene" }).appendTo( container.dom );
 
 	
 	// default color
@@ -223,6 +222,7 @@ Sidebars.Properties.Scene = function ( editor ) {
 		'fogNear': 2,
 		'fogFar': 2,
 		'fogDensity': 2,
+		'skyBox' : 2,
 		'leapBox': 1
 	};
 	
@@ -234,6 +234,7 @@ Sidebars.Properties.Scene = function ( editor ) {
 			'fogNear': fogNearRow,
 			'fogFar': fogFarRow,
 			'fogDensity': fogDensityRow,
+			'skyBox': skyboxRow,
 			'leapBox': leapBoxRow
 		};
 
