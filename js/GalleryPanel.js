@@ -145,7 +145,7 @@ var GalleryPanel = function( editor ){
 		
 		if ( editor.scene.skybox ) editor.scene.skybox.alignWithCamera( galleryCamera );
 		
-		//renderer.clear();
+		renderer.clear();
 		
 		//sceneHelpers.updateMatrixWorld();
 		
@@ -157,6 +157,7 @@ var GalleryPanel = function( editor ){
 		
 		renderer.render( scene, galleryCamera, textureRTT, true );
 		renderer.render( scene, camera );
+		renderer.render( sceneHelpers, camera );
 
 		var width  = textureRTT.width;
 		var height = textureRTT.height;

@@ -343,16 +343,6 @@
 
 .imageContainer:hover a .galleryDeleteIcon{display:block; cursor:pointer;}
 
-
-/*
-.imageContainer a img{
-    width: 310px; 
-    height: 140px;
-    border: solid 1px #ccc; 
-    padding: 1px;
-}
-*/
-
 .imageContainer a canvas{
     width: 310px; 
     height: 140px;
@@ -388,7 +378,7 @@
     margin-right: 705px;
     bottom: 32px;
     z-index: 2;
-    height: 215px;
+    height: 250px;
     /* display:none; */
     background-color:#eee;
 	border-bottom-right-radius: 10px;

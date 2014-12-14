@@ -41,6 +41,53 @@ var GalleryUploadPanel = function( editor ){
 
     var uploadButton = $( document.createElement('button') ).text('Upload').addClass('galleryUploadButton');
     infoPanel.dom.appendChild( uploadButton[0] );
+	
+	var fieldCheck = new function(){
+		
+	}
+	
+	uploadButton.click(function(){
+		//TODO: FieldCheck
+		var zip = new JSZip();
+		var imageFolder = zip.folder('images');	
+		
+		$('.imageContainer > a > canvas' ).each(function(i,v){
+			//console.log(v);
+			var data = v.toDataURL('image/png');
+			console.log(data.substr(data.indexOf(',')+1));
+			imageFolder.file('image'+i+'.png', data.substr(data.indexOf(',')+1), {base64: true});
+		});
+		
+		editor.storage.createZip( function(blob){
+						
+			var formData = new FormData();
+								
+			//console.log( inputName );
+								
+			formData.append("name",        inputName.val() );
+			formData.append("scene",       editor.scene.name );
+			formData.append("email",       inputMail.val() );
+			formData.append("description", inputDescription.val() );
+			formData.append("images",      zip.generate({type:'blob'}) );
+			formData.append("playful",     blob );
+			
+			//console.log('send...');
+			
+			$.ajax({
+				url: "upload",
+				//url: "localhost:3000/upload",
+				type: "POST",
+				data: formData,
+				crossDomain: true,
+				error: function(a,b,c){   console.log(a); console.log(b); console.log(c); statusLabel.text(a);},
+				success: function(a,b,c){ console.log(a); console.log(b); console.log(c); statusLabel.text("success"); },
+				processData: false,  // tell jQuery not to process the data
+				contentType: false   // tell jQuery not to set contentType
+			});
+			
+		} );
+		
+	});
 
     infoPanel.dom.appendChild( document.createElement("br") );
 

@@ -6,6 +6,25 @@ var Loader = function ( editor ) {
 	this.loadedSoundsFolder;
 	this.loadedTexturesFolder;
 
+	
+	this.loadBase64Playful = function( baseData ){
+	
+		var zip = new JSZip(baseData,{base64:true});
+	
+		var contents = zip.file("Sceneobjects.json").asText();
+		var data;
+		try {
+			data = JSON.parse( contents );
+			self.loadedSoundsFolder = zip.folder("sounds");
+			self.loadedTexturesFolder = zip.folder("textures");
+		} catch ( error ) {
+			alert( error );
+			return;
+		}
+		//add dummy name + filename
+		handleJSON( data, { name:'playful' }, 'playful.playful' );
+	};
+	
 	this.loadFile = function ( file ) {
 
 		editor._isLoadingFile = true; // fix to not decorate imported objects...

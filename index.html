@@ -772,7 +772,19 @@
 
 				} );
 
-				//
+				//load remote scene				
+				var sceneId = /^\?load_scene=(\d+)/i.exec(window.location.search);					
+				if( sceneId !== null ){
+					$.ajax({
+						url: "gallery/download"+sceneId[0],						
+						type: "GET",
+						crossDomain: true,
+						error: function(a,b,c){   console.log("a"+a); console.log("b"+b); console.log("c"+c); },
+						success: function(a,b,c){ editor.loader.loadBase64Playful(a) },
+						processData: false,  // tell jQuery not to process the data
+						contentType: false   // tell jQuery not to set contentType
+					});
+				}
 
 				var timeout;
 				var exporter = new THREE.PlayfulExporter();
