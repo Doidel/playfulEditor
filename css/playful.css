@@ -295,14 +295,14 @@
 }
 
 #cameraPanel{
-    width:35%;
-    float: left;
+    width:320px;
+    /*float: left;*/
 }
 
 #cameraArrayList{
     /* border: 1px solid blue; */
-    overflow-x:scroll;
-    overflow-y:hidden;
+    overflow-x:hidden;
+    overflow-y:scroll;
     white-space:nowrap;
     height: 140px;
     margin-Left:7px;
@@ -317,57 +317,47 @@
     text-align:center;
 }
 
-#cameraArrayList>.Panel>.Panel{
-    float:left;	    
-}
-
 #imageList{
     /* border: 1px solid blue; */
-    overflow-x:scroll;
-    overflow-y:hidden;
+    overflow-x:hidden;
+    overflow-y:scroll;
     white-space:nowrap;
-    height: 140px;
+    height: 160px;
     margin-Left:7px;
     margin-top:5px;
     background: #eee;
     border-radius: 10px;
 }
 
-#imageList>.Panel{
-    margin-top:-15px;
-}
-
-.imageContainer{
-    float:left;	
-}
-
-.imageContainer:hover a .galleryDeleteIcon{display:block; cursor:pointer;}
+.imageContainer:hover a .galleryDeleteIcon{opacity: 1.0; cursor:pointer;}
 
 .imageContainer a canvas{
     width: 310px; 
     height: 140px;
     border: solid 1px #ccc; 
     padding: 1px;
+	cursor:pointer;
 }
 
 .galleryDeleteIcon{
     /* position : absolute; */
-    display:none;
+    display:block;
     background: url('../images/iconset/Delete.png') right top no-repeat;
-    margin: -125px 10px 0px 285px; 
+    margin: -135px 0px 0px 10px;
+	padding: 119px 0px 0px 0px; 
     height: 16px; 
     width: 16px;
     position: relative; 
     z-index: 100; 
-    opacity: 0.8; 
+    opacity: 0.0; 
     filter: alpha(opacity=80);
 
     /* z-index:100 */
 }
 
 #imagePanel{
-    width:65%;
-    float:left;
+    width:320px;
+    
 }
 
 
