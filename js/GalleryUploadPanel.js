@@ -74,7 +74,7 @@ var GalleryUploadPanel = function( editor ){
 			//console.log('send...');
 			
 			$.ajax({
-				url: "upload",
+				url: "gallery/upload",
 				//url: "localhost:3000/upload",
 				type: "POST",
 				data: formData,
