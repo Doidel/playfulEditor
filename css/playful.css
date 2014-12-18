@@ -282,16 +282,12 @@
 	
 	
 	
-#gallery{
-    position: relative;
+#gallery {
+    position: absolute;
     top: 50px;
     left: 300px;
-    margin-right: 700px;
-    bottom: 32px;
-    z-index: 2;	   
-    /* border: 1px solid black; */
-    height: 170px;
-	/* overflow: auto; */
+    z-index: 2;
+    width: 320px;
 }
 
 #cameraPanel{
@@ -307,7 +303,7 @@
     height: 140px;
     margin-Left:7px;
     margin-top:5px;
-    background: #eee;
+    background: #DDD;
     border-radius: 10px;
 }
 
@@ -315,6 +311,26 @@
     margin-top:-5px;
     margin-left:5px;
     text-align:center;
+}
+
+#cameraArrayList > div > div > button{
+	
+	background-repeat: no-repeat;
+	border: none;
+	width: 16px;
+	height: 16px;
+	cursor:pointer;
+	
+}
+
+.buttonShow{
+	background: url("../images/iconset/Eye.png") no-repeat scroll right top transparent;
+	border-radius: 10px;
+}
+
+.buttonRemove{	
+	background: url("../images/iconset/Delete.png") no-repeat scroll right top transparent;
+	border-radius: 10px;
 }
 
 #imageList{
@@ -325,7 +341,7 @@
     height: 160px;
     margin-Left:7px;
     margin-top:5px;
-    background: #eee;
+    background: #DDD;
     border-radius: 10px;
 }
 
@@ -334,7 +350,7 @@
 .imageContainer a canvas{
     width: 310px; 
     height: 140px;
-    border: solid 1px #ccc; 
+    border: solid 1px #DDD; 
     padding: 1px;
 	cursor:pointer;
 }
@@ -356,31 +372,41 @@
 }
 
 #imagePanel{
-    width:320px;
-    
+    width:320px;    
+}
+
+#imagePanel > button, #cameraPanel > button{
+	color: white;
+	cursor: pointer;
+	font-weight: bold;
+	background: #E57245;
+	-webkit-border-radius: 10;
+	-moz-border-radius: 10;
+	border-radius: 10px;	
 }
 
 
-#galleryUpload{
-    position: relative;
-    top: 60px;
-    left: 306px;
-    margin-right: 705px;
-    bottom: 32px;
+#galleryUpload {
+    position: absolute;
+    top: 81px;
+    left: 625px;
     z-index: 2;
-    height: 250px;
-    /* display:none; */
-    background-color:#eee;
-	border-bottom-right-radius: 10px;
-	border-bottom-left-radius: 10px;
+    background-color: #DDD;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    height: 334px;
+    width: 35%;
+    float: left;
 }
 
 .galleryUploadPanel{
-    width: 49%;
-    height:100%;
-    float: left;
-    margin-left:5px;
-    /* border: 1px solid black; */
+	width: 48%;
+	height: 100%;
+	float: left;
+	margin-left: 10px;
+	color: #E57245;
+	margin-top: 5px;
+	font-weight: bold;
 }
 
 .galleryUploadPanel > input{
@@ -402,6 +428,12 @@
 .galleryUploadPanel > button{
     margin: 15px auto 0px auto;
     display: block;
-    padding: 10px 80px;
-    position:
+    padding: 10px 80px;    
+	-webkit-border-radius: 10;
+	-moz-border-radius: 10;
+	border-radius: 10px;
+	font-weight: bold;
+	background: #E57245;
+	color: white;
+	cursor: pointer;
 }

@@ -31,7 +31,7 @@ var GalleryUploadPanel = function( editor ){
 
     inputPanel.dom.appendChild( document.createElement("br") );
 
-    var inputDescription = $( document.createElement('textarea') ).attr('rows','4').attr('cols','50');
+    var inputDescription = $( document.createElement('textarea') ).attr('rows','9').attr('cols','50');
     inputPanel.dom.appendChild( inputDescription[0] );
     container.add( inputPanel  );
 
@@ -47,6 +47,19 @@ var GalleryUploadPanel = function( editor ){
 	}
 	
 	uploadButton.click(function(){
+	
+		if( $('.imageContainer > a > canvas' ).length == 0 ){
+			//addCameras
+			var addCameraButton = $('#cameraPanel > button ').first();
+			for(var i = 0; i < 3; i++) addCameraButton.click();
+			
+			//TODO: distribute cameras
+			
+			//take screenshots
+			$('#imagePanel > button')[1].click();
+			
+		}
+	
 		//TODO: FieldCheck
 		var zip = new JSZip();
 		var imageFolder = zip.folder('images');	

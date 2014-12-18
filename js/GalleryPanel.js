@@ -76,7 +76,8 @@ var GalleryPanel = function( editor ){
 		}		
 		ctx.putImageData(imgData, 0, 0);
 		
-		var iconDelete = $( document.createElement('span') ).addClass('galleryDeleteIcon');				
+		var iconDelete = $( document.createElement('span') ).addClass('galleryDeleteIcon');	
+		iconDelete.attr('title','Remove Photo');
 		var scrollContainer = $('#imageList').children().first();			
 		var imageItem = $( document.createElement('div') ).addClass('imageContainer');		
 		scrollContainer.append( imageItem );
@@ -118,6 +119,8 @@ var GalleryPanel = function( editor ){
 		
 		renderToTexture();		
 	});    
+	
+	takeScreenshot.dom.title = 'Renders a Photo of the current View';
 
     var takeArrayScreenshot = new UI.Button( 'Take Photo from Array' ).setMarginTop('5px').setMarginLeft( '7px' ).onClick( function () {
 		cameraArray = [];
@@ -136,6 +139,8 @@ var GalleryPanel = function( editor ){
 			renderToTexture();	
 		}
     });
+	
+	takeArrayScreenshot.dom.title = 'Renders a Photo of every Camera in the Array';
 
     imagePanel.add(takeScreenshot, takeArrayScreenshot, new UI.Break());
 
@@ -161,6 +166,7 @@ var GalleryPanel = function( editor ){
 
     var cameraPanel = new  UI.Panel().setId('cameraPanel');    
     var addCamera  = new UI.Button( 'Add Camera' ).setMarginTop('5px').setMarginLeft( '10px' );
+	addCamera.dom.title = 'Adds a new Camera to the Array';
     
     addCamera.onClick( function () {
 	
@@ -193,17 +199,21 @@ var GalleryPanel = function( editor ){
 
 		cameraListItem.add(new UI.Break());
 
-		var showCam = new UI.Button('Show').setMarginLeft( '10px' ).onClick( setAllCameras );
-		var remCam  = new UI.Button('Remove').setMarginLeft( '10px' ).onClick( function(){ 
+		var showCam = new UI.Button().setMarginLeft( '10px' ).setClass('buttonShow').onClick( setAllCameras );
+		showCam.dom.title = 'Switch to Camera';
+		var remCam  = new UI.Button().setMarginLeft( '10px' ).setClass('buttonRemove').onClick( function(){ 
 			cameraScrollContainer.remove( cameraListItem ); 
 			var scrollContainer = document.getElementById('cameraArrayList').firstChild;
-			var currentWidth = parseInt( scrollContainer.style.width ,10 );	  
-			
+			var currentWidth = parseInt( scrollContainer.style.width ,10 );				
 			//rescale scrollContainer
 			scrollContainer.style.width = (currentWidth - 285)+'px';
 		});	
 
+		remCam.dom.title = 'Remove Camera from Array';
+		
 		cameraListItem.add(showCam, remCam, new UI.Break());
+		
+		//$('.buttonShow').attr('title', 'Switch to Camera');
 
 		var cameraPositionX = new UI.Number().setValue( position[0] ).setWidth( '50px' ).setColor( 'red' ).onChange( setAllCameras );
 		var cameraPositionY = new UI.Number().setValue( position[1] ).setWidth( '50px' ).setColor( 'green' ).onChange( setAllCameras );
@@ -243,6 +253,7 @@ var GalleryPanel = function( editor ){
     cameraPanel.add( addCamera  );
 
     var distCamera = new UI.Button( 'Distribute Cameras' ).setMarginTop('5px').setMarginLeft( '7px' );
+	distCamera.dom.title = 'All Cameras in the Array get rearranged';
     cameraPanel.add( distCamera );
 
     cameraPanel.add( new UI.Break() );
