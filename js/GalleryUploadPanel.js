@@ -50,10 +50,12 @@ var GalleryUploadPanel = function( editor ){
 	
 		if( $('.imageContainer > a > canvas' ).length == 0 ){
 			//addCameras
-			var addCameraButton = $('#cameraPanel > button ').first();
+			var addCameraButton = $('#cameraPanel > button:eq(0)');
 			for(var i = 0; i < 3; i++) addCameraButton.click();
 			
-			//TODO: distribute cameras
+			//rearrange cameras
+			var rearrangeCameraButton = $('#cameraPanel > button:eq(1)');
+			rearrangeCameraButton.click();
 			
 			//take screenshots
 			$('#imagePanel > button')[1].click();

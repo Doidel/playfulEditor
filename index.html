@@ -87,6 +87,7 @@
 
 		<script src="js/Menubar.SceneGallery.js"></script>
 		<script src="js/GalleryPanel.js"></script>
+		<script src="js/GalleryCameraPanel.js"></script>
 		<script src="js/GalleryUploadPanel.js"></script>
 		
 		<script src="js/sidebars/Sidebars.js"></script>
@@ -664,11 +665,14 @@
 			var tools = new Tools( editor ).setId( 'tools' );
 			document.body.appendChild( tools.dom );
 
-			var gallery = new GalleryPanel( editor ).setId('gallery');
-			document.body.appendChild( gallery.dom );
+			var galleryCamera = new GalleryCameraPanel( editor ).setId('galleryCamera');
+			document.body.appendChild( galleryCamera.dom );
 			
 			var galleryUpload = new GalleryUploadPanel( editor ).setId('galleryUpload');
 			document.body.appendChild( galleryUpload.dom );
+			
+			var gallery = new GalleryPanel( editor ).setId('gallery');
+			document.body.appendChild( gallery.dom );
 
 			//
 
@@ -775,15 +779,7 @@
 				//load remote scene				
 				var sceneId = /^\?load_scene=(\d+)/i.exec(window.location.search);					
 				if( sceneId !== null ){
-					$.ajax({
-						url: "gallery/download"+sceneId[0],						
-						type: "GET",
-						crossDomain: true,
-						error: function(a,b,c){   console.log("a"+a); console.log("b"+b); console.log("c"+c); },
-						success: function(a,b,c){ editor.loader.loadBase64Playful(a) },
-						processData: false,  // tell jQuery not to process the data
-						contentType: false   // tell jQuery not to set contentType
-					});
+					editor.loader.loadRemotePlayful(sceneId[0]);
 				}
 
 				var timeout;

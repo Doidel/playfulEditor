@@ -7,22 +7,34 @@ var Loader = function ( editor ) {
 	this.loadedTexturesFolder;
 
 	
-	this.loadBase64Playful = function( baseData ){
+	this.loadRemotePlayful = function( sceneId ){
 	
-		var zip = new JSZip(baseData,{base64:true});
+		$.ajax({
+			url: "http://playfulmedia.cs.technik.fhnw.ch/play/gallery/download"+sceneId,						
+			type: "GET",
+			crossDomain: true,
+			error: function(a,b,c){   console.log("a"+a); console.log("b"+b); console.log("c"+c); },
+			success: function(a,b,c){ loadBase64Playful(a) },
+			processData: false,  // tell jQuery not to process the data
+			contentType: false   // tell jQuery not to set contentType
+		});
+		
+		var loadBase64Playful = function( baseData ){
+			var zip = new JSZip(baseData,{base64:true});
 	
-		var contents = zip.file("Sceneobjects.json").asText();
-		var data;
-		try {
-			data = JSON.parse( contents );
-			self.loadedSoundsFolder = zip.folder("sounds");
-			self.loadedTexturesFolder = zip.folder("textures");
-		} catch ( error ) {
-			alert( error );
-			return;
-		}
-		//add dummy name + filename
-		handleJSON( data, { name:'playful' }, 'playful.playful' );
+			var contents = zip.file("Sceneobjects.json").asText();
+			var data;
+			try {
+				data = JSON.parse( contents );
+				self.loadedSoundsFolder = zip.folder("sounds");
+				self.loadedTexturesFolder = zip.folder("textures");
+			} catch ( error ) {
+				alert( error );
+				return;
+			}
+			//add dummy name + filename
+			handleJSON( data, { name:'playful' }, 'playful.playful' );
+		}	
 	};
 	
 	this.loadFile = function ( file ) {

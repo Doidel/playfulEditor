@@ -282,7 +282,7 @@
 	
 	
 	
-#gallery {
+#galleryCamera {
     position: absolute;
     top: 50px;
     left: 300px;
@@ -352,7 +352,7 @@
     height: 140px;
     border: solid 1px #DDD; 
     padding: 1px;
-	cursor:pointer;
+	cursor:zoom-in;
 }
 
 .galleryDeleteIcon{
@@ -395,7 +395,7 @@
     border-bottom-right-radius: 10px;
     border-top-right-radius: 10px;
     height: 334px;
-    width: 35%;
+    width: 500px;
     float: left;
 }
 
@@ -436,4 +436,15 @@
 	background: #E57245;
 	color: white;
 	cursor: pointer;
+}
+
+#gallery{
+	background-color: red;
+	position: absolute;
+	bottom: 5px;
+	margin: 0px 0 0 -35%;
+	left: 50%;
+	width:70%;
+	height: 20%;
+	z-index: 2;
 }

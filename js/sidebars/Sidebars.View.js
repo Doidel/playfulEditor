@@ -26,24 +26,31 @@ Sidebars.View = function ( editor ) {
 		$(this).addClass("active");
 	});
 	
-	var cameraPanelButton = $("<a/>").html("Show / Hide Camera Panel").on("click",function(e)
+	var cameraPanelButton = $("<a/>").html("Gallery Camera").on("click",function(e)
 	{
-		showHide('gallery');
+		showHide('galleryCamera', $(this) );
 	});
 	
-	var uploadPanelButton = $("<a/>").html("Show / Hide Upload Panel").on("click",function(e)
+	var uploadPanelButton = $("<a/>").html("Gallery Upload").on("click",function(e)
 	{
-		showHide('galleryUpload');
+		showHide('galleryUpload', $(this));
+	});
+
+	var galleryPanelButton = $("<a/>").html("Gallery").on("click",function(e)
+	{
+		showHide('gallery', $(this));
 	});
 	
-		function showHide ( id ) {
-		    var panel = document.getElementById( id );
-		    if(panel.style.display == 'none'){	
-				panel.style.display = '';
-		    }else{	
-				panel.style.display = 'none';
-		    }
-		}
+	function showHide ( id, menu ) {
+	    var panel = $('#'+id);
+	    if(panel.css('display') == 'none'){	
+			menu.addClass("active");
+			panel.css('display','block');
+	    }else{				
+			menu.removeClass("active");
+			panel.css('display','none');
+	    }
+	}
 	
 	// Create a list of the menu items
 	$("<ul/>")
@@ -52,6 +59,7 @@ Sidebars.View = function ( editor ) {
 		.append( $("<li/>").addClass("twoup").html(d3Button) )
 		.append( $("<li/>").html(cameraPanelButton) )
 		.append( $("<li/>").html(uploadPanelButton) )
+		.append( $("<li/>").html(galleryPanelButton) )
 		.appendTo(menu.dom);
 	
 	// Add signal listener to show/hide this sidebar panel
