@@ -8,9 +8,9 @@ var Loader = function ( editor ) {
 
 	
 	this.loadRemotePlayful = function( sceneId ){
-	
+		console.log('load remote scene:'+sceneId);
 		$.ajax({
-			url: "http://playfulmedia.cs.technik.fhnw.ch/play/gallery/download"+sceneId,						
+			url: "gallery/download"+sceneId,						
 			type: "GET",
 			crossDomain: true,
 			error: function(a,b,c){   console.log("a"+a); console.log("b"+b); console.log("c"+c); },
@@ -20,6 +20,7 @@ var Loader = function ( editor ) {
 		});
 		
 		var loadBase64Playful = function( baseData ){
+			console.log("loading successful");
 			var zip = new JSZip(baseData,{base64:true});
 	
 			var contents = zip.file("Sceneobjects.json").asText();

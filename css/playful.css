@@ -439,12 +439,19 @@
 }
 
 #gallery{
-	background-color: red;
+	
 	position: absolute;
-	bottom: 5px;
+	bottom: 1px;
 	margin: 0px 0 0 -35%;
 	left: 50%;
 	width:70%;
 	height: 20%;
 	z-index: 2;
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+}
+
+#gallery > iframe{
+border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
 }

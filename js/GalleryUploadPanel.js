@@ -88,14 +88,54 @@ var GalleryUploadPanel = function( editor ){
 			
 			//console.log('send...');
 			
+			
+			
+			// var injectNewButton = function(){
+				// $('#gallery > iframe').contents().find('.btn:contains("Open in PlayfulEditor")').each(function(){
+					// var match = $(this).attr('href').match(/(\d+)$/);
+					// if( match !== null ){
+						// $(this).html('Open in this PlayfulEditor');
+						// $(this).removeClass('btn-primary');
+						// $(this).addClass('btn-warning');
+						
+						// //$(this).attr('target','');
+						// $(this).click(function( event ){
+							// event.preventDefault();
+							// console.log(match[0]);
+							// //editor.loader.loadRemotePlayful( match[0] );
+						// });
+					// }					
+				// });
+			// }
+			
+			// $('#gallery > iframe').load(function() {
+				// injectNewButton();
+			// });
+			// injectNewButton();
+			
+			var success = function( a, b, c ){
+				statusLabel.text("success");
+				$('#gallery > iframe')[0].contentWindow.location.reload();
+				//setTimeout(injectNewButton, 1000);
+				
+			};
+			
+			var error = function(a,b,c){
+				statusLabel.text("error");
+				console.log(a);
+				console.log(b);
+				console.log(c);
+			};
+			
+			
 			$.ajax({
 				url: "gallery/upload",
 				//url: "localhost:3000/upload",
 				type: "POST",
 				data: formData,
 				crossDomain: true,
-				error: function(a,b,c){   console.log(a); console.log(b); console.log(c); statusLabel.text(a);},
-				success: function(a,b,c){ console.log(a); console.log(b); console.log(c); statusLabel.text("success"); },
+				error: error,
+				success: success,
 				processData: false,  // tell jQuery not to process the data
 				contentType: false   // tell jQuery not to set contentType
 			});

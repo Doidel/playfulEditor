@@ -85,7 +85,6 @@
 		<script src="js/Menubar.Help.js"></script>
 		<script src="js/Menubar.PlayCameras.js"></script>
 
-		<script src="js/Menubar.SceneGallery.js"></script>
 		<script src="js/GalleryPanel.js"></script>
 		<script src="js/GalleryCameraPanel.js"></script>
 		<script src="js/GalleryUploadPanel.js"></script>
@@ -664,6 +663,9 @@
 			
 			var tools = new Tools( editor ).setId( 'tools' );
 			document.body.appendChild( tools.dom );
+			
+			var gallery = new GalleryPanel( editor ).setId('gallery');
+			document.body.appendChild( gallery.dom );
 
 			var galleryCamera = new GalleryCameraPanel( editor ).setId('galleryCamera');
 			document.body.appendChild( galleryCamera.dom );
@@ -671,8 +673,7 @@
 			var galleryUpload = new GalleryUploadPanel( editor ).setId('galleryUpload');
 			document.body.appendChild( galleryUpload.dom );
 			
-			var gallery = new GalleryPanel( editor ).setId('gallery');
-			document.body.appendChild( gallery.dom );
+			
 
 			//
 
