@@ -79,7 +79,8 @@ var GalleryCameraPanel = function( editor ){
 		var iconDelete = $( document.createElement('span') ).addClass('galleryDeleteIcon');	
 		iconDelete.attr('title','Remove Photo');
 		var scrollContainer = $('#imageList').children().first();			
-		var imageItem = $( document.createElement('div') ).addClass('imageContainer');		
+		var imageItem = $( document.createElement('div') ).addClass('imageContainer');	
+		imageItem.attr('title','Open in new Window');
 		scrollContainer.append( imageItem );
 
 		var img = canvas[0];

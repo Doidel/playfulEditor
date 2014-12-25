@@ -79,52 +79,34 @@ var GalleryUploadPanel = function( editor ){
 								
 			//console.log( inputName );
 								
-			formData.append("name",        inputName.val() );
-			formData.append("scene",       editor.scene.name );
-			formData.append("email",       inputMail.val() );
-			formData.append("description", inputDescription.val() );
-			formData.append("images",      zip.generate({type:'blob'}) );
-			formData.append("playful",     blob );
+			formData.append("name",        	inputName.val() );
+			formData.append("scene",       	editor.scene.name );
+			formData.append("email",       	inputMail.val() );
+			formData.append("description", 	inputDescription.val() );
+			formData.append("images",      	zip.generate({type:'blob'}) );
+			formData.append("playful",     	blob );
+			formData.append("captcha", 		$('#g-recaptcha-response').val() || '' );
 			
-			//console.log('send...');
-			
-			
-			
-			// var injectNewButton = function(){
-				// $('#gallery > iframe').contents().find('.btn:contains("Open in PlayfulEditor")').each(function(){
-					// var match = $(this).attr('href').match(/(\d+)$/);
-					// if( match !== null ){
-						// $(this).html('Open in this PlayfulEditor');
-						// $(this).removeClass('btn-primary');
-						// $(this).addClass('btn-warning');
-						
-						// //$(this).attr('target','');
-						// $(this).click(function( event ){
-							// event.preventDefault();
-							// console.log(match[0]);
-							// //editor.loader.loadRemotePlayful( match[0] );
-						// });
-					// }					
-				// });
-			// }
-			
-			// $('#gallery > iframe').load(function() {
-				// injectNewButton();
-			// });
-			// injectNewButton();
-			
-			var success = function( a, b, c ){
-				statusLabel.text("success");
-				$('#gallery > iframe')[0].contentWindow.location.reload();
-				//setTimeout(injectNewButton, 1000);
+			//console.log($('#g-recaptcha-response').val());
+									
+			var success = function(a,b,c){
+				//console.log(a);
+				//var json = ;
+				console.log(a.link);
+				statusLabel.css('color','green');
+				statusLabel.text("Upload Successful!");
 				
+				$('#gallery > iframe')[0].contentWindow.location.reload();							
 			};
 			
 			var error = function(a,b,c){
-				statusLabel.text("error");
-				console.log(a);
-				console.log(b);
-				console.log(c);
+				var json = $.parseJSON(a.responseText);
+				statusLabel.css('color','red');
+				statusLabel.text( json['error-codes'] );
+			};
+			
+			var complete = function(){
+				grecaptcha.reset();
 			};
 			
 			
@@ -132,10 +114,12 @@ var GalleryUploadPanel = function( editor ){
 				url: "gallery/upload",
 				//url: "localhost:3000/upload",
 				type: "POST",
+				dataType: 'json',
 				data: formData,
 				crossDomain: true,
 				error: error,
 				success: success,
+				complete: complete,
 				processData: false,  // tell jQuery not to process the data
 				contentType: false   // tell jQuery not to set contentType
 			});
@@ -149,6 +133,16 @@ var GalleryUploadPanel = function( editor ){
     var siteLink = document.createElement("a");
     
     infoPanel.dom.appendChild( document.createElement("br") );
+	
+	//add captcha
+	var captcha = $( document.createElement('div') );
+	//captcha.attr('data-sitekey','6Ld5j_8SAAAAADdyhgzdoSKe6LRR8c75rW5F9RWr');
+	captcha.addClass('g-recaptcha');
+	// grecaptcha.render(
+		// captcha[0],
+		// {'sitekey':'6Ld5j_8SAAAAADdyhgzdoSKe6LRR8c75rW5F9RWr',}
+	// );
+	infoPanel.dom.appendChild( captcha[0] );
 
     var statusLabel =  $( document.createElement('label') ).text('status').attr('id','galleryUploadStatus');   
     infoPanel.dom.appendChild( statusLabel[0] );

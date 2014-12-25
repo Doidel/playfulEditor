@@ -7,38 +7,26 @@ var GalleryPanel = function( editor ){
 	frame.attr('src','http://playfulmedia.cs.technik.fhnw.ch/play/gallery');
 	frame.attr('width','100%');
 	
-	
+	//update iframe content after every reload
 	frame.load(function(){
 		injectNewButton();
 	});
-	//console.log();
 	
+	//inject new code, so the user can open the scene directly in the already opened editor 
 	var injectNewButton = function(){
 		$('#gallery > iframe').contents().find('.btn:contains("Open in PlayfulEditor")').each(function(){
 			var match = $(this).attr('href').match(/(\d+)$/);
 			if( match !== null ){
 				$(this).html('Open in this PlayfulEditor');
 				$(this).removeClass('btn-primary');
-				$(this).addClass('btn-warning');
-						
-						// //$(this).attr('target','');
+				$(this).addClass('btn-warning');				
 				$(this).click(function( event ){
-					event.preventDefault();
-					//console.log(match[0]);
-					//console.log(editor.loader.loadRemotePlayful);
+					event.preventDefault();				
 					editor.loader.loadRemotePlayful( '?load_scene='+match[0] );
 				});
 			}					
 		});
 	};
-			
-			// $('#gallery > iframe').load(function() {
-				// injectNewButton();
-			// });
-			// injectNewButton();
-	
-	
-	//frame.appendTo(container.dom);
       
 	container.dom.appendChild( frame[0] );
     return container;

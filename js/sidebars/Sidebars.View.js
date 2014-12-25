@@ -32,7 +32,7 @@ Sidebars.View = function ( editor ) {
 	});
 	
 	var uploadPanelButton = $("<a/>").html("Gallery Upload").on("click",function(e)
-	{
+	{		
 		showHide('galleryUpload', $(this));
 	});
 

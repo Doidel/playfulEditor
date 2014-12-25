@@ -85,6 +85,7 @@
 		<script src="js/Menubar.Help.js"></script>
 		<script src="js/Menubar.PlayCameras.js"></script>
 
+		<script src="https://www.google.com/recaptcha/api.js?render=explicit"></script>
 		<script src="js/GalleryPanel.js"></script>
 		<script src="js/GalleryCameraPanel.js"></script>
 		<script src="js/GalleryUploadPanel.js"></script>
@@ -672,6 +673,15 @@
 			
 			var galleryUpload = new GalleryUploadPanel( editor ).setId('galleryUpload');
 			document.body.appendChild( galleryUpload.dom );
+			$( window ).load( function(){ 
+				grecaptcha.render( 
+					$('.g-recaptcha')[0],
+					{ 
+						'sitekey' : '6Ld5j_8SAAAAADdyhgzdoSKe6LRR8c75rW5F9RWr',
+						'data-theme':'dark',
+					});	
+			});
+			
 			
 			
 
