@@ -41,12 +41,30 @@ var GalleryUploadPanel = function( editor ){
 
     var uploadButton = $( document.createElement('button') ).text('Upload').addClass('galleryUploadButton');
     infoPanel.dom.appendChild( uploadButton[0] );
-	
-	var fieldCheck = new function(){
 		
-	}
-	
 	uploadButton.click(function(){
+	
+		var lockPanel = function(){
+		//background: url("../images/iconset/wait.gif") no-repeat scroll 25% 50% #E57245;
+			uploadButton.attr('disabled','disabled');
+			uploadButton.css('background-image','url("./images/iconset/wait.gif")');
+			uploadButton.css('background-repeat','no-repeat');
+			uploadButton.css('background-position','left center');
+			removeLink.val('');
+		};
+		
+		var unlockPanel = function(){
+			uploadButton.removeAttr('disabled');
+			uploadButton.css('background-image','');
+			uploadButton.css('background-repeat','');
+			uploadButton.css('background-position','');
+		};
+		
+		var checkFields = function(){
+			
+		};
+	
+		lockPanel();
 	
 		if( $('.imageContainer > a > canvas' ).length == 0 ){
 			//addCameras
@@ -93,6 +111,8 @@ var GalleryUploadPanel = function( editor ){
 				//console.log(a);
 				//var json = ;
 				console.log(a.link);
+				console.log(a.remove);
+				removeLink.val(a.remove);
 				statusLabel.css('color','green');
 				statusLabel.text("Upload Successful!");
 				
@@ -107,6 +127,7 @@ var GalleryUploadPanel = function( editor ){
 			
 			var complete = function(){
 				grecaptcha.reset();
+				unlockPanel();
 			};
 			
 			
@@ -127,24 +148,27 @@ var GalleryUploadPanel = function( editor ){
 		} );
 		
 	});
-
-    infoPanel.dom.appendChild( document.createElement("br") );
-
-    var siteLink = document.createElement("a");
     
     infoPanel.dom.appendChild( document.createElement("br") );
 	
 	//add captcha
 	var captcha = $( document.createElement('div') );
-	//captcha.attr('data-sitekey','6Ld5j_8SAAAAADdyhgzdoSKe6LRR8c75rW5F9RWr');
-	captcha.addClass('g-recaptcha');
-	// grecaptcha.render(
-		// captcha[0],
-		// {'sitekey':'6Ld5j_8SAAAAADdyhgzdoSKe6LRR8c75rW5F9RWr',}
-	// );
+	captcha.addClass('g-recaptcha');	
 	infoPanel.dom.appendChild( captcha[0] );
+	
+	var removeLinkLabel = $(document.createElement('label')).text('Delete Link:').attr('id','galleryUploadRemoveLinkLabel');
+	infoPanel.dom.appendChild( removeLinkLabel[0] );
+	
+	var removeLink = $(document.createElement("input"));
+	removeLink.attr('type','text');
+	//removeLink.attr('href','');
+	removeLink.attr('target','_blank');
+	//removeLink.val('');
+	removeLink.attr('id','galleryUploadRemoveLink');
+	removeLink.attr('readonly', true);
+	infoPanel.dom.appendChild( removeLink[0] );
 
-    var statusLabel =  $( document.createElement('label') ).text('status').attr('id','galleryUploadStatus');   
+    var statusLabel =  $( document.createElement('label') ).attr('id','galleryUploadStatus');   
     infoPanel.dom.appendChild( statusLabel[0] );
 
     container.add( infoPanel );

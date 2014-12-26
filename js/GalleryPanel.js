@@ -14,6 +14,12 @@ var GalleryPanel = function( editor ){
 	
 	//inject new code, so the user can open the scene directly in the already opened editor 
 	var injectNewButton = function(){
+		// $('#gallery > iframe').hover(function(){
+			// $(this).parent().animate({'height':'+=20%', 'width':'+=20%', 'margin-left':'-=10%'},'slow');
+		// },function(){
+			// $(this).parent().animate({'height':'-=20%', 'width':'-=20%', 'margin-left':'+=10%'},'slow');
+		// });
+		
 		$('#gallery > iframe').contents().find('.btn:contains("Open in PlayfulEditor")').each(function(){
 			var match = $(this).attr('href').match(/(\d+)$/);
 			if( match !== null ){
