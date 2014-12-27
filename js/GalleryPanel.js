@@ -10,6 +10,7 @@ var GalleryPanel = function( editor ){
 	//update iframe content after every reload
 	frame.load(function(){
 		injectNewButton();
+		iFrameLoadImages();
 	});
 	
 	//inject new code, so the user can open the scene directly in the already opened editor 

@@ -39,6 +39,7 @@ Sidebars.View = function ( editor ) {
 	var galleryPanelButton = $("<a/>").html("Gallery").on("click",function(e)
 	{
 		showHide('gallery', $(this));
+		iFrameLoadImages();
 	});
 	
 	function showHide ( id, menu ) {

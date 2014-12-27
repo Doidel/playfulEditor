@@ -31,7 +31,7 @@ var GalleryUploadPanel = function( editor ){
 
     inputPanel.dom.appendChild( document.createElement("br") );
 
-    var inputDescription = $( document.createElement('textarea') ).attr('rows','9').attr('cols','50');
+    var inputDescription = $( document.createElement('textarea') ).attr('name','description').attr('rows','9').attr('cols','50');
     inputPanel.dom.appendChild( inputDescription[0] );
     container.add( inputPanel  );
 
@@ -41,11 +41,8 @@ var GalleryUploadPanel = function( editor ){
 
     var uploadButton = $( document.createElement('button') ).text('Upload').addClass('galleryUploadButton');
     infoPanel.dom.appendChild( uploadButton[0] );
-		
-	uploadButton.click(function(){
 	
-		var lockPanel = function(){
-		//background: url("../images/iconset/wait.gif") no-repeat scroll 25% 50% #E57245;
+	var lockPanel = function(){
 			uploadButton.attr('disabled','disabled');
 			uploadButton.css('background-image','url("./images/iconset/wait.gif")');
 			uploadButton.css('background-repeat','no-repeat');
@@ -53,99 +50,136 @@ var GalleryUploadPanel = function( editor ){
 			removeLink.val('');
 		};
 		
-		var unlockPanel = function(){
-			uploadButton.removeAttr('disabled');
-			uploadButton.css('background-image','');
-			uploadButton.css('background-repeat','');
-			uploadButton.css('background-position','');
-		};
-		
-		var checkFields = function(){
-			
-		};
+	var unlockPanel = function(){
+		uploadButton.removeAttr('disabled');
+		uploadButton.css('background-image','');
+		uploadButton.css('background-repeat','');
+		uploadButton.css('background-position','');
+	};
 	
-		lockPanel();
-	
-		if( $('.imageContainer > a > canvas' ).length == 0 ){
-			//addCameras
-			var addCameraButton = $('#cameraPanel > button:eq(0)');
-			for(var i = 0; i < 3; i++) addCameraButton.click();
-			
-			//rearrange cameras
-			var rearrangeCameraButton = $('#cameraPanel > button:eq(1)');
-			rearrangeCameraButton.click();
-			
-			//take screenshots
-			$('#imagePanel > button')[1].click();
-			
+	var checkFields = function(){
+
+		if( inputMail.val().length == 0 || inputMail.val().length > 50 ){
+			inputMail.css('border','1px solid red');
+			statusLabel.text('E-Mail must be between 1 and 50 characters');
+			statusLabel.css('color','red');
+			return false;
+		}else{
+			inputMail.css('border','');				
 		}
+		
+		if( inputName.val().length == 0 || inputName.val().length > 50 ){
+			statusLabel.text('Name must be between 1 and 50 characters');
+			statusLabel.css('color','red');
+			inputName.css('border','1px solid red');
+			return false;
+		}else{
+			inputName.css('border','');
+		}
+		
+		if( inputDescription.val().length > 500 ){
+			statusLabel.text('Description must be 500 characters or less');
+			statusLabel.css('color','red');
+			inputDescription.css('border','1px solid red');
+			return false;
+		}else{
+			inputDescription.css('border','');
+		}
+		
+		return true;
+		
+	};
+		
+	uploadButton.click(function(){		
 	
-		//TODO: FieldCheck
-		var zip = new JSZip();
-		var imageFolder = zip.folder('images');	
 		
-		$('.imageContainer > a > canvas' ).each(function(i,v){
-			//console.log(v);
-			var data = v.toDataURL('image/png');
-			console.log(data.substr(data.indexOf(',')+1));
-			imageFolder.file('image'+i+'.png', data.substr(data.indexOf(',')+1), {base64: true});
-		});
 		
-		editor.storage.createZip( function(blob){
-						
-			var formData = new FormData();
-								
-			//console.log( inputName );
-								
-			formData.append("name",        	inputName.val() );
-			formData.append("scene",       	editor.scene.name );
-			formData.append("email",       	inputMail.val() );
-			formData.append("description", 	inputDescription.val() );
-			formData.append("images",      	zip.generate({type:'blob'}) );
-			formData.append("playful",     	blob );
-			formData.append("captcha", 		$('#g-recaptcha-response').val() || '' );
+		if( checkFields() ){
+		
+			lockPanel();
+			if( $('.imageContainer > a > canvas' ).length == 0 ){
+				//addCameras
+				var addCameraButton = $('#cameraPanel > button:eq(0)');
+				for(var i = 0; i < 3; i++) addCameraButton.click();
 			
-			//console.log($('#g-recaptcha-response').val());
-									
-			var success = function(a,b,c){
-				//console.log(a);
-				//var json = ;
-				console.log(a.link);
-				console.log(a.remove);
-				removeLink.val(a.remove);
-				statusLabel.css('color','green');
-				statusLabel.text("Upload Successful!");
+				//rearrange cameras
+				var rearrangeCameraButton = $('#cameraPanel > button:eq(1)');
+				rearrangeCameraButton.click();
 				
-				$('#gallery > iframe')[0].contentWindow.location.reload();							
-			};
+				//take screenshots
+				$('#imagePanel > button')[1].click();
+				
+			}
+		
 			
-			var error = function(a,b,c){
-				var json = $.parseJSON(a.responseText);
-				statusLabel.css('color','red');
-				statusLabel.text( json['error-codes'] );
-			};
+			var zip = new JSZip();
+			var imageFolder = zip.folder('images');	
 			
-			var complete = function(){
-				grecaptcha.reset();
-				unlockPanel();
-			};
-			
-			
-			$.ajax({
-				url: "gallery/upload",
-				//url: "localhost:3000/upload",
-				type: "POST",
-				dataType: 'json',
-				data: formData,
-				crossDomain: true,
-				error: error,
-				success: success,
-				complete: complete,
-				processData: false,  // tell jQuery not to process the data
-				contentType: false   // tell jQuery not to set contentType
+			$('.imageContainer > a > canvas' ).each(function(i,v){
+				//console.log(v);
+				var data = v.toDataURL('image/png');
+				console.log(data.substr(data.indexOf(',')+1));
+				imageFolder.file('image'+i+'.png', data.substr(data.indexOf(',')+1), {base64: true});
 			});
 			
-		} );
+			editor.storage.createZip( function(blob){
+							
+				var formData = new FormData();
+									
+				//console.log( inputName );
+									
+				formData.append("name",        	inputName.val() );
+				formData.append("scenename",  	editor.scene.name );
+				formData.append("email",       	inputMail.val() );
+				formData.append("description", 	inputDescription.val() );
+				formData.append("images",      	zip.generate({type:'blob'}) );
+				formData.append("playful",     	blob );
+				formData.append("captcha", 		$('#g-recaptcha-response').val() || '' );
+				
+				//console.log($('#g-recaptcha-response').val());
+										
+				var success = function(a,b,c){
+					//console.log(a);
+					//var json = ;
+					console.log(a.link);
+					console.log(a.remove);
+					removeLink.val(a.remove);
+					statusLabel.css('color','green');
+					statusLabel.text("Upload Successful!");
+					
+					$('#gallery > iframe')[0].contentWindow.location.reload();							
+				};
+				
+				var error = function(a,b,c){
+					var json = $.parseJSON(a.responseText);
+					statusLabel.css('color','red');
+					statusLabel.text( json['error-codes'] );
+				};
+				
+				var complete = function(){
+					grecaptcha.reset();
+					unlockPanel();
+				};
+				
+				
+				$.ajax({
+					url: "gallery/upload",
+					//url: "localhost:3000/upload",
+					type: "POST",
+					dataType: 'json',
+					data: formData,
+					crossDomain: true,
+					error: error,
+					success: success,
+					complete: complete,
+					processData: false,  // tell jQuery not to process the data
+					contentType: false   // tell jQuery not to set contentType
+				});
+				
+			} );
+		}
+	
+		
 		
 	});
     
