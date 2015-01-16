@@ -10,28 +10,37 @@ var GalleryUploadPanel = function( editor ){
     
     inputPanel.dom.appendChild( document.createElement("br") );
 
-    var inputMail = $( document.createElement('input') ).attr('type','text').attr('name','email').attr('size','30');
+    var inputMail = $( document.createElement('input') ).attr('type','text').attr('name','email').attr('size','50');
     inputPanel.dom.appendChild( inputMail[0] );
 
     inputPanel.dom.appendChild( document.createElement("br") );
 
-    var labelName = $( document.createElement('label') ).text('Name:');
+    var labelName = $( document.createElement('label') ).text('Componist:');
     inputPanel.dom.appendChild( labelName[0] );    
     
-
+//$('#outliner > div:eq(0)').text()
     inputPanel.dom.appendChild( document.createElement("br") );
 
-    var inputName = $( document.createElement('input') ).attr('type','text').attr('name','nickname').attr('size','30');
+    var inputName = $( document.createElement('input') ).attr('type','text').attr('name','nickname').attr('size','50');
     inputPanel.dom.appendChild( inputName[0] );
 
     inputPanel.dom.appendChild( document.createElement("br") );
     
+	var labelSceneName = $( document.createElement('label') ).text('Scenename:');
+    inputPanel.dom.appendChild( labelSceneName[0] );   
+	inputPanel.dom.appendChild( document.createElement("br") );
+	var inputSceneName = $( document.createElement('input') ).attr('type','text').attr('name','scenename').attr('size','50');
+    inputPanel.dom.appendChild( inputSceneName[0] );
+
+    inputPanel.dom.appendChild( document.createElement("br") );
+	
+	
     var labelDescription = $( document.createElement('label') ).text('Description:');
     inputPanel.dom.appendChild( labelDescription[0] );
 
     inputPanel.dom.appendChild( document.createElement("br") );
 
-    var inputDescription = $( document.createElement('textarea') ).attr('name','description').attr('rows','9').attr('cols','50');
+    var inputDescription = $( document.createElement('textarea') ).attr('name','description').attr('rows','5').attr('cols','50');
     inputPanel.dom.appendChild( inputDescription[0] );
     container.add( inputPanel  );
 
@@ -47,7 +56,7 @@ var GalleryUploadPanel = function( editor ){
 			uploadButton.css('background-image','url("./images/iconset/wait.gif")');
 			uploadButton.css('background-repeat','no-repeat');
 			uploadButton.css('background-position','left center');
-			removeLink.val('');
+			//removeLink.val('');
 		};
 		
 	var unlockPanel = function(){
@@ -69,12 +78,21 @@ var GalleryUploadPanel = function( editor ){
 		}
 		
 		if( inputName.val().length == 0 || inputName.val().length > 50 ){
-			statusLabel.text('Name must be between 1 and 50 characters');
+			statusLabel.text('Componist must be between 1 and 50 characters');
 			statusLabel.css('color','red');
 			inputName.css('border','1px solid red');
 			return false;
 		}else{
 			inputName.css('border','');
+		}
+		
+		if( inputSceneName.val().length == 0 || inputSceneName.val().length > 50 ){
+			statusLabel.text('Scenename must be between 1 and 50 characters');
+			statusLabel.css('color','red');
+			inputSceneName.css('border','1px solid red');
+			return false;
+		}else{
+			inputSceneName.css('border','');
 		}
 		
 		if( inputDescription.val().length > 500 ){
@@ -111,72 +129,96 @@ var GalleryUploadPanel = function( editor ){
 				
 			}
 		
+			var captcha = $('#g-recaptcha-response').val() || '';
 			
-			var zip = new JSZip();
-			var imageFolder = zip.folder('images');	
+			var error = function(a,b,c){
+				var json = $.parseJSON(a.responseText);
+				//console.log(json);
+				statusLabel.css('color','red');
+				statusLabel.text( json['error-codes'] );
+				unlockPanel();
+			};			
 			
-			$('.imageContainer > a > canvas' ).each(function(i,v){
-				//console.log(v);
-				var data = v.toDataURL('image/png');
-				console.log(data.substr(data.indexOf(',')+1));
-				imageFolder.file('image'+i+'.png', data.substr(data.indexOf(',')+1), {base64: true});
-			});
-			
-			editor.storage.createZip( function(blob){
-							
+			var uploadData = function(){
 				var formData = new FormData();
-									
-				//console.log( inputName );
-									
+				
 				formData.append("name",        	inputName.val() );
-				formData.append("scenename",  	editor.scene.name );
+				formData.append("scenename",  	inputSceneName.val() );
 				formData.append("email",       	inputMail.val() );
 				formData.append("description", 	inputDescription.val() );
-				formData.append("images",      	zip.generate({type:'blob'}) );
-				formData.append("playful",     	blob );
-				formData.append("captcha", 		$('#g-recaptcha-response').val() || '' );
+				formData.append("captcha", 		captcha );
+				//console.log()
 				
-				//console.log($('#g-recaptcha-response').val());
-										
-				var success = function(a,b,c){
-					//console.log(a);
-					//var json = ;
-					console.log(a.link);
-					console.log(a.remove);
-					removeLink.val(a.remove);
-					statusLabel.css('color','green');
-					statusLabel.text("Upload Successful!");
+				editor.storage.createZip( function(blob){	
 					
-					$('#gallery > iframe')[0].contentWindow.location.reload();							
+					var zip = new JSZip();
+					var imageFolder = zip.folder('images');	
+				
+					$('.imageContainer > a > canvas' ).each(function(i,v){
+						var data = v.toDataURL('image/png');
+						imageFolder.file('image'+i+'.png', data.substr(data.indexOf(',')+1), {base64: true});
+					});
+					var imageBlob = zip.generate({type:'blob'});					
+
+					formData.append("images",      	imageBlob );
+					formData.append("playful",     	blob );
+					
+					
+					//console.log($('#g-recaptcha-response').val());
+										
+					var complete = function(){
+						grecaptcha.reset();
+						unlockPanel();
+						$('#gallery > iframe')[0].contentWindow.location.reload();	
+					};
+										
+					var success = function(a,b,c){
+						removeLink.val(a.remove+"\n"+removeLink.val());
+						statusLabel.css('color','green');
+						statusLabel.text("Upload Successful!");														
+					};				
+					
+					console.log('send gallery');
+					
+					$.ajax({
+						url: "gallery/upload",
+						type: "POST",
+						dataType: 'json',
+						data: formData,
+						crossDomain: true,
+						error: error,
+						success: success,
+						complete: complete,
+						processData: false,  // tell jQuery not to process the data
+						contentType: false   // tell jQuery not to set contentType
+					});
+					
+				} );				
+			};
+			
+			var checkCaptcha = function(){	
+
+				var success = function(a,b,c){
+					//console.log(a.success);
+					uploadData();
 				};
 				
-				var error = function(a,b,c){
-					var json = $.parseJSON(a.responseText);
-					statusLabel.css('color','red');
-					statusLabel.text( json['error-codes'] );
-				};
-				
-				var complete = function(){
-					grecaptcha.reset();
-					unlockPanel();
-				};
-				
-				
+				console.log('check captcha: '+"gallery/captchacheck?token="+captcha);
+			
 				$.ajax({
-					url: "gallery/upload",
-					//url: "localhost:3000/upload",
-					type: "POST",
-					dataType: 'json',
-					data: formData,
+					url: "gallery/captchacheck?token="+captcha,
+					type: "GET",
+					dataType: 'json',					
 					crossDomain: true,
 					error: error,
 					success: success,
-					complete: complete,
 					processData: false,  // tell jQuery not to process the data
 					contentType: false   // tell jQuery not to set contentType
 				});
-				
-			} );
+			};
+			
+			checkCaptcha();
+
 		}
 	
 		
@@ -190,16 +232,15 @@ var GalleryUploadPanel = function( editor ){
 	captcha.addClass('g-recaptcha');	
 	infoPanel.dom.appendChild( captcha[0] );
 	
-	var removeLinkLabel = $(document.createElement('label')).text('Delete Link:').attr('id','galleryUploadRemoveLinkLabel');
+	var removeLinkLabel = $(document.createElement('label')).text('Delete Links:').attr('id','galleryUploadRemoveLinkLabel');
 	infoPanel.dom.appendChild( removeLinkLabel[0] );
 	
-	var removeLink = $(document.createElement("input"));
-	removeLink.attr('type','text');
-	//removeLink.attr('href','');
-	removeLink.attr('target','_blank');
-	//removeLink.val('');
+	var removeLink = $(document.createElement("textarea"));
+	removeLink.attr('rows','3').attr('cols','50');
+	//removeLink.attr('target','_blank');
 	removeLink.attr('id','galleryUploadRemoveLink');
 	removeLink.attr('readonly', true);
+	removeLink.attr('wrap','off');
 	infoPanel.dom.appendChild( removeLink[0] );
 
     var statusLabel =  $( document.createElement('label') ).attr('id','galleryUploadStatus');   

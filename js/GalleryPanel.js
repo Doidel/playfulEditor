@@ -10,6 +10,7 @@ var GalleryPanel = function( editor ){
 	//update iframe content after every reload
 	frame.load(function(){
 		injectNewButton();
+		$('#gallery > iframe').contents().find('body').css('background-color','transparent');;
 		iFrameLoadImages();
 	});
 	
@@ -25,8 +26,9 @@ var GalleryPanel = function( editor ){
 			var match = $(this).attr('href').match(/(\d+)$/);
 			if( match !== null ){
 				$(this).html('Open in this PlayfulEditor');
-				$(this).removeClass('btn-primary');
-				$(this).addClass('btn-warning');				
+				$(this).css
+				//$(this).removeClass('btn-primary');
+				//$(this).addClass('btn-warning');				
 				$(this).click(function( event ){
 					event.preventDefault();				
 					editor.loader.loadRemotePlayful( '?load_scene='+match[0] );

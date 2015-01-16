@@ -5,9 +5,12 @@ var Loader = function ( editor ) {
 	
 	this.loadedSoundsFolder;
 	this.loadedTexturesFolder;
-
+	
 	
 	this.loadRemotePlayful = function( sceneId ){
+		var self = this;
+		editor._isLoadingFile = true;
+		
 		console.log('load remote scene:'+sceneId);
 		$.ajax({
 			url: "gallery/download"+sceneId,						
@@ -15,21 +18,35 @@ var Loader = function ( editor ) {
 			crossDomain: true,
 			error: function(a,b,c){   console.log("a"+a); console.log("b"+b); console.log("c"+c); },
 			success: function(a,b,c){ loadBase64Playful(a) },
+			//success: function(a,b,c){ console.log(a);console.log(b);console.log(c);},
 			processData: false,  // tell jQuery not to process the data
 			contentType: false   // tell jQuery not to set contentType
 		});
 		
 		var loadBase64Playful = function( baseData ){
-			console.log("loading successful");
-			var zip = new JSZip(baseData,{base64:true});
+			//console.log("loading successful");
+			
+			var binary_string =  window.atob( baseData.replace(/\s/g, '') );
+			var len = binary_string.length;
+			var bytes = new Uint8Array( len );
+			for (var i = 0; i < len; i++){
+				bytes[i] = binary_string.charCodeAt(i);
+			}
+			var zip = new JSZip( bytes.buffer );
+
+			//dies on large files...
+			//var zip = new JSZip(baseData,{base64:true});
 	
 			var contents = zip.file("Sceneobjects.json").asText();
 			var data;
 			try {
-				data = JSON.parse( contents );
+				//console.log(  zip.folder("sounds") );
 				self.loadedSoundsFolder = zip.folder("sounds");
 				self.loadedTexturesFolder = zip.folder("textures");
+				data = JSON.parse( contents );
+				
 			} catch ( error ) {
+				
 				alert( error );
 				return;
 			}
