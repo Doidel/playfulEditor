@@ -10,7 +10,8 @@ var GalleryUploadPanel = function( editor ){
     
     inputPanel.dom.appendChild( document.createElement("br") );
 
-    var inputMail = $( document.createElement('input') ).attr('type','text').attr('name','email').attr('size','50');
+    var inputMail = $( document.createElement('input') ).attr('type','text').attr('name','email').attr('size','50');	
+	deactivateEventListener( inputMail[0], 'keydown' );	
     inputPanel.dom.appendChild( inputMail[0] );
 
     inputPanel.dom.appendChild( document.createElement("br") );
@@ -22,6 +23,7 @@ var GalleryUploadPanel = function( editor ){
     inputPanel.dom.appendChild( document.createElement("br") );
 
     var inputName = $( document.createElement('input') ).attr('type','text').attr('name','nickname').attr('size','50');
+	deactivateEventListener( inputName[0], 'keydown' );
     inputPanel.dom.appendChild( inputName[0] );
 
     inputPanel.dom.appendChild( document.createElement("br") );
@@ -30,6 +32,7 @@ var GalleryUploadPanel = function( editor ){
     inputPanel.dom.appendChild( labelSceneName[0] );   
 	inputPanel.dom.appendChild( document.createElement("br") );
 	var inputSceneName = $( document.createElement('input') ).attr('type','text').attr('name','scenename').attr('size','50');
+	deactivateEventListener( inputSceneName[0], 'keydown' );
     inputPanel.dom.appendChild( inputSceneName[0] );
 
     inputPanel.dom.appendChild( document.createElement("br") );
@@ -41,6 +44,7 @@ var GalleryUploadPanel = function( editor ){
     inputPanel.dom.appendChild( document.createElement("br") );
 
     var inputDescription = $( document.createElement('textarea') ).attr('name','description').attr('rows','5').attr('cols','50');
+	deactivateEventListener( inputDescription[0], 'keydown' );
     inputPanel.dom.appendChild( inputDescription[0] );
     container.add( inputPanel  );
 
@@ -129,14 +133,21 @@ var GalleryUploadPanel = function( editor ){
 				
 			}
 		
+			//get captcha before the session timeout
 			var captcha = $('#g-recaptcha-response').val() || '';
 			
+			var complete = function(){
+						grecaptcha.reset();
+						unlockPanel();
+						$('#gallery > iframe')[0].contentWindow.location.reload();	
+			};
+			
 			var error = function(a,b,c){
+				complete();
 				var json = $.parseJSON(a.responseText);
 				//console.log(json);
 				statusLabel.css('color','red');
 				statusLabel.text( json['error-codes'] );
-				unlockPanel();
 			};			
 			
 			var uploadData = function(){
@@ -166,19 +177,16 @@ var GalleryUploadPanel = function( editor ){
 					
 					//console.log($('#g-recaptcha-response').val());
 										
-					var complete = function(){
-						grecaptcha.reset();
-						unlockPanel();
-						$('#gallery > iframe')[0].contentWindow.location.reload();	
-					};
+					
 										
 					var success = function(a,b,c){
+						complete();	
 						removeLink.val(a.remove+"\n"+removeLink.val());
 						statusLabel.css('color','green');
-						statusLabel.text("Upload Successful!");														
+						statusLabel.text("Upload Successful!");												
 					};				
 					
-					console.log('send gallery');
+					//console.log('send gallery');
 					
 					$.ajax({
 						url: "gallery/upload",
@@ -188,7 +196,7 @@ var GalleryUploadPanel = function( editor ){
 						crossDomain: true,
 						error: error,
 						success: success,
-						complete: complete,
+						//complete: complete,
 						processData: false,  // tell jQuery not to process the data
 						contentType: false   // tell jQuery not to set contentType
 					});
@@ -203,8 +211,9 @@ var GalleryUploadPanel = function( editor ){
 					uploadData();
 				};
 				
-				console.log('check captcha: '+"gallery/captchacheck?token="+captcha);
-			
+				//console.log('check captcha: '+"gallery/captchacheck?token="+captcha);
+				
+				//checkin captcha
 				$.ajax({
 					url: "gallery/captchacheck?token="+captcha,
 					type: "GET",
@@ -250,5 +259,13 @@ var GalleryUploadPanel = function( editor ){
 
     return container;
 
+}
+
+function deactivateEventListener( dom, type ){
+	dom.addEventListener( type, function ( event ) {
+
+		event.stopPropagation();
+
+	}, false );
 }
 
